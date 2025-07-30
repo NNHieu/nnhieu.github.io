@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://hnn.github.io/sitemap.xml
+Sitemap: https://nnhieu.github.io//sitemap.xml
