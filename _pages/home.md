@@ -5,12 +5,11 @@ permalink: /
 subtitle: >
   <i>He/Him/His<i>. Email: ngochieutb13 at gmail.com
 # <a href='#'>Affiliations</a>. Address. Contacts. Motto. Etc.
-
 profile:
   align: right
   image: prof_pic.jpg
   image_circular: false # crops the image to make it circular
-  more_info: > 
+  more_info: >
     <p>My full name (in the Vietnamese order) is</p>
     <p>Nguyen Ngoc Hieu</p>
     <p>(Nguyễn Ngọc Hiếu - with diacritical marks).</p>
@@ -36,16 +35,12 @@ Put your address / P.O. box / other info right below your picture. You can also 
 
 Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them. -->
 
-
 👋 Hi! I'm Hieu (Pronounce: hɪəʊ).
-
 
 I'm currently a Research Assistant at [MAIL Research lab](https://khoadoan.me/) and [SAIL](https://www.sail-research.com/), working with Professors [Khoa D. Doan](https://khoadoan.me/), [Kok-Seng Wong](https://www.sail-research.com/) and [Le Duy Dung](https://andrew-dungle.github.io/).
 
-
-Previouly, I was an AI resident at [FPT AI Center](https://fpt-aicenter.com/en/ai-residency) under the supervision of [Dr. Hoang Thanh-Tung](https://scholar.google.com/citations?user=xZU08d0AAAAJ&hl=en). 
-I completed my B.Sc Honours degree in Computer Science at [VNU-UET](https://uet.vnu.edu.vn/en/), advised by [Dr. Hoang Thanh-Tung](https://scholar.google.com/citations?user=xZU08d0AAAAJ&hl=en) and [Dr. Viet-Cuong Ta](https://scholar.google.com/citations?hl=en&user=j9_spcUAAAAJ&view_op=list_works&sortby=pubdate). 
-
+Previouly, I was an AI resident at [FPT AI Center](https://fpt-aicenter.com/en/ai-residency) under the supervision of [Dr. Hoang Thanh-Tung](https://scholar.google.com/citations?user=xZU08d0AAAAJ&hl=en).
+I completed my B.Sc Honours degree in Computer Science at [VNU-UET](https://uet.vnu.edu.vn/en/), advised by [Dr. Hoang Thanh-Tung](https://scholar.google.com/citations?user=xZU08d0AAAAJ&hl=en) and [Dr. Viet-Cuong Ta](https://scholar.google.com/citations?hl=en&user=j9_spcUAAAAJ&view_op=list_works&sortby=pubdate).
 
 You can find my academic resumé [here](assets/pdf/AI_ML_Research_Resume.pdf) (updated in Dec 2024).
 
