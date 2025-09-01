@@ -35,7 +35,7 @@ Put your address / P.O. box / other info right below your picture. You can also 
 
 Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them. -->
 
-👋 Hi! I'm Hieu. My full name (in the Vietnamese order and with diacritical marks) is Nguyễn Ngọc Hiếu.
+👋 Hi! I'm Hieu. My full name, written in Vietnamese order with diacritical marks, is Nguyễn Ngọc Hiếu.
 
 I'm a first-year Ph.D. Student in CS at [Penn State NLP](https://nlp.psu.edu/) advised by Professor [Rui Zhang](https://ryanzhumich.github.io/).
 
