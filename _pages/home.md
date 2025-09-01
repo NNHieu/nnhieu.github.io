@@ -3,16 +3,16 @@ layout: about
 title: about
 permalink: /
 subtitle: >
-  <i>He/Him/His<i>. Email: ngochieutb13 at gmail.com
+  <i>He/Him/His<i>. Email: ngochieutb13 at gmail.com.
 # <a href='#'>Affiliations</a>. Address. Contacts. Motto. Etc.
+# <p>My full name (in the Vietnamese order) is</p>
+# <p>Nguyen Ngoc Hieu</p>
+# <p>(Nguyễn Ngọc Hiếu - with diacritical marks).</p>
 profile:
   align: right
   image: prof_pic.jpg
   image_circular: false # crops the image to make it circular
-  more_info: >
-    <p>My full name (in the Vietnamese order) is</p>
-    <p>Nguyen Ngoc Hieu</p>
-    <p>(Nguyễn Ngọc Hiếu - with diacritical marks).</p>
+  more_info: I’m learning to navigate through a blurred sea.
 
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: false # includes social icons at the bottom of the page
@@ -35,12 +35,12 @@ Put your address / P.O. box / other info right below your picture. You can also 
 
 Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them. -->
 
-👋 Hi! I'm Hieu.
+👋 Hi! I'm Hieu. My full name (in the Vietnamese order and with diacritical marks) is Nguyễn Ngọc Hiếu.
 
 I'm a first-year Ph.D. Student in CS at [Penn State NLP](https://nlp.psu.edu/) advised by Professor [Rui Zhang](https://ryanzhumich.github.io/).
 
 <details>
-<summary>Previouly, </summary>
+<summary>Previouly, ...</summary>
 <p>
   <p>From January 2024 to August 2025, I was a Research Assistant at the <a href="https://khoadoan.me/">MAIL Research Lab</a>, working with Professor <a href="https://khoadoan.me/">Khoa D. Doan</a>.</p>
 
@@ -49,7 +49,7 @@ I'm a first-year Ph.D. Student in CS at [Penn State NLP](https://nlp.psu.edu/) a
   <p>From May 2021 to June 2023, I was an AI Resident at the <a href="https://fpt-aicenter.com/en/ai-residency">FPT AI Center</a>, under the supervision of <a href="https://scholar.google.com/citations?user=xZU08d0AAAAJ&amp;hl=en">Dr. Hoang Thanh-Tung</a>.</p>
 
   <p>I completed my B.Sc Honours degree in Computer Science at <a href="https://uet.vnu.edu.vn/en/">VNU-UET</a>, advised by <a href="https://scholar.google.com/citations?user=xZU08d0AAAAJ&amp;hl=en">Dr. Hoang Thanh-Tung</a> and <a href="https://scholar.google.com/citations?hl=en&amp;user=j9_spcUAAAAJ&amp;view_op=list_works&amp;sortby=pubdate">Dr. Viet-Cuong Ta</a>.</p>
-  
+
 </p>
 </details>
 
