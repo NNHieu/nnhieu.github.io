@@ -35,17 +35,28 @@ Put your address / P.O. box / other info right below your picture. You can also 
 
 Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them. -->
 
-👋 Hi! I'm Hieu (Pronounce: hɪəʊ).
+👋 Hi! I'm Hieu.
 
-I'm currently a Research Assistant at [MAIL Research lab](https://khoadoan.me/) and [SAIL](https://www.sail-research.com/), working with Professors [Khoa D. Doan](https://khoadoan.me/), [Kok-Seng Wong](https://www.sail-research.com/) and [Le Duy Dung](https://andrew-dungle.github.io/).
+I'm a first-year Ph.D. Student in CS at [Penn State NLP](https://nlp.psu.edu/) advised by Professor [Rui Zhang](https://ryanzhumich.github.io/).
 
-Previouly, I was an AI resident at [FPT AI Center](https://fpt-aicenter.com/en/ai-residency) under the supervision of [Dr. Hoang Thanh-Tung](https://scholar.google.com/citations?user=xZU08d0AAAAJ&hl=en).
-I completed my B.Sc Honours degree in Computer Science at [VNU-UET](https://uet.vnu.edu.vn/en/), advised by [Dr. Hoang Thanh-Tung](https://scholar.google.com/citations?user=xZU08d0AAAAJ&hl=en) and [Dr. Viet-Cuong Ta](https://scholar.google.com/citations?hl=en&user=j9_spcUAAAAJ&view_op=list_works&sortby=pubdate).
+<details>
+<summary>Previouly, </summary>
+<p>
+  <p>From January 2024 to August 2025, I was a Research Assistant at the <a href="https://khoadoan.me/">MAIL Research Lab</a>, working with Professor <a href="https://khoadoan.me/">Khoa D. Doan</a>.</p>
+
+  <p>Between June 2023 and January 2024, I served as a Research Assistant at <a href="https://sites.google.com/view/r2studio/home">R2Studio</a> and <a href="https://www.sail-research.com/">SAIL</a>, collaborating with Professors <a href="https://www.sail-research.com/">Kok-Seng Wong</a> and <a href="https://andrew-dungle.github.io/">Le Duy Dung</a>.</p>
+
+  <p>From May 2021 to June 2023, I was an AI Resident at the <a href="https://fpt-aicenter.com/en/ai-residency">FPT AI Center</a>, under the supervision of <a href="https://scholar.google.com/citations?user=xZU08d0AAAAJ&amp;hl=en">Dr. Hoang Thanh-Tung</a>.</p>
+
+  <p>I completed my B.Sc Honours degree in Computer Science at <a href="https://uet.vnu.edu.vn/en/">VNU-UET</a>, advised by <a href="https://scholar.google.com/citations?user=xZU08d0AAAAJ&amp;hl=en">Dr. Hoang Thanh-Tung</a> and <a href="https://scholar.google.com/citations?hl=en&amp;user=j9_spcUAAAAJ&amp;view_op=list_works&amp;sortby=pubdate">Dr. Viet-Cuong Ta</a>.</p>
+  
+</p>
+</details>
 
 You can find my academic resumé [here](assets/pdf/AI_ML_Research_Resume.pdf) (updated in Dec 2024).
 
 ##### Primary research interests
 
-I am eager to (i) understand the foundations, strengths, and limitations of data and learning algorithms and (ii) build learning systems better capable of system 2 tasks such as reasoning and planning.
+I am eager to (i) understand the foundations, strengths, and limitations of data and learning algorithms and (ii) build learning systems better capable of system 2 tasks such as reasoning, planning, and creativity.
 
---- Last Updated: Jul 31 2025 ---
+--- Last Updated: Sep 01 2025 ---
