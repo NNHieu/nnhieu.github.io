@@ -3,7 +3,7 @@ layout: post
 title: Just know stuffs
 date: 2025-07-30 16:40:16
 description: This is just a place for my personal use to keep track of what I have learnt. So that I can free up my mental space.
-tags:
+tags: research
 categories: thoughts
 ---
 
