@@ -46,7 +46,7 @@ I'm a first-year Ph.D. Student in CS at [Penn State NLP](https://nlp.psu.edu/) a
 
   <p>Between June 2023 and January 2024, I served as a Research Assistant at <a href="https://sites.google.com/view/r2studio/home">R2Studio</a> and <a href="https://www.sail-research.com/">SAIL</a>, collaborating with Professors <a href="https://www.sail-research.com/">Kok-Seng Wong</a> and <a href="https://andrew-dungle.github.io/">Le Duy Dung</a>.</p>
 
-  <p>From May 2021 to June 2023, I was an AI Resident at the <a href="https://fpt-aicenter.com/en/ai-residency">FPT AI Center</a>, under the supervision of <a href="https://scholar.google.com/citations?user=xZU08d0AAAAJ&amp;hl=en">Dr. Hoang Thanh-Tung</a>.</p>
+  <p>From May 2021 to June 2023, I was an AI Resident at the <a href="https://www.fpt-aic.com/en/ai-residency">FPT AI Center</a>, under the supervision of <a href="https://scholar.google.com/citations?user=xZU08d0AAAAJ&amp;hl=en">Dr. Hoang Thanh-Tung</a>.</p>
 
   <p>I completed my B.Sc Honours degree in Computer Science at <a href="https://uet.vnu.edu.vn/en/">VNU-UET</a>, advised by <a href="https://scholar.google.com/citations?user=xZU08d0AAAAJ&amp;hl=en">Dr. Hoang Thanh-Tung</a> and <a href="https://scholar.google.com/citations?hl=en&amp;user=j9_spcUAAAAJ&amp;view_op=list_works&amp;sortby=pubdate">Dr. Viet-Cuong Ta</a>.</p>
 
