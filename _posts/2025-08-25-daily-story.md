@@ -2,7 +2,7 @@
 layout: post
 title: Chuyện
 date: 2025-09-01 14:14:14
-description: Nơi mình lan man chuyện hàng ngày và thể hiện trình độ con mẹ dạy Văn.
+description: Nơi mình lan man chuyện hàng ngày và thể hiện trình độ con giáo viên dạy Văn.
 tags: daily
 categories: thoughts
 ---
