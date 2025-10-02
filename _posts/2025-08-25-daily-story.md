@@ -2,7 +2,7 @@
 layout: post
 title: Chuyện
 date: 2025-09-01 14:14:14
-description: Nơi mình lan man chuyện hàng ngày.
+description: Nơi mình lan man chuyện hàng ngày và thể hiện trình độ con mẹ dạy Văn.
 tags: daily
 categories: thoughts
 ---
@@ -17,7 +17,7 @@ Một trong những ấn tượng đầu tiên của mình ở State College là
 
 "Nồi cơm điện là một vật dụng thiết yếu" là một điều không phải bàn cãi. Bạn có thể nấu cơm bằng xoong nhưng nó sẽ giảm hiệu xuất nấu ăn của bạn đi đáng kể. Vì vậy mình rất biết ơn J đã tìm ra món cơm nấu phomai và mua nồi cơm điện, và sau đó cho mình sài ké (95% of the time). Hơn thế nữa, sau khi nghe mình than thở về cà phê ở đây yếu, cậu này đẫ cố tìm loại mạnh nhất trong siêu thị, tên Death Wish. Cái tên rất đáng gờm nhưng xin lỗi J, nó vẫn hơi yếu :( . E thì chỉ mình cần mua quần áo gì để trú đông ở đây. Rất chi tiết, cậu mở web online shopping và chỉ từng món. E cũng giỏi nấu ăn, mình và J đã được cậu cho thưởng thức vài bữa, a.k.a free dinner =)).
 
-J và E đều là undergrad năm cuối và cũng mới gặp nhau lúc mình chuyển vào. Nhưng thỉnh thoảng mình thấy 2 cậu vận động chân tay và mát xa nhau bằng xoong chảo. Hay có lúc J thể hiện trình độ joke có được từ gốc Brishtist của mình.
+J và E đều là undergrad năm cuối và cũng mới gặp nhau lúc mình chuyển vào. Nhưng thỉnh thoảng mình thấy 2 cậu vận động chân tay và mát xa nhau bằng xoong chảo. Hay có lúc J thể hiện trình độ joke có được từ gốc British của mình.
 
 ### Lần đầu được Interview và lên báo
 Mình đến State College sát ngày nhập học, trước có 1 ngày. Lúc đầu cũng lo bị jetlag ảnh hưởng nhưng có vẻ do được ngủ và đi chơi ở sân bay suốt nên bù lại là mình bị jetlag rất ít. Vậy mà vẫn lỡ buổi đi tour 1-1 với một bạn sinh viên do bị nhầm thời gian với buổi hướng dẫn chung. Và thế là có duyên gặp bác Bill, một phóng viên của báo StateCollege. Bác interview mình cho bài báo của bác về [sinh viên quốc tế đến Penn State](https://www.statecollege.com/articles/psu-news/penn-state's-new-international-students-show-resilience-persistence-and-perseverance-in-getting-to-campus/), xong dẫn mình đi giới thiệu trường 1-1 với bác luôn.
