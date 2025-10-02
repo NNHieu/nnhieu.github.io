@@ -27,7 +27,7 @@ ninja.data = [{
         
           title: "Chuyện",
         
-        description: "Nơi mình lan man chuyện hàng ngày.",
+        description: "Nơi mình lan man chuyện hàng ngày và thể hiện trình độ con mẹ dạy Văn.",
         section: "Posts",
         handler: () => {
           
