@@ -23,11 +23,22 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/publications/";
           },
-        },{id: "post-chuyện",
+        },{id: "post-thinking-in-language-models",
         
-          title: "Chuyện",
+          title: "Thinking in Language Models",
         
-        description: "Nơi mình lan man chuyện hàng ngày và thể hiện trình độ con giáo viên dạy Văn.",
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2025/discovering-reasoning/";
+          
+        },
+      },{id: "post-tản-mạn",
+        
+          title: "Tản mạn",
+        
+        description: "Lan man",
         section: "Posts",
         handler: () => {
           
