@@ -35,9 +35,8 @@ Put your address / P.O. box / other info right below your picture. You can also 
 
 Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them. -->
 
-👋 Hi! I'm Hieu. My full name, written in Vietnamese order with diacritical marks, is Nguyễn Ngọc Hiếu.
-
-I'm a first-year Ph.D. Student in CS at [Penn State NLP](https://nlp.psu.edu/) advised by Professor [Rui Zhang](https://ryanzhumich.github.io/).
+👋 Hi! I'm Hieu. My full name, written in Vietnamese order with diacritical marks, is Nguyễn Ngọc Hiếu. I'm a first-year Ph.D. Student in CS at [Penn State NLP](https://nlp.psu.edu/) advised by Professor [Rui Zhang](https://ryanzhumich.github.io/).
+You can find my academic resumé [here](assets/pdf/AI_ML_Research_Resume.pdf) (updated in Dec 2024).
 
 <details>
 <summary>Previouly, ...</summary>
@@ -49,11 +48,8 @@ I'm a first-year Ph.D. Student in CS at [Penn State NLP](https://nlp.psu.edu/) a
   <p>From May 2021 to June 2023, I was an AI Resident at the <a href="https://www.fpt-aic.com/en/ai-residency">FPT AI Center</a>, under the supervision of <a href="https://scholar.google.com/citations?user=xZU08d0AAAAJ&amp;hl=en">Dr. Hoang Thanh-Tung</a>.</p>
 
   <p>I completed my B.Sc Honours degree in Computer Science at <a href="https://uet.vnu.edu.vn/en/">VNU-UET</a>, advised by <a href="https://scholar.google.com/citations?user=xZU08d0AAAAJ&amp;hl=en">Dr. Hoang Thanh-Tung</a> and <a href="https://scholar.google.com/citations?hl=en&amp;user=j9_spcUAAAAJ&amp;view_op=list_works&amp;sortby=pubdate">Dr. Viet-Cuong Ta</a>.</p>
-
 </p>
 </details>
-
-You can find my academic resumé [here](assets/pdf/AI_ML_Research_Resume.pdf) (updated in Dec 2024).
 
 ##### Primary research interests
 
