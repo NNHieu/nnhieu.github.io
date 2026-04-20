@@ -15,7 +15,7 @@ mermaid:
 bibliography: 2025-11-13-lrm.bib
 ---
 
-## More parameters vs more tokens
+## More parameters and more tokens
 
 <!-- ### The power of *Large* _Language Models_ -->
 
@@ -44,33 +44,33 @@ So what does scaling up test-time compute mean in this context? There are a lot 
 - Markov Chain Monte Carlo (MCMC): More MCMC samples → better posterior estimates.
 
 
-“Scaling test-time compute” in LLMs means: Allocating more computation during inference - without retraining the model — to get higher accuracy, better reasoning, or more reliable outputs.
+<!-- “Scaling test-time compute” in LLMs means: Allocating more computation during inference - without retraining the model — to get higher performance. -->
 
-In LLM inference, test-time compute often refer to number of tokens generated (More tokens = more test-time FLOPs). And scaling the test-time compute can be achieved via 
+In LLM inference, test-time compute often refer to number of tokens generated (e.g. generating multiple responses, or generating longer responses,...). And scaling the test-time compute can be achieved via 
 - Chain-of-thought (CoT)
 - Self-consistency: sample many CoT paths
 - Tree-of-thoughts search
 - Reflection loops / Re-evaluation or verification passes
-- Reasoning models
+- Reasoning models with thinking tokens
 
 However, different from previous examples, why does this help is often not very clear.
 
-Let's go thought some of them.
+<!-- Let's go thought some of them. -->
 
-### From Standard Prompting, to Chain-of-Thought, to Reasoning trace
-
+## Reasoning in text
 >*"The process of drawing conclusions based on available information (usually a set of premises)."*
 
-In this article, we refer to "reasoning in LLMs" as the act of generating intermediate *steps* before arriving to the final answer. This could be achieved via 
+In this article, we refer to "reasoning" in LLMs as the act of generating intermediate *steps* before arriving to the final answer. 
+This could be achieved via 
 * **Chain-of-thought with Prompting:** Prompt LMs such that they generate intermediate tokens/steps before the final answer.
 * **Chain-of-thought without Prompting:** Select a decoding path where the model "reason" before answering.
-* **Reasoning via RLVF or Distillation:** Post-finetuning LMs to reinforce generating reasoning behaviors.
+* **Reasoning via RLVF or Distillation:** Post-training LMs to reinforce reasoning behaviors such as backtracking, verification, error correction, ...
 
-The first and second approaches are actually very similar. Both try to steer the generation using input context. And they suggest that the base/instruct models are capable of reasoning with language to some extend.
+The first and second approaches try to steer the generation using input context or intial response tokens. And they suggest that the base/instruct models are capable of reasoning step-by-step using text to some extend.
 
-Furthermore, LLMs could be finetuned such that they generate reasoning behaviors when solving problems. These reasoning behaviors could be initialization, deduction, knowledge augmentation, example testing, uncertainty estimation, and backtracking, e.t.c <d-cite key="venhoff2025understanding, mondorf2024beyond"></d-cite>. And by combining these behaviors, these models can achieve good performance on many complex tasks.
+Furthermore, LLMs could be finetuned such that they generate reasoning behaviors when solving problems. These reasoning behaviors could be initialization, deduction, knowledge augmentation, example testing, uncertainty estimation, and backtracking, e.t.c <d-cite key="venhoff2025understanding, mondorf2024beyond"></d-cite>. And by combining these behaviors during *a thinking process*, these models can achieve good performance on many complex tasks.
 
-#### 1. From Standard Prompting to Chain-of-Thought Prompting
+### 1. From direct answers to chain-of-thought answers
 The following is an example from <d-cite key="wei2022chain"></d-cite> that ilustrate chain of thought from LLMs and the performance gains across different model families and model sizes:
 
 | | **Standard Prompting** | **Chain-of-Thought Prompting** |

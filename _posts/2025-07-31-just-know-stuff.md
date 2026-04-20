@@ -60,3 +60,32 @@ I might also make my work available here.
 - Introduction to writing CUDA kernels and intergation with Pytorch. [my github repo](https://github.com/NNHieu/Fast-Attention-Cuda)
 - Jax (some of my repo: [Thinking in mazes](https://github.com/NNHieu/Thinking_Mazes_Jax), [gpt2-jax])
 - [Hydra](https://hydra.cc/docs/intro/)
+
+## My thought on research - v0.5
+
+So I started writing this because I feel a growing uncertainty about how we, as AI/ML researchers, should do research in a world where AI is rapidly improving and beginning to automate AI research and develop its own successor.
+
+This question isn’t entirely new to me. Back in 2021, during a conversation with my former advisor about neural architecture search, we wondered: If AI becomes so good that it can iteratively improve itself to solve specific tasks, what should ML researchers do then?
+At the time, my answer—from an undergraduate who hadn't done any research—was that we could try to understand these systems. If machines exhibit intelligence, then studying them might help us understand our own. That belief is what drew me toward machine learning theory.
+
+But there was an implicit assumption in that answer: that “doing research” would remain the last frontier—something machines couldn’t fully take over. I’m no longer sure that’s true.
+
+Today, the question feels more urgent—but my answer hasn’t fundamentally changed.
+What has changed is the research process.
+We’re already seeing systems that automate large parts of the research workflow: generating ideas, running experiments, iterating on code, and drafting papers. In this emerging paradigm, researchers propose directions—and AI executes.
+
+This shift brings undeniable gains in productivity, but it also creates a real tension—especially for students. If you don’t adopt these tools, you risk falling behind in speed and output. If you do, you risk outsourcing the very skills that shape your development as a researcher.
+
+So what should we do? I think the answer depends on what you believe the goal of your research is. For me, it remains the same: to understand, to explain, and to create knowledge—not just to produce results. In that sense, the philosophy of research doesn’t change, even if the workflow does.
+
+Take writing as an example. AI can already help generate drafts, refine language, and even generate a research paper. But writing isn’t just about producing text—it’s a way of thinking. It forces clarity, exposes gaps in understanding, and shapes the ideas themselves. If we fully delegate that process, we risk losing these "by-products".
+The same applies more broadly. If we reduce research to proposing ideas and validating them through automated pipelines, we might become efficient—but also shallow.
+
+This reminds me of what happened when AlphaGo defeated the strongest human Go players. For many top players, it triggered a kind of existential crisis: What is the meaning of playing Go now?
+But maybe that question was always there.
+Before AlphaGo, playing Go was about mastery, creativity, and understanding the game deeply. After AlphaGo, those values didn’t disappear—they just shifted. Players began to learn from AI, explore new styles, and engage with the game differently. And importantly, people still play.
+
+<!-- So the question for researchers might not be whether AI replaces us, but what we choose to value in research.
+If AI can generate ideas, run experiments, and write papers, then what remains uniquely ours?
+Perhaps it’s taste. Judgment. The ability to ask meaningful questions. The curiosity to explore directions that aren’t immediately rewarded by benchmarks.
+In other words, the things that were always at the core of research—but are now harder to ignore. -->

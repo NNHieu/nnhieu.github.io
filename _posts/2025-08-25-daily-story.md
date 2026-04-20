@@ -7,6 +7,22 @@ tags: daily
 categories: thoughts
 ---
 
+## 2026
+
+### Đi xa và nhìn về
+
+### Câu sao - Catching the Great Bear
+
+Một buổi tối đi tập tự nhiên nhận ra trời nay đẹp quá. Vậy là mình mặc trời lạnh mà tìm cách đi câu sao. Dụng cụ thì chỉ có một điện thoại và vốn kiến thức astrophotography gần như bằng 0. Tất cả những gì mình biết là set low-iso và tăng phơi sáng. Cái khó là hôm nay cũng có full moon nên dễ bị cháy sáng nếu không có len chuyên dụng. Có vẻ trăng tròn và trời quang hay xuất hiện cùng nhau, mà có lẽ vì ánh trăng sáng nên mình mới nhận ra trời quang.
+
+Cũng hơi giống việc đi câu, mình phải tìm vị trí đặt cần phù hợp và kiên nhẫn chờ đợi. Do không có tripod nên mình đành nhờ vào "địa lợi", nghĩa là phải tìm một mặt nền nào đó có góc nghiêng hợp lý. Mục tiêu đầu tiên là Orion, dù có thể nhìn rõ bằng mắt thường nhưng khá khó để tìm góc có ít ánh trăng hay ánh đèn điện. Sau khi loay hoay một hồi thì mình bắt được 3 chòm sao khác: Ursa major (con gấu lớn), Leo, và Gemini. Cancer thì ở giữa Gemini và Leo mà ánh trăng sáng quá nên mình không tìm được.
+
+Cái này làm nhớ hồi nhỏ mình hay trèo lên mái nhà nằm nhìn trời, bố mẹ bảo nguy hiểm. Mình cũng thấy nguy hiểm thật, vì nó dễ làm rơi vào trạng thái existential crisis 🙄
+
+### Món Tết gia truyền via vidcall
+
+Năm nay ăn tết xa nhà nên mình lần đầu tiên được lead công tác làm mâm cỗ ngày Tết. Từ khâu chọn món, mua nguyên liệu, đến nấu đồ. Trong quá trình thực hiên, mình có sự trợ giúp của bạn cùng nhà, cậu chở mình đi mua đồ và cũng được dịp thử mấy món ăn vặt của châu Á. Và cũng không thể không kể đến tổ tư vấn nhà mình đã hỗ trợ qua zalo. Kết quả là giới thiệu được món ăn ngày Tết ở VN cho cậu bạn (cậu này người Mỹ nhưng dùng đũa rất siêu) và được khen ngon. Vậy là chương trình năm nay diễn ra suôn sẻ. Trừ việc món thịt đông không được đông cho lắm
+
 ## 2025
 
 ### Những ước mơ cũ
