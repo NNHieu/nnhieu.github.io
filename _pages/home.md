@@ -55,4 +55,4 @@ You can find my academic resumé [here](assets/pdf/AI_ML_Research_Resume_190426.
 
 I am eager to (i) understand the foundations, strengths, and limitations of data and learning algorithms and (ii) build learning systems better capable of system 2 tasks such as reasoning, planning, and creativity.
 
---- Last Updated: Sep 01 2025 ---
+--- Last Updated: Apr 22 2025 ---

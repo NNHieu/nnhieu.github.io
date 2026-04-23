@@ -35,7 +35,7 @@ Recently, there is a new axis of scaling these models: test-time compute. In thi
 
 {% include figure.liquid loading="eager" path="assets/img/train_vs_test_compute.webp" caption="From OpenAI's blog post: Learning to reason with LLMs."%}
 
-So what does scaling up test-time compute mean in this context? There are a lot of examples where increasing test-time compute (i.e., doing more work at inference/test time rather than training time) leads to better performance in traditional algorithms - long before LLMs.
+There are a lot of examples where increasing test-time compute (i.e., doing more work at inference/test time rather than training time) leads to better performance in traditional algorithms - long before LLMs.
 
 - Best-First or A Search*: Expanding more nodes → closer to optimal path.
 - Monte Carlo Tree Search (MCTS): More playouts → deeper/denser search tree → stronger move choices.
@@ -142,7 +142,7 @@ In the above example, we ask GPT-4 to answer the value of a variable given chain
 It seems like the model should have the ability to backtrack.
 
 
-#### 2. From Chain-of-Thought Prompting to Reasoning trace
+#### 2. From "linear reasoning" to "non-linear reasoning"
 
 | | **Chain-of-Thought Prompting** | **Large Reasoning Models** <br>*(e.g., o1, R1)* |
 | :--- | :--- | :--- |
@@ -151,34 +151,32 @@ It seems like the model should have the ability to backtrack.
 
 Even thought, with CoT prompting, LLMs will break down the problem into steps, it often reflects *a final solution* which means that the "thought" does not includes common behaviors in human's reasoning process such as uncertainty expression, verification, or backtracking. 
 
-However, these behaviors can emerge via RLVE finetuning. The resulted models, called Large Reasoning Models, generate answer in a 2 phases: the thinking phase where the generation shows different reasoning behaviors, and the conclusion phase.
+However, these behaviors can emerge via RLVR finetuning. The resulted models, called Large Reasoning Models, generate answer in a 2 phases: the thinking phase where the generation shows different reasoning behaviors, and the conclusion phase.
 
 <!-- *(Reasoning Behavior). The system’s computed response to a reasoning task, particularly its actions, expressions and underlying mechanisms exhibited during **the reasoning process**.*  -->
+<!-- ### LLM Monkey -->
 
-### LLM Monkey
+## The mechanism question
 
-## Research Questions
-
-Our main question is 
-> When reasoning models perform a certain reasoning behavior (e.g. verification), why do they chose to generate that step?
+The development of reasoning models give rise to the following question: 
+> When reasoning models perform a certain reasoning behavior (e.g. backtracking or verification), why do they chose to generate that step?
 
 In another words, we aim to understand the underlying mechanism in these models: the debate between reasoning pattern or genuine reasoning. 
-
-An example of genuine reasoning is when people get stuck in solving math problem, they response with a targeted adjustment instead of wild guesses.
-
-Answering this question could give us insight into mitigating overthinking or enhancing reasoning capability of these models.
+Answering this question could give us insight into mitigating issues such as overthinking or enhancing reasoning capability of these models.
 
 To better understand this question, we will walk thought several scenarios:
 
+<!-- An example of genuine reasoning is when people get stuck in solving math problem, they response with a targeted adjustment instead of wild guesses. -->
+
 ---
 
-**Scenario 1: A toy example - BFS**
+**Scenario 1: A toy example - Mimicking search trace**
 
 In this section, we "approximate" the learning to reasoning with learning to search. 
 To illustrate this approximation, let's consider the process of solving mathematical problems. 
 A language reasoning process starts with the initial state which includes question, axioms/heuristics, and a set of information. At each step, the thinking process transforms to a new state via reasoning behaviors.
 
-This approach is similar to <d-cite key="saparov2025transformers"></d-cite>. 
+<!-- This approach is similar to <d-cite key="saparov2025transformers"></d-cite>.  -->
 
 LLMs can learn to mimic the search process and achieve better performance on specific graph search problems  <d-cite key="gandhi2024stream"></d-cite>. The learning objective is to be able to generate intermediate steps of an algorithmic procedure. 
 
