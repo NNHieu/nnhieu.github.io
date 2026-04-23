@@ -35,24 +35,32 @@ Put your address / P.O. box / other info right below your picture. You can also 
 
 Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them. -->
 
-👋 Hi! I'm Hieu. My full name, written in Vietnamese order with diacritical marks, is Nguyễn Ngọc Hiếu. I'm a first-year Ph.D. Student in CS at [Penn State NLP](https://nlp.psu.edu/) advised by Professor [Rui Zhang](https://ryanzhumich.github.io/).
-You can find my academic resumé [here](assets/pdf/AI_ML_Research_Resume.pdf) (updated in Apr 2026).
+👋 Hi! I'm Hieu. My full name, written in Vietnamese order with diacritical marks, is **Nguyễn Ngọc Hiếu**. I am a first-year Ph.D. student in Computer Science at [Penn State NLP](https://nlp.psu.edu/), advised by Professor [Rui Zhang](https://ryanzhumich.github.io/).
+
+You can find my academic résumé [here](assets/pdf/AI_ML_Research_Resume.pdf) (last updated: April 2026).
+
+> 🔎 I am currently seeking research internship or visiting research opportunities in LLM reasoning and AI for scientific discovery.
 
 <details>
-<summary>Previouly, ...</summary>
-<p>
-  <p>From January 2024 to August 2025, I was a Research Assistant at the <a href="https://khoadoan.me/">MAIL Research Lab</a>, working with Professor <a href="https://khoadoan.me/">Khoa D. Doan</a>.</p>
+<summary>Previously</summary>
 
-  <p>Between June 2023 and January 2024, I served as a Research Assistant at <a href="https://sites.google.com/view/r2studio/home">R2Studio</a> and <a href="https://www.sail-research.com/">SAIL</a>, collaborating with Professors <a href="https://www.sail-research.com/">Kok-Seng Wong</a> and <a href="https://andrew-dungle.github.io/">Le Duy Dung</a>.</p>
+From January 2024 to August 2025, I worked as a Research Assistant at the [MAIL Research Lab](https://khoadoan.me/), under the supervision of Professor [Khoa D. Doan](https://khoadoan.me/).
 
-  <p>From May 2021 to June 2023, I was an AI Resident at the <a href="https://www.fpt-aic.com/en/ai-residency">FPT AI Center</a>, under the supervision of <a href="https://scholar.google.com/citations?user=xZU08d0AAAAJ&amp;hl=en">Dr. Hoang Thanh-Tung</a>.</p>
+Between June 2023 and January 2024, I was a Research Assistant at [R2Studio](https://sites.google.com/view/r2studio/home) and [SAIL](https://www.sail-research.com/), collaborating with Professors [Kok-Seng Wong](https://www.sail-research.com/) and [Le Duy Dung](https://andrew-dungle.github.io/).
 
-  <p>I completed my B.Sc Honours degree in Computer Science at <a href="https://uet.vnu.edu.vn/en/">VNU-UET</a>, advised by <a href="https://scholar.google.com/citations?user=xZU08d0AAAAJ&amp;hl=en">Dr. Hoang Thanh-Tung</a> and <a href="https://scholar.google.com/citations?hl=en&amp;user=j9_spcUAAAAJ&amp;view_op=list_works&amp;sortby=pubdate">Dr. Viet-Cuong Ta</a>.</p>
-</p>
+From May 2021 to June 2023, I was an AI Resident at the [FPT AI Center](https://www.fpt-aic.com/en/ai-residency), supervised by Dr. Hoang Thanh-Tung.
+
+I received my B.Sc. (Honours) in Computer Science from [VNU-UET](https://uet.vnu.edu.vn/en/), where I was advised by Dr. Hoang Thanh-Tung and Dr. Viet-Cuong Ta.
+
 </details>
 
-##### Primary research interests
+### Primary Research Interests
 
-I am eager to (i) understand the foundations, strengths, and limitations of data and learning algorithms and (ii) build learning systems better capable of system 2 tasks such as reasoning, planning, and creativity.
+My research focuses on understanding and improving the reasoning and generalization capabilities of learning systems. I study the strengths and limitations of these systems through controlled, large-scale experimentation, with an emphasis on failure modes and robustness.
 
---- Last Updated: Apr 22 2025 ---
+I am particularly interested in developing models and training paradigms that enable reliable multi-step reasoning, planning, and creativity (System 2 behaviors). More broadly, I aim to build learning systems that can support scientific discovery and high-impact real-world applications.
+
+---
+
+*Last updated: April 22, 2026*
+chro
