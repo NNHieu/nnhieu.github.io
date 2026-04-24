@@ -1,0 +1,95 @@
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const items = document.querySelectorAll(".autoregressive-item");
+    if (items.length === 0) return;
+
+    let currentItemIndex = 0;
+
+    function playCarousel() {
+      // Loop back to the beginning when we reach the end
+      if (currentItemIndex >= items.length) {
+        currentItemIndex = 0; 
+        
+        // If you want it to STOP at the last item instead of looping infinitely, 
+        // delete the line above and uncomment the line below:
+        // return; 
+      }
+
+      const currentItem = items[currentItemIndex];
+      
+      // 1. Walk DOM to get text nodes (preserves HTML structure)
+      const textNodes = [];
+      function walkNodes(node) {
+        if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() !== "") {
+          textNodes.push(node);
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          for (let child of node.childNodes) walkNodes(child);
+        }
+      }
+      walkNodes(currentItem);
+
+      // Store original text and clear it out
+      const originalTexts = textNodes.map(n => n.nodeValue);
+      textNodes.forEach(n => n.nodeValue = "");
+
+      // Reveal the container
+      currentItem.style.display = "block";
+
+      let nodeIdx = 0;
+      let charIdx = 0;
+
+      // 2. Type Forward
+      function typeChar() {
+        if (nodeIdx < textNodes.length) {
+          if (charIdx < originalTexts[nodeIdx].length) {
+            textNodes[nodeIdx].nodeValue += originalTexts[nodeIdx].charAt(charIdx);
+            charIdx++;
+            
+            // Forward typing speed
+            setTimeout(typeChar, Math.random() * 15 + 15); 
+          } else {
+            nodeIdx++;
+            charIdx = 0;
+            typeChar();
+          }
+        } else {
+          // Finished typing this item. Wait 3.5 seconds so the user can read it.
+          nodeIdx = textNodes.length - 1; 
+          setTimeout(eraseChar, 3500); 
+        }
+      }
+
+      // 3. Erase Backward
+      function eraseChar() {
+        if (nodeIdx >= 0) {
+          if (textNodes[nodeIdx].nodeValue.length > 0) {
+            textNodes[nodeIdx].nodeValue = textNodes[nodeIdx].nodeValue.slice(0, -1);
+            
+            // Backward erasing speed (fast backspace)
+            setTimeout(eraseChar, 5); 
+          } else {
+            nodeIdx--;
+            eraseChar();
+          }
+        } else {
+          // Finished erasing. Hide this item and prepare the next one.
+          currentItem.style.display = "none";
+          
+          // Restore the text invisibly so it's ready for the next loop
+          textNodes.forEach((n, i) => n.nodeValue = originalTexts[i]);
+          
+          currentItemIndex++;
+          
+          // Pause briefly before typing the next item
+          setTimeout(playCarousel, 500); 
+        }
+      }
+
+      // Kick off the typing phase
+      typeChar();
+    }
+
+    // Start the whole sequence
+    setTimeout(playCarousel, 500);
+  });
+</script>

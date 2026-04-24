@@ -1,0 +1,94 @@
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Look for our specific diffusion class
+    const containers = document.querySelectorAll(".diffusion-content");
+    if (containers.length === 0) return;
+
+    // The "noise" vocabulary. You can add/remove characters to change the aesthetic.
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*+<>?";
+
+    containers.forEach(contentDiv => {
+      // 1. Walk DOM to safely get text nodes (preserves HTML/links/bold)
+      const textNodes = [];
+      function walkNodes(node) {
+        if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() !== "") {
+          textNodes.push(node);
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          for (let child of node.childNodes) walkNodes(child);
+        }
+      }
+
+      walkNodes(contentDiv);
+      
+      const originalTexts = textNodes.map(n => n.nodeValue);
+      
+      // 2. Data structure to track which characters have been "denoised" (resolved)
+      const resolvedMasks = originalTexts.map(text => new Array(text.length).fill(false));
+      
+      // 3. Initialize the starting state (Pure Noise)
+      textNodes.forEach((n, idx) => {
+        let noiseStr = "";
+        for(let i = 0; i < originalTexts[idx].length; i++) {
+            // Auto-resolve spaces and punctuation to keep the block structure stable
+            const char = originalTexts[idx][i];
+            if(char === " " || char === "\n" || char === "." || char === ",") {
+                noiseStr += char;
+                resolvedMasks[idx][i] = true; 
+            } else {
+                // Inject noise
+                noiseStr += chars[Math.floor(Math.random() * chars.length)];
+            }
+        }
+        n.nodeValue = noiseStr;
+      });
+
+      // Reveal the container now that it is filled with noise
+      contentDiv.style.opacity = 1;
+
+      // Calculate how many characters we need to denoise
+      let totalUnresolved = resolvedMasks.reduce((sum, mask) => sum + mask.filter(v => !v).length, 0);
+
+      // 4. The Denoising Loop
+      function diffuseStep() {
+        if (totalUnresolved <= 0) return; // Denoising complete
+
+        // Determine how many characters to resolve this frame. 
+        // 5% of remaining characters creates a natural ease-out effect (starts fast, finishes slow)
+        const resolveCount = Math.max(1, Math.floor(totalUnresolved * 0.05)); 
+        
+        let resolvedThisFrame = 0;
+        
+        // Randomly select characters to lock in
+        while(resolvedThisFrame < resolveCount && totalUnresolved > 0) {
+            const nodeIdx = Math.floor(Math.random() * textNodes.length);
+            const charIdx = Math.floor(Math.random() * originalTexts[nodeIdx].length);
+            
+            if (!resolvedMasks[nodeIdx][charIdx]) {
+                resolvedMasks[nodeIdx][charIdx] = true;
+                resolvedThisFrame++;
+                totalUnresolved--;
+            }
+        }
+
+        // Re-render the text. Resolved = original character, Unresolved = newly generated noise
+        textNodes.forEach((n, idx) => {
+            let currentStr = "";
+            for(let i = 0; i < originalTexts[idx].length; i++) {
+                if (resolvedMasks[idx][i]) {
+                    currentStr += originalTexts[idx][i];
+                } else {
+                    currentStr += chars[Math.floor(Math.random() * chars.length)];
+                }
+            }
+            n.nodeValue = currentStr;
+        });
+
+        // Loop the animation (50ms = 20 frames per second)
+        setTimeout(diffuseStep, 10); 
+      }
+
+      // Brief delay so the user sees the pure noise block before it begins resolving
+      setTimeout(diffuseStep, 100);
+    });
+  });
+</script>

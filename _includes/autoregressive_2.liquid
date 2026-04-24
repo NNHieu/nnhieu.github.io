@@ -1,0 +1,71 @@
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const containers = document.querySelectorAll(".autoregressive-content");
+    if (containers.length === 0) return;
+
+    containers.forEach(contentDiv => {
+      // 1. Walk DOM to get text nodes
+      const textNodes = [];
+      function walkNodes(node) {
+        if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() !== "") {
+          textNodes.push(node);
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          for (let child of node.childNodes) walkNodes(child);
+        }
+      }
+
+      walkNodes(contentDiv);
+      const originalTexts = textNodes.map(n => n.nodeValue);
+      textNodes.forEach(n => n.nodeValue = "");
+      contentDiv.style.opacity = 1;
+
+      // ---------------------------------------------------------
+      // 2. PARALLEL CONFIGURATION
+      // ---------------------------------------------------------
+      // How many simultaneous typing cursors do you want?
+      const numThreads = 3; 
+      
+      // Safety check: Don't spawn more threads than actual text nodes
+      const activeThreads = Math.min(numThreads, textNodes.length);
+      
+      // Divide the text nodes into roughly equal chunks
+      const chunkSize = Math.ceil(textNodes.length / activeThreads);
+
+      // 3. The Thread Function
+      function startTypingThread(startIdx, endIdx) {
+        let nodeIdx = startIdx;
+        let charIdx = 0;
+
+        function typeChar() {
+          if (nodeIdx < endIdx) {
+            // Type the current node character by character
+            if (charIdx < originalTexts[nodeIdx].length) {
+              textNodes[nodeIdx].nodeValue += originalTexts[nodeIdx].charAt(charIdx);
+              charIdx++;
+              
+              // Typing speed (randomized for natural feel)
+              const typingDelay = Math.random() * 20 + 10;
+              setTimeout(typeChar, typingDelay);
+            } else {
+              // Move to the next node in this thread's assigned chunk
+              nodeIdx++;
+              charIdx = 0;
+              typeChar();
+            }
+          }
+        }
+        
+        // Randomize the start delay so the threads don't all fire on the exact same millisecond
+        setTimeout(typeChar, Math.random() * 500 + 100);
+      }
+
+      // 4. Launch all threads simultaneously
+      for (let i = 0; i < activeThreads; i++) {
+        const startNodeIdx = i * chunkSize;
+        const endNodeIdx = Math.min((i + 1) * chunkSize, textNodes.length);
+        
+        startTypingThread(startNodeIdx, endNodeIdx);
+      }
+    });
+  });
+</script>
