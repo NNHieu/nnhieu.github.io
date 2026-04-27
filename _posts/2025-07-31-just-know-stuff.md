@@ -29,12 +29,12 @@ I might also make my work available here.
 
 - Rotary Embeddings ([EleutherAI's blog post](https://blog.eleuther.ai/rotary-embeddings/?fbclid=IwY2xjawHPi2hleHRuA2FlbQIxMQABHQSL_ydF9TfFw8DmRc-1UkyElaq84q7WQIYkJYDVhMLbhkdH219uc1fz8Q_aem_oDD33a-KzrFW7e5bt0uIrw))
 
-## Iterpretability
+## Interpretability
 
-- https://leonardbereska.github.io/blog/2024/mechinterpreview/
-- https://www.anthropic.com/research/engineering-challenges-interpretability
-- [Activation Patching](), [nnsight](https://nnsight.net/)
-- An Adversarial Perspective on “Overinterpretation Reveals Image Classification Model Pathologies”
+- [MechInterp Preview](https://leonardbereska.github.io/blog/2024/mechinterpreview/)
+- [Engineering Challenges in Interpretability](https://www.anthropic.com/research/engineering-challenges-interpretability)
+- Tools and methods: [Activation Patching](), [nnsight](https://nnsight.net/)
+- *An Adversarial Perspective on “Overinterpretation Reveals Image Classification Model Pathologies”*
 
 ## ML Engineering
 
