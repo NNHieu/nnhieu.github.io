@@ -143,7 +143,7 @@ ninja.data = [{
         title: 'X',
         section: 'Socials',
         handler: () => {
-          window.open("https://twitter.com/HiuNguy71624401", "_blank");
+          window.open("https://twitter.com/hieu_ngoc_ng", "_blank");
         },
       },{
         id: 'social-resume',
