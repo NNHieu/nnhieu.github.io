@@ -50,6 +50,8 @@ I believe this understanding can help us:
 3. Use AI to support scientific discovery and high-impact real-world applications (see [ICML '25](https://arxiv.org/abs/2504.10415)).
 </div>
 
+[My thought on research](/blog/2025/just-know-stuff/#my-thought-on-research-v0-5).
+
 <!-- am particularly interested in developing models and training paradigms that enable reliable . More broadly, I aim to  -->
 <!-- <details>
 <summary>Previously</summary>
