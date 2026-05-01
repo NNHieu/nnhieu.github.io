@@ -23,9 +23,9 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/publications/";
           },
-        },{id: "post-rl-series-multi-armed-bandits",
+        },{id: "post-multi-armed-bandits",
         
-          title: "[RL Series] Multi-Armed Bandits",
+          title: "Multi-Armed Bandits",
         
         description: "Learning by teaching",
         section: "Posts",
