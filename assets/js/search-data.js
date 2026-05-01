@@ -34,6 +34,17 @@ ninja.data = [{
             window.location.href = "/blog/2026/multi-arms-bandit/";
           
         },
+      },{id: "post-scaling-the-giants-a-guide-to-efficient-parallelism-in-llm-inference",
+        
+          title: "Scaling the Giants: A Guide to Efficient Parallelism in LLM Inference",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2025/scaling-inference/";
+          
+        },
       },{id: "post-thinking-in-language-models",
         
           title: "Thinking in Language Models",
