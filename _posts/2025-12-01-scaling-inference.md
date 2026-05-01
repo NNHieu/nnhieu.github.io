@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Scaling the Giants: A Guide to Efficient Parallelism in LLM Inference"
-date: 2026-05-01 16:40:16
+date: 2025-12-01 16:40:16
 description: ""
 tags: "llm-inference"
 categories: code
