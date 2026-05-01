@@ -10,9 +10,9 @@ subtitle: >
 # <p>(Nguyễn Ngọc Hiếu - with diacritical marks).</p>
 profile:
   align: right
-  image: prof_pic.jpg
+  image: prof_pic3.jpg
   image_circular: false # crops the image to make it circular
-  more_info: I’m learning to navigate through a blurred sea.
+  more_info: I’m often amazed by the vastness of the ocean.
 
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: false # includes social icons at the bottom of the page
@@ -38,6 +38,7 @@ Link to your social media connections, too. This theme is set up to use [Font Aw
 👋 Hi! I'm Hieu. My full name, written in Vietnamese order with diacritical marks, is **Nguyễn Ngọc Hiếu**. I am a first-year Ph.D. student in Computer Science at [Penn State NLP](https://nlp.psu.edu/), advised by Professor [Rui Zhang](https://ryanzhumich.github.io/).
 
 You can find my academic résumé [here](assets/pdf/AI_ML_Research_Resume.pdf) (last updated: April 2026).
+
 <!-- </div> -->
 ### Primary Research Interests
 <div class="diffusion-content" markdown="1" style="opacity: 0;">
@@ -51,6 +52,16 @@ I believe this understanding can help us:
 </div>
 
 [My thought on research](/blog/2025/just-know-stuff/#my-thought-on-research-v0-5).
+
+Outside of research and work, I enjoy learning violin 🎻 as a hobby in my free time. [Here](https://www.youtube.com/watch?v=24QD4lP7mDE) is a short practice video. I also enjoy sports 🏸🏀🥏, so feel free to say hi or invite me if you see me around. I find these activities help me generate new ideas 💡 and stay creative in my research.
+
+---
+
+
+🔎 I am currently seeking research internship or visiting research opportunities in LLM reasoning and AI for scientific discovery.
+
+*Last updated: May 1, 2026 (I sometimes forget to update this)*
+
 
 <!-- am particularly interested in developing models and training paradigms that enable reliable . More broadly, I aim to  -->
 <!-- <details>
@@ -81,10 +92,3 @@ I received my B.Sc. (Honours) in Computer Science from [VNU-UET](https://uet.vnu
   </div>
 </div> -->
 
-
----
-
-
-🔎 I am currently seeking research internship or visiting research opportunities in LLM reasoning and AI for scientific discovery.
-
-*Last updated: April 22, 2026*
