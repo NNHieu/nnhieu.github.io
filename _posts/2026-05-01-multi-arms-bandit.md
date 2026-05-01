@@ -2,7 +2,7 @@
 layout: post
 title: "[RL Series] Multi-Armed Bandits"
 date: 2026-05-01 16:40:16
-description: This is one of my lecture note on the topic
+description: Learning by teaching
 tags: "reinforcement-learning"
 categories: lecture
 ---
