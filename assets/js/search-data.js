@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/publications/";
           },
-        },{id: "post-thinking-in-language-models",
+        },{id: "post-rl-series-multi-armed-bandits",
+        
+          title: "[RL Series] Multi-Armed Bandits",
+        
+        description: "This is one of my lecture note on the topic",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/multi-arms-bandit/";
+          
+        },
+      },{id: "post-thinking-in-language-models",
         
           title: "Thinking in Language Models",
         
