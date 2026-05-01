@@ -35,7 +35,7 @@ Put your address / P.O. box / other info right below your picture. You can also 
 
 Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them. -->
 <!-- <div class="autoregressive-content" markdown="1" style="opacity: 0;"> -->
-👋 Hi! I'm Hieu. My full name, written in Vietnamese order with diacritical marks, is **Nguyễn Ngọc Hiếu**. I am a first-year Ph.D. student in Computer Science at [Penn State NLP](https://nlp.psu.edu/), advised by Professor [Rui Zhang](https://ryanzhumich.github.io/).
+👋 Hi! I'm Hieu. My full name, written in Vietnamese order with diacritical marks, is **Nguyễn Ngọc Hiếu**. I am a first-year Ph.D. student in Computer Science at [Penn State NLP](https://nlp.psu.edu/), where I'm fortunate to be advised by Prof. [Rui Zhang](https://ryanzhumich.github.io/).
 
 You can find my academic résumé [here](assets/pdf/AI_ML_Research_Resume.pdf) (last updated: April 2026).
 
@@ -46,9 +46,9 @@ You can find my academic résumé [here](assets/pdf/AI_ML_Research_Resume.pdf) (
 I study the strengths and limitations of learning algorithms through carefully designed and controlled experimentation, with an emphasis on failure modes and robustness.
 
 I believe this understanding can help us:
-1. Develop more efficient learning algorithms (see [WWW '25](https://arxiv.org/abs/2401.03748), and [ICLR '26](https://arxiv.org/abs/2504.02010)) and more robust systems (see [ICLR '25](https://arxiv.org/abs/2407.10825), [NeurIPS '25](https://arxiv.org/abs/2506.08681) and [ACL '23](https://aclanthology.org/2023.acl-short.104/))
-2. Build systems capable of multi-step reasoning, planning, and creativity (System 2 behaviors) (upcoming work on coverage shrinkage in reasoning models).
-3. Use AI to support scientific discovery and high-impact real-world applications (see [ICML '25](https://arxiv.org/abs/2504.10415)).
+1. Develop more **efficient** learning algorithms (see [WWW '25](https://arxiv.org/abs/2401.03748), and [ICLR '26](https://arxiv.org/abs/2504.02010)) and more **robust** systems (see [ICLR '25](https://arxiv.org/abs/2407.10825), [NeurIPS '25](https://arxiv.org/abs/2506.08681) and [ACL '23](https://aclanthology.org/2023.acl-short.104/))
+2. Build systems **capable** of multi-step reasoning, planning, and creativity (System 2 behaviors) (upcoming work on coverage shrinkage in reasoning models).
+3. Use AI to support scientific **discovery** and high-impact real-world applications (see [ICML '25](https://arxiv.org/abs/2504.10415)).
 </div>
 
  
