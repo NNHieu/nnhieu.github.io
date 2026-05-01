@@ -27,7 +27,7 @@ ninja.data = [{
         
           title: "[RL Series] Multi-Armed Bandits",
         
-        description: "This is one of my lecture note on the topic",
+        description: "Learning by teaching",
         section: "Posts",
         handler: () => {
           
