@@ -1,9 +1,28 @@
-"AJP":
-  url: https://aapt.scitation.org/journal/ajp
-  color: "#00369f"
+"CVPR":
+  color: "#007bff" # Blue
+  text_color: "#ffffff" # White text
+  url: "https://cvpr.thecvf.com/"
 
-"PhysRev":
-  url: https://journals.aps.org/
+"NeurIPS":
+  color: "#28a745" # Green
+  text_color: "#ffffff"
 
-"Vision":
-  color: "#009f36"
+"ICML":
+  color: "#dc3545" # Red
+  text_color: "#ffffff"
+
+"ACL":
+  color: "purple" # Purple
+  text_color: "#ffffff"
+
+"Nature":
+  color: "#fd7e14" # Orange
+  text_color: "#000000" # Black text contrasts better with bright orange
+
+"ICLR":
+  color: "#17a2b8" # Teal/Cyan
+  text_color: "#ffffff"
+
+"WWW":
+  color: "#ffc107" # Yellow/Amber
+  text_color: "#000000" # Black text is required here
