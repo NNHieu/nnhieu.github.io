@@ -12,7 +12,7 @@ profile:
   align: right
   image: prof_pic3.jpg
   image_circular: false # crops the image to make it circular
-  more_info: I’m often amazed by the vastness of the ocean.
+  more_info: I'm often amazed by the vastness of the ocean.
 
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: false # includes social icons at the bottom of the page
@@ -60,7 +60,7 @@ See [my thoughts on research](/blog/2025/just-know-stuff/#my-thought-on-research
 ---
 
 
-Outside of research and work, I enjoy learning violin 🎻 as a hobby in my free time. [Here](https://www.youtube.com/watch?v=24QD4lP7mDE) is a short practice video. I also enjoy sports 🏸🏀🥏, so feel free to say hi or invite me if you see me around. I find these activities help me generate new ideas 💡 and stay creative in my research.
+Outside of research and work, I enjoy learning [violin 🎻](https://www.youtube.com/watch?v=24QD4lP7mDE) as a hobby in my free time. I also enjoy sports 🏸🏀🥏, so feel free to say hi or invite me if you see me around. I find these activities help me generate new ideas 💡 and stay creative in my research.
 
 ---
 
