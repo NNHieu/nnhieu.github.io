@@ -37,22 +37,24 @@ Link to your social media connections, too. This theme is set up to use [Font Aw
 <!-- <div class="autoregressive-content" markdown="1" style="opacity: 0;"> -->
 👋 Hi! I'm Hieu. My full name, written in Vietnamese order with diacritical marks, is **Nguyễn Ngọc Hiếu**. I am a first-year Ph.D. student in Computer Science at [Penn State NLP](https://nlp.psu.edu/), where I'm fortunate to be advised by Prof. [Rui Zhang](https://ryanzhumich.github.io/).
 
-You can find my academic résumé [here](assets/pdf/AI_ML_Research_Resume.pdf) (last updated: April 2026).
-
 <!-- </div> -->
-### Primary Research Interests
+<!-- ### Primary Research Interests -->
+
+<!-- <p align="center"><strong>Where is the decision boundary?</strong></p> -->
+
 <div class="diffusion-content" markdown="1" style="opacity: 0;">
 
 I study the strengths and limitations of learning algorithms through carefully designed and controlled experimentation, with an emphasis on failure modes and robustness.
 
 I believe this understanding can help us:
-1. Develop more **efficient** learning algorithms (see [WWW '25](https://arxiv.org/abs/2401.03748), and [ICLR '26](https://arxiv.org/abs/2504.02010)) and more **robust** systems (see [ICLR '25](https://arxiv.org/abs/2407.10825), [NeurIPS '25](https://arxiv.org/abs/2506.08681) and [ACL '23](https://aclanthology.org/2023.acl-short.104/))
-2. Build systems **capable** of multi-step reasoning, planning, and creativity (System 2 behaviors) (upcoming work on coverage shrinkage in reasoning models).
-3. Use AI to support scientific **discovery** and high-impact real-world applications (see [ICML '25](https://arxiv.org/abs/2504.10415)).
+1. Develop more **efficient** learning algorithms ([WWW '25](https://arxiv.org/abs/2401.03748), [ICLR '26](https://arxiv.org/abs/2504.02010)) and more **robust** systems ([ICLR '25](https://arxiv.org/abs/2407.10825), [NeurIPS '25](https://arxiv.org/abs/2506.08681), [ACL '23](https://aclanthology.org/2023.acl-short.104/))
+2. Build systems **capable** of reasoning, planning, and creativity (upcoming work on coverage shrinkage in reasoning models).
+3. Use AI to support scientific **discovery** ([ICML '25](https://arxiv.org/abs/2504.10415)).
+   
+<!-- TLDR; “make models faster” + “make models safer” + “make models think” + “use them for science” -->
 </div>
-
  
-See [my thoughts on research](/blog/2025/just-know-stuff/#my-thought-on-research-v0-5) and [my generated tokens (blog posts)](/blog/).
+See [my thoughts on research](/blog/2025/just-know-stuff/#my-thought-on-research-v0-5) and [my generated tokens (blog posts)](/blog/). You can find my academic résumé [here](assets/pdf/AI_ML_Research_Resume.pdf) (last updated: April 2026).
 
 
 ---

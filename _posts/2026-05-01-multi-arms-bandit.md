@@ -1,6 +1,7 @@
 ---
 layout: post
-title: "[RL Series] Multi-Armed Bandits"
+title: "Multi-Armed Bandits"
+series: "Learning by teaching - RL"
 date: 2026-05-01 16:40:16
 description: Learning by teaching
 tags: "reinforcement-learning"
