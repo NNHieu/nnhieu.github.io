@@ -6,8 +6,8 @@ description:
 authors:
   - name: Ngoc-Hieu Nguyen
 
-tags: research
-categories: thoughts
+tags: reasoning,llm
+categories: blog
 mermaid:
   enabled: true
   zoomable: true
