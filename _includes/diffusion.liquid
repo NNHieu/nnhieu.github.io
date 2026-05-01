@@ -106,3 +106,18 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 </script>
+<noscript>
+  <style>
+    /* Override the inline opacity for the auto-regressive and diffusion effects */
+    .autoregressive-content, 
+    .diffusion-content {
+      opacity: 1 !important;
+    }
+
+    /* Override the display:none for the experience carousel */
+    .experience-item {
+      display: block !important;
+      margin-bottom: 1rem; /* Adds spacing since they will now stack vertically */
+    }
+  </style>
+</noscript>
