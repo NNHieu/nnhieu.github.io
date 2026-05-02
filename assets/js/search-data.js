@@ -45,15 +45,37 @@ ninja.data = [{
             window.location.href = "/blog/2025/scaling-inference/";
           
         },
-      },{id: "post-thinking-in-language-models",
+      },{id: "post-scaling-compute",
         
-          title: "Thinking in Language Models",
+          title: "Scaling compute",
         
         description: "",
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/blog/2025/discovering-reasoning/";
+            window.location.href = "/blog/2025/discovering-reasoning-0/";
+          
+        },
+      },{id: "post-the-mechanistic-question-1-learning-to-search",
+        
+          title: "The mechanistic question - 1. Learning to search",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2025/discovering-reasoning-1/";
+          
+        },
+      },{id: "post-the-mechanistic-question-2-reasoning-modes-in-training-data",
+        
+          title: "The mechanistic question - 2. Reasoning modes in training data",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2025/discovering-reasoning-2/";
           
         },
       },{id: "post-tản-mạn",
@@ -109,6 +131,17 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/blog/2022/optimization-2/";
+          
+        },
+      },{id: "post-beyond-convexity",
+        
+          title: "Beyond convexity",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2022/optimization-3/";
           
         },
       },{id: "books-the-godfather",
@@ -185,6 +218,13 @@ ninja.data = [{
         section: 'Socials',
         handler: () => {
           window.open("mailto:%6E%67%6F%63%68%69%65%75%74%62%31%33@%67%6D%61%69%6C.%63%6F%6D", "_blank");
+        },
+      },{
+        id: 'social-github',
+        title: 'GitHub',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://github.com/NNHieu", "_blank");
         },
       },{
         id: 'social-linkedin',
