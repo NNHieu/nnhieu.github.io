@@ -60,7 +60,7 @@ See [my thoughts on research](/blog/2025/just-know-stuff/#my-thought-on-research
 ---
 
 
-Outside of research and work, I enjoy learning [violin 🎻](https://www.youtube.com/watch?v=24QD4lP7mDE) as a hobby in my free time. I also enjoy sports 🏸🏀🥏, so feel free to say hi or invite me if you see me around. I find these activities help me generate new ideas 💡 and stay creative in my research.
+Outside of research and work, I enjoy learning [violin 🎻](https://www.youtube.com/watch?v=24QD4lP7mDE) as a hobby in my free time. I also like playing sports 🏸🏀🥏, so feel free to say hi or invite me if you see me around. These activities help me generate new ideas 💡 and stay creative in my research.
 
 ---
 
