@@ -78,6 +78,39 @@ ninja.data = [{
             window.location.href = "/blog/2025/just-know-stuff/";
           
         },
+      },{id: "post-learning-as-optimization",
+        
+          title: "Learning as optimization",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2022/Learning-as-optimization/";
+          
+        },
+      },{id: "post-convergence-to-critical-point",
+        
+          title: "Convergence to critical point",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2022/optimization-1/";
+          
+        },
+      },{id: "post-convergence-of-gd-under-convexity",
+        
+          title: "Convergence of GD under Convexity",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2022/optimization-2/";
+          
+        },
       },{id: "books-the-godfather",
           title: 'The Godfather',
           description: "",
