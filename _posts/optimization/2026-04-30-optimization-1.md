@@ -6,7 +6,7 @@ description:
 authors:
   - name: Hieu N. Nguyen
     affiliations: 
-      name: FPT AI Center
+      name: "FPT AI Center | VNU-UET"
 
 tags: math
 categories: math

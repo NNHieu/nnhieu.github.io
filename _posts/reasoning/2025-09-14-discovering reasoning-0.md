@@ -1,10 +1,13 @@
 ---
 layout: distill
-title: Thinking in Language Models
-date: 2025-09-14 14:14:14
+title: Scaling compute
+date: 2025-09-14 23:14:14
 description: 
+series: Thinking in Language Models
 authors:
   - name: Ngoc-Hieu Nguyen
+    affiliations: 
+      name: "MAILLAB - VinUniversity"
 
 tags: reasoning,llm
 categories: blog
@@ -12,12 +15,10 @@ mermaid:
   enabled: true
   zoomable: true
 
-bibliography: 2025-11-13-lrm.bib
+bibliography: thinking-in-lm.bib
 ---
 
 ## More parameters and more tokens
-
-<!-- ### The power of *Large* _Language Models_ -->
 
 Bender et al. <d-cite key="bender2021parrots"></d-cite> introduced the “stochastic parrot” metaphor to describe large language models (LLMs). They characterize an LM as “a system that randomly pieces together linguistic patterns it has encountered in massive training data, guided only by statistical cues about how those patterns co-occur, and without any grounding in meaning — essentially, a stochastic parrot.” While this description is accurate in that LLMs are trained by minimizing cross-entropy loss, this objective alone does not fully account for the range of behaviors these models exhibit.
 
@@ -46,7 +47,8 @@ There are a lot of examples where increasing test-time compute (i.e., doing more
 
 <!-- “Scaling test-time compute” in LLMs means: Allocating more computation during inference - without retraining the model — to get higher performance. -->
 
-In LLM inference, test-time compute often refer to number of tokens generated (e.g. generating multiple responses, or generating longer responses,...). And scaling the test-time compute can be achieved via 
+In LLM inference, test-time compute often refers to the number of tokens generated (e.g., generating multiple responses, or producing longer responses, etc.). Scaling test-time compute can be achieved via<d-footnote>
+See <a href="/assets/pdf/Reading_Scaling_LLM_Test_Time_Compute_Optimally_can_be_more_effective_than_scaling_model_parameters.pdf" target="_blank">my slides</a> on test-time scaling </d-footnote>:  
 - Chain-of-thought (CoT)
 - Self-consistency: sample many CoT paths
 - Tree-of-thoughts search
@@ -60,7 +62,7 @@ However, different from previous examples, why does this help is often not very 
 ## Reasoning in text
 >*"The process of drawing conclusions based on available information (usually a set of premises)."*
 
-In this article, we refer to "reasoning" in LLMs as the act of generating intermediate *steps* before arriving to the final answer. 
+In this article, we refer to "reasoning" in LLMs as the act of generating intermediate *steps*<d-footnote>even though the definition of a "step" can be ambiguous</d-footnote> before arriving to the final answer. 
 This could be achieved via 
 * **Chain-of-thought with Prompting:** Prompt LMs such that they generate intermediate tokens/steps before the final answer.
 * **Chain-of-thought without Prompting:** Select a decoding path where the model "reason" before answering.
@@ -133,7 +135,7 @@ Some tasks are easier to learn and generalize than the others.
 
 {% enddetails %}
 
-The failure case of CoT:
+In the example below, we present a failure case of CoT when prompting ChatGPT on a simple chain-of-arithmetic task:
 
 {% include figure.liquid loading="eager" path="assets/img/failcase_cot.png" width="200" sizes="95vw" zoomable=true caption="Chain-of-thought on LEGO."%}
 
@@ -151,162 +153,15 @@ It seems like the model should have the ability to backtrack.
 
 Even thought, with CoT prompting, LLMs will break down the problem into steps, it often reflects *a final solution* which means that the "thought" does not includes common behaviors in human's reasoning process such as uncertainty expression, verification, or backtracking. 
 
-However, these behaviors can emerge via RLVR finetuning. The resulted models, called Large Reasoning Models, generate answer in a 2 phases: the thinking phase where the generation shows different reasoning behaviors, and the conclusion phase.
+However, these behaviors can emerge through RLVR (Reinforcement Learning from Verifiable Reward) finetuning <d-cite key="Guo2025"></d-cite>. The resulting models, known as Large Reasoning Models, generate answers in two phases: a thinking phase, during which the model exhibits various reasoning behaviors, and a conclusion phase, which generate a final "submission" from the thought.
+
+{% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/dsr1_fig2.png" class="img-fluid" caption="Figure 2 in the DeepSeek-R1 paper. The multi-stage training pipeline of DeepSeek-R1."%}
+
+Another post-training receipt to make models think is reasoning distillation which is also describe in the DeepSeek-R1 paper and is shown to be more effective for small models.
+Furthermore, distilling stronger models into smaller ones achieves outstanding results. In contrast, training smaller models using the large-scale reinforcement learning approaches demands significant computational resources and may still not reach the effectiveness obtained through distillation <d-cite key="Guo2025"></d-cite>.
+
+Thus, "effective" reasoning behaviors or "Aha moments" appear to emerge more readily in larger models.
+So more paramerters and more tokens.
 
 <!-- *(Reasoning Behavior). The system’s computed response to a reasoning task, particularly its actions, expressions and underlying mechanisms exhibited during **the reasoning process**.*  -->
 <!-- ### LLM Monkey -->
-
-## The mechanism question
-
-The development of reasoning models give rise to the following question: 
-> When reasoning models perform a certain reasoning behavior (e.g. backtracking or verification), why do they chose to generate that step?
-
-In another words, we aim to understand the underlying mechanism in these models: the debate between reasoning pattern or genuine reasoning. 
-Answering this question could give us insight into mitigating issues such as overthinking or enhancing reasoning capability of these models.
-
-To better understand this question, we will walk thought several scenarios:
-
-<!-- An example of genuine reasoning is when people get stuck in solving math problem, they response with a targeted adjustment instead of wild guesses. -->
-
----
-
-**Scenario 1: A toy example - Mimicking search trace**
-
-In this section, we "approximate" the learning to reasoning with learning to search. 
-To illustrate this approximation, let's consider the process of solving mathematical problems. 
-A language reasoning process starts with the initial state which includes question, axioms/heuristics, and a set of information. At each step, the thinking process transforms to a new state via reasoning behaviors.
-
-<!-- This approach is similar to <d-cite key="saparov2025transformers"></d-cite>.  -->
-
-LLMs can learn to mimic the search process and achieve better performance on specific graph search problems  <d-cite key="gandhi2024stream"></d-cite>. The learning objective is to be able to generate intermediate steps of an algorithmic procedure. 
-
-For instance, given the following input:
-$$
-\underbrace{1,3|2,4|1,2|0,1|0,2|3,4}_{\text{graph description}}/\underbrace{0,4}_{\text{query}} 
-$$
-
-```mermaid
-flowchart TD
-    %% --- Graph Structure ---
-    subgraph Graph["Graph Input: 1,3 | 2,4 | 1,2 | 0,1 | 0,2 | 3,4"]
-        0((0)) ---> 1((1))
-        0((0)) ===> 2((2))
-        1((1)) ---> 3((3))
-        1((1)) ---> 2((2))
-        2((2)) ===> 4((4))
-        3((3)) ---> 4((4))
-    end
-    %% --- Final Path Highlight ---
-```
-
-
-
-The expected output for a BFS trace on the shortest path problem is 
-$$
-\underbrace{<0,(1, 2),1,(2, 3),2,(4) - 4,2,0>}_{\text{Search trace}} \underbrace{0,2,4}_{\text{Final path}}
-$$
-
-The BFS's search trace could be divide into 2 parts: (1) the exploration part and (2) the backtracking part. After generating the search trace, the model output a final answer to the problem.
-
-At each step, the BFS procedure moves to a new node at the end of a queue, adds adjacency nodes of the current node to the queue, and requires an array to keep track of visited nodes. In the search trace above, the *mechanism* of listing adjacency nodes is explicitly revealed while the queue and visited array are implicitly represented. This decomposition of explicit and implicit information exists in other types of reasoning traces.
-
-Under this format, to be able to perfectly generate a BFS trace, the generative model needs to mimic a queue and a visited array. 
-Can the model successfully learn this?
-It turned out that the model performs near perfect with in distribution data, but fail on OOD inputs.
-
-
-<!-- 1. A set of states $\mathcal{S}$, a set of actions $\mathcal{A}$, a transition function $T: \mathcal{S} \times \mathcal{A} \mapsto \mathcal{S}$.
-1.  -->
-
-<!-- We select a set of problems related to graphs and train GPT models from scratch to mimic the process of search algorithms on these problems. We first analyze the (systematic) generalization by measuring performance on instances that are harder than those in the training set. Next, we break down the search process into steps and find which steps LLM fails to mimic and generalize. -->
-
-
-| Model               | G¹⁵₂,₄ (ID) | G¹⁷₂,₄ (OOD) | G²⁰₂,₄ (OOD) | G15_5_6 (OOD) | G17_5_6 (OOD) | G20_5_6 (OOD) |
-|----------------------|--------------|---------------|---------------|---------------|---------------|---------------|
-| 3 layers x 4 heads  | 89.21%       | 85.58%        | 85.80%        | **41.53%**    | **40.09%**    | **28.02%**    |
-| 3 layers x 8 heads  | _99.70%_     | **98.47%**    | **98.45%**    | 33.53%        | 33.77%        | 24.46%        |
-| 6 layers x 4 heads  | 99.53%       | _98.29%_      | _98.29%_      | 35.83%        | 36.45%        | _26.71%_      |
-| 6 layers x 8 heads  | 99.45%       | 97.23%        | 96.96%        | _40.09%_      | _39.65%_      | 25.08%        |
-| 12 layers x 8 heads | **99.87%**   | 79.40%        | 78.90%        | 36.38%        | 30.54%        | 23.65%        |
-
-To understand how do the GPT models learn the search procedure, we parse the generated search traces and analyze which type of error occurs.
-We divide errors in search traces generated by learned GPT models into the following types:
-1. **Error in listing neighbor nodes.** For example, 0,(1, 2), 1,(2, 3) is correct but 0,(1, 2),1,(2, 3, 4) is incorrect since 4 is not a neighbor of 1.
-2. **Queuing error**: For example, the model could visit a node that is not in a queue.
-
-From this framework, we observe that
-1. The model can follow rules of entering and removing from queue
-2. However, it fail to correctly list neighboring nodes when the input graphs are larger than those in the training set.
-3. Sometimes, model’s intermediate steps are correct but it fails to trace back. For example, it only outputs the last 5 nodes even thought the full path is 6-node length. 
-
-These errors lead to the failure of generalization to OOD graphs.
-
-
-
-> How does this reveal about the learning to reasoning process in LRMs?
-
-A recent work<d-cite key="lippmann2025style"></d-cite> showed that finetuning non-reasoning LMs on stylistically consistent synthetic reasoning traces enhances reasoning performance over the base model. This is actually very similar to training on BFS traces in this experiment.
-Moreover, the paper demonstrates that the stylistic patterns present in reasoning traces heavily effect reasoning improvement.
-
-This raise the question of how does these distilled models perform when the problems require extending learned patterns? Do they fail similar to those in this experiment? Or can they adapt their reasoning process to the difficulty of questions?
-
-Now, we move the next scenario.
-
----
-
-**Scenario 2: TriviaQA**
-
-Let's start with a simple knowledge question:
-
-<center>"What is the capital of Vietnam?"</center>
-
-This is the type of question that requires retrieving knowledge instead of reasoning or "either you know it or you don't know it".
-
-I belive most of large reasoning models have been trained on this piece of knowledge and they can answer directly without thinking. However, when we let the models think, they still express uncertanty, as shown in the following reasoning trace.
-
-```markdown
-Alright, so I need to figure out the capital of Vietnam. I'm not entirely sure, but I think it's somewhere in Southeast Asia. I remember hearing that Vietnam has a capital, but I'm not 100% certain which city it is. Let me try to recall any information I might have. ...
-
-I think the capital isn't one of the really big cities like Ho Chi Minh or Hanoi. Wait, no, actually, I think Hanoi is the capital. I've heard of Hanoi being mentioned in the news a lot, especially regarding political events or historical contexts. It's been a while since I studied this, so I'm a bit fuzzy on the details.
-
-Let me think about other capitals in Southeast Asia. Singapore, Kuala Lumpur, Jakarta, Bangkok, Manila... those are capitals of other countries in that region. But Vietnam is a separate country, so its capital should be different. I'm pretty sure it's not Saigon because I think Saigon is a city in Vietnam, but I might be confusing it with the capital. Wait, no, I think Saigon is actually the name of the city, and the capital is a different name.
-```
-
-
-
-**Why does the model expresses uncertainty in this case?**
-
----
-
-**Scenario 3: Sensitive Factors**
-
-Let's consider a simple math question:
-<center>"What is the answer of 2 plus 3?"</center>
-
-A thinking trace can be
-```markdown
-I need to solve the addition problem 2 plus 3. First, I identify the two numbers involved in the equation, which are 2 and 3. Next, I add these two numbers together to find the sum. Finally, I conclude that the answer is 5.
-```
-
-This is the thought if we prefix the reasoning trace with "Okay".
-
-```markdown
-Okay, so I need to figure out the answer to 2 plus 3. Hmm, let me think about this step by step. First, I remember that addition is one of the basic math operations, right? It's adding two numbers together. So, 2 plus 3 means I'm combining these two numbers to get a total.
-
-Let me visualize this. If I have two apples and someone gives me three more apples, how many apples do I have in total? So, starting with 2 apples, adding 3 more would give me 5 apples. That makes sense because 2 plus 3 is 5. I think that's correct, but let me double-check to make sure I'm not making a mistake.
-
-Another way to look at it is by using my fingers ...
-
-Wait, maybe I should try using a number line to be extra sure ...
-
-I also remember that in math, addition is commutative, so ...
-```
-
-
----
-
-**Scenario 4: Error correction**
-
-Reasoning traces in LRMs are rarely linear. They often revisit previous steps to identify and correct errors.
-
-<!-- 2. When the reasoning trace get stuck, can the model perform targeted adjust -->

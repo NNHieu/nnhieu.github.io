@@ -6,7 +6,7 @@ description:
 authors:
   - name: Hieu N. Nguyen
     affiliations: 
-      name: FPT AI Center
+      name: "FPT AI Center | VNU-UET"
 
 tags: math
 categories: math
@@ -86,5 +86,3 @@ f(\theta_{T}) - f(\theta^*) \le \frac{\|\theta_0 - \theta^*\|^2}{2\eta (T - 1)}
 $$
 
 This convergence rate is sub-linear.
-
-## Beyond convexity

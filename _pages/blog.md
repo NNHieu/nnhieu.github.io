@@ -15,6 +15,11 @@ pagination:
 
 <div class="post">
 
+<p>
+  These notes are my attempt to distill and present materials in an on-policy manner (see
+  <a href="https://x.com/_jasonwei/status/1945294042138599722?s=20" target="_blank">this</a> and <a href="/blog/2025/just-know-stuff/" target="_blank">this</a>).  I also try to use different mediums to communicate my research.
+</p>
+
 {% if site.display_tags.size > 0 or site.display_categories.size > 0 %}
   <div class="tag-category-list" style="margin-bottom: 0.25rem; font-size: 0.8rem;">
     <ul class="p-0 m-0" style="display: flex; flex-wrap: wrap; list-style: none; gap: 8px;">
@@ -25,7 +30,7 @@ pagination:
   </div>
 {% endif %}
 
-{% assign featured_posts = site.posts | where: "featured", "true" %}
+{% assign featured_posts = site.posts | where: "featured", "true" | reject: "hidden", true %}
 {% if featured_posts.size > 0 %}
 <div class="featured-posts mb-2">
   <div class="row row-cols-2 g-1"> {% for post in featured_posts %}
@@ -48,7 +53,8 @@ pagination:
 
   <ul class="post-list" style="padding-left: 0; list-style: none;">
     {% assign postlist = paginator.posts | default: site.posts %}
-    {% assign grouped_posts = postlist | group_by: "series" %}
+    {% assign visible_postlist = postlist | reject: "hidden", true %}
+    {% assign grouped_posts = visible_postlist | group_by: "series" %}
 
     {% for group in grouped_posts %}
       {% if group.name and group.name != "" %}
