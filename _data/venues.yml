@@ -11,6 +11,10 @@
   color: "#dc3545" # Red
   text_color: "#ffffff"
 
+"ICML Oral":
+  color: "#dc3545" # Red
+  text_color: "#ffffff"
+
 "ACL":
   color: "purple" # Purple
   text_color: "#ffffff"
@@ -24,5 +28,9 @@
   text_color: "#ffffff"
 
 "WWW":
+  color: "#ffc107" # Yellow/Amber
+  text_color: "#000000" # Black text is required here
+
+"WWW Oral":
   color: "#ffc107" # Yellow/Amber
   text_color: "#000000" # Black text is required here
