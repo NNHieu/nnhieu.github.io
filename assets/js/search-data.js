@@ -56,9 +56,9 @@ ninja.data = [{
             window.location.href = "/blog/2025/discovering-reasoning-0/";
           
         },
-      },{id: "post-the-mechanistic-question-1-learning-to-search",
+      },{id: "post-learning-to-search",
         
-          title: "The mechanistic question - 1. Learning to search",
+          title: "Learning to search",
         
         description: "",
         section: "Posts",
@@ -67,9 +67,9 @@ ninja.data = [{
             window.location.href = "/blog/2025/discovering-reasoning-1/";
           
         },
-      },{id: "post-the-mechanistic-question-2-reasoning-modes-in-training-data",
+      },{id: "post-reasoning-modes",
         
-          title: "The mechanistic question - 2. Reasoning modes in training data",
+          title: "Reasoning modes",
         
         description: "",
         section: "Posts",
