@@ -197,7 +197,7 @@ hidden: true
 
 In this part of the series, we'll gain insights to this question from post-training perspective, and more specically, the post-training data.
 
-During post-training, models are optimized via reinforcement learning or distillation to exhibit reasoning, there is a distinct risk that the optimization merely encourages the model to adopt the syntax of verification without the substance.
+During post-training, models are optimized via reinforcement learning or distillation to exhibit reasoning, there is a distinct risk that the optimization merely encourages the model to adopt the syntax of reasoning bahaviors without the substance.
 
 ---
 <!-- **Linear Thinking vs Non-linear Thinking** -->
