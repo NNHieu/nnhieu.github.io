@@ -1,9 +1,9 @@
 ---
 layout: distill
-title: The mechanistic question - 1. Learning to search
+title: Learning to search
 date: 2025-09-14 22:14:14
 description: 
-series: Thinking in Language Models
+series: "Thinking in Language Models - The mechanistic questions"
 authors:
   - name: Hieu N. Nguyen
     affiliations: 

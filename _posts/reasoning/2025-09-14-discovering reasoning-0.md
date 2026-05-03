@@ -3,7 +3,7 @@ layout: distill
 title: Scaling compute
 date: 2025-09-14 23:14:14
 description: 
-series: Thinking in Language Models
+series: "Thinking in Language Models - The mechanistic questions"
 authors:
   - name: Ngoc-Hieu Nguyen
     affiliations: 
@@ -161,7 +161,7 @@ Another post-training receipt to make models think is reasoning distillation whi
 Furthermore, distilling stronger models into smaller ones achieves outstanding results. In contrast, training smaller models using the large-scale reinforcement learning approaches demands significant computational resources and may still not reach the effectiveness obtained through distillation <d-cite key="Guo2025"></d-cite>.
 
 Thus, "effective" reasoning behaviors or "Aha moments" appear to emerge more readily in larger models.
-So more paramerters and more tokens.
+So, more paramerters and more tokens.
 
 <!-- *(Reasoning Behavior). The system’s computed response to a reasoning task, particularly its actions, expressions and underlying mechanisms exhibited during **the reasoning process**.*  -->
 <!-- ### LLM Monkey -->

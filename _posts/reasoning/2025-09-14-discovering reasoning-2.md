@@ -1,9 +1,9 @@
 ---
 layout: distill
-title: The mechanistic question - 2. Reasoning modes in training data
+title: Reasoning modes
 date: 2025-09-14 21:14:14
 description: 
-series: Thinking in Language Models
+series: "Thinking in Language Models - The mechanistic questions"
 authors:
   - name: Hieu N. Nguyen
     affiliations: 
@@ -67,29 +67,156 @@ hidden: true
   .trace-wrapper.is-collapsed::after { content: ""; position: absolute; bottom: 38px; left: 0; width: 100%; height: 80px; background: linear-gradient(transparent, #ffffff); pointer-events: none; }
   .show-more-btn { display: block; width: 100%; background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 4px; color: #555; padding: 6px 0; margin-top: 15px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: background 0.2s; }
   .show-more-btn:hover { background: #e9ecef; }
+
+  /* ==========================================
+     HOVER TOOLTIPS FOR HIGHLIGHTS
+     ========================================== */
+  
+  /* Make all highlight spans relative to position the tooltip */
+  .model-content span[class^="hl-"] {
+    position: relative;
+    cursor: help;
+    /* Optional: adds a subtle underline to show it's interactive */
+    border-bottom: 1px dotted rgba(0,0,0,0.4); 
+  }
+
+  /* The Tooltip Box */
+  .model-content span[class^="hl-"]::after {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translate(-50%, 5px); /* Start slightly lowered */
+    background: #2c3e50;
+    color: #ffffff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-family: var(--global-font-family, -apple-system, BlinkMacSystemFont, sans-serif);
+    font-weight: normal;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none; /* Prevents flickering */
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 10;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+
+  /* The Tooltip Arrow (Small triangle pointing down) */
+  .model-content span[class^="hl-"]::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translate(-50%, 5px);
+    border: 5px solid transparent;
+    border-top-color: #2c3e50;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 10;
+  }
+
+  /* Hover State: Fade in and slide up */
+  .model-content span[class^="hl-"]:hover::after,
+  .model-content span[class^="hl-"]:hover::before {
+    opacity: 1;
+    transform: translate(-50%, -4px);
+  }
+
+  /* Map the text content DIRECTLY to the spans (ignoring the legend boxes) */
+  .model-content span.hl-task::after { content: "Task Formulation"; }
+  .model-content span.hl-plan::after { content: "Planning Next Step"; }
+  .model-content span.hl-eval::after { content: "Evaluating Intermediate Results"; }
+  .model-content span.hl-calc::after { content: "Intermediate Numeric Calculations"; }
+  .model-content span.hl-uncert::after { content: "Acknowledging uncertainty"; }
+  .model-content span.hl-concl::after { content: "Announcing Intermediate Conclusions"; }
+  .model-content span.hl-reval::after { content: "Reevaluation"; }
+  .model-content span.hl-eq::after { content: "Equation Rearrangement"; }
+
+  .center-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  d-article blockquote {
+    padding: .5rem 1rem;
+    margin: .8rem 0;
+    color: #7a7a7a;
+    border-left: .25rem solid #e5e5e5;
+    font-family: "Fira Code", monospace;
+    font-size: 14px;
+  }
+
+  .graph-example-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    font-family: system-ui, -apple-system, sans-serif;
+    max-width: 800px;
+    margin: 20px auto;
+    line-height: 1.6;
+  }
+  .question-area {
+    width: 68%;
+  }
+  .question-text {
+    font-size: 0.9em;
+    margin-bottom: 20px;
+  }
+  .solution {
+    background-color: #f8f9fa;
+    border-left: 4px solid #0056b3;
+    padding: 15px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  .solution h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #0056b3;
+  }
+  .solution ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+  .diagram {
+    width: 28%;
+    display: flex;
+    justify-content: center;
+  }
+  .math {
+    font-family: "Cambria Math", "Times New Roman", serif;
+    font-style: italic;
+  }
 </style>
 
 
 {% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/forks_motiv.png" class="img-fluid"%}
-> What contextual or internal representational shifts trigger self-correction and backtracking behaviors in distilled reasoning models?
+> When reasoning models perform a certain reasoning behavior (e.g. backtracking or verification), why do they chose to generate that step?
+
+In this part of the series, we'll gain insights to this question from post-training perspective, and more specically, the post-training data.
+
+During post-training, models are optimized via reinforcement learning or distillation to exhibit reasoning, there is a distinct risk that the optimization merely encourages the model to adopt the syntax of verification without the substance.
 
 ---
+<!-- **Linear Thinking vs Non-linear Thinking** -->
 
-**Scenario 2: Linear Thinking vs Non-linear Thinking**
+{% include figure.liquid path="/assets/posts/thinking_in_language_models/linear_vs_non_linear_thinking.png" max-width="70%" class="center-image"%}
 
-Let's start with a simple knowledge question that requires retrieving knowledge instead of reasoning or "either you know it or you don't know it". 
+Let's start with a "simple" knowledge question:
 
-<center>"What is the capital of Vietnam?"</center>
+<center>What is the capital of Vietnam?</center>
 
 It's likely that most large reasoning models have been trained on these piece of knowledge and they can answer directly without thinking. However, when we let the models think, they still express uncertanty, as shown in the following reasoning trace.
 
-```
-Okay, so I need to figure out the capital of Vietnam. I'm not entirely sure, but I think it's somewhere in Southeast Asia. I remember hearing that Vietnam has a capital, but I'm not 100% certain which city it is. Let me try to recall any information I might have. ...
-
-I think the capital isn't one of the really big cities like Ho Chi Minh or Hanoi. Wait, no, actually, I think Hanoi is the capital. I've heard of Hanoi being mentioned in the news a lot, especially regarding political events or historical contexts. It's been a while since I studied this, so I'm a bit fuzzy on the details.
-
-Let me think about other capitals in Southeast Asia. Singapore, Kuala Lumpur, Jakarta, Bangkok, Manila... those are capitals of other countries in that region. But Vietnam is a separate country, so its capital should be different. I'm pretty sure it's not Saigon because I think Saigon is a city in Vietnam, but I might be confusing it with the capital. Wait, no, I think Saigon is actually the name of the city, and the capital is a different name.
-```
+> Okay, so I need to figure out the capital of Vietnam. I'm not entirely sure, but I think it's somewhere in Southeast Asia. I remember hearing that Vietnam has a capital, but I'm not 100% certain which city it is. Let me try to recall any information I might have. 
+> 
+> ...
+>
+> I think the capital isn't one of the really big cities like Ho Chi Minh or Hanoi. Wait, no, actually, I think Hanoi is the capital. I've heard of Hanoi being mentioned in the news a lot, especially regarding political events or historical contexts. It's been a while since I studied this, so I'm a bit fuzzy on the details.
+>
+> ...
 
 **Why does the model expresses uncertainty in this case?**
 
@@ -168,22 +295,144 @@ When the reasoning trace get stuck, can the model perform targeted adjust -->
 
 ### Forks in the roads
 
+
 In our recent work, we explore why does the distilled models exhibit this brittleness.
-Our key hypothesis is that these linear and non-linear thinking are different reasoning modes co-exist in the training data, and for which model must resolve during post-training.
+Our key hypothesis is that these linear and non-linear thinking are different reasoning modes co-exist in the training data (or mixtures of data generated from DeepSeek-V3 and DeepSeek-R1<d-cite key="Guo2025"></d-cite>), and for which model must resolve during post-training.
 Specifically, the rationale for chosing one mode over another is hidden. 
 This leads to **forks-in-the-road** situations in which a model encounters multiple valid, indistinguishable reasoning paths. 
 At such points, post-training objective pressures the model to commit to a subset of these options available. 
 This "missing rationale" problem manifests at both micro-level (step-by-step or which algebraic manipulation to apply next) and macro-level (strategy or mode selection). 
-And when the model is exposed to a single reasoning path without justification, it may struggle to learn the "correct mechanisms" (e.g., based on the difficulty of problems) and instead rely on **spurious cues** (such as the prefix token) to steer it toward a particular path. 
+And when the model is exposed to a single reasoning path without justification, it may struggle to learn the "correct mechanisms" (e.g., based on the difficulty or the type of problems) and instead rely on **spurious cues** (such as the prefix token as in the ealier examples) to steer it toward a particular path. 
 
 {% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/forks.png" class="img-fluid" caption="<strong>Illustrative examples of forks in the road</strong> (a) Graph navigation with indecipherable nodes, and (b) Mathematical reasoning with multiple valid solution modes. In both settings, decision points force commitment to a path without knowing which will succeed."%}
 
-To test this hypothesis, we design controlled case studies that isolate and expose these decision-point structures.
-Our first setting is a graph-based navigation task, inspired by prior work on indecipherable nodes in next-token prediction <d-cite key="bachmann24a"></d-cite>. In this task, a model must traverse a star graph from a start node to a target node, while encountering branching points that provide no information about which branch leads to success.
-Our second setting focuses on mathematical reasoning problems that admit multiple valid reasoning modes and solution strategies.
-At certain stages of reasoning, the model must decide how to proceed without knowing which strategy will ultimately succeed; these moments constitute decision points analogous to the graph branching. 
-By tracking post-training dynamics across both of these settings as well as across ablated data variants, we observe that post-training coverage shrinkage is largely driven by how models resolve ambiguity under repeated exposure to such decision points. In particular, ablating or restructuring these points significantly alters model behavior, and the degree of shrinkage is correlated with their prevalence in the post-training data.
+---
+
+### Forks in the roads and Coverage Shrinkage
+
+To test this hypothesis, we designed controlled case studies that isolate and expose these decision-point structures.
+Our first setting is a graph-based navigation task, inspired by prior work on indecipherable nodes in next-token prediction <d-cite key="bachmann24a"></d-cite>.
+
+<div class="graph-example-container">
+  <div class="question-area">
+    <div class="question-text">
+      <p>
+        <strong>Q:</strong> Let each letter represent a numerical variable. These variables are defined as follows:<br>
+        <span class="math">n</span> = 10; 
+        <span class="math">m</span> = <span class="math">n</span> + 12; 
+        <span class="math">k</span> = <span class="math">m</span> + 3; 
+        <span class="math">h</span> = <span class="math">k</span> + 4; 
+        <span class="math">l</span> = <span class="math">n</span> + 19; 
+        <span class="math">j</span> = <span class="math">l</span> + 17; 
+        <span class="math">x</span> = <span class="math">j</span> + 2.<br>
+        What is the resulting value of <span class="math">x</span>?
+      </p>
+    </div>
+
+    <div class="solution">
+      <h4>Ground Truth Solution</h4>
+      <p>To find the value of <span class="math">x</span>, we compute the variables step by step:</p>
+      <ul>
+        <li><span class="math">n</span> = 10</li>
+        <li style="background-color: #FFEFBA; border-radius: 4px; padding: 2px 6px;">
+          <span class="math">l</span> = <span class="math">n</span> + 19 = 10 + 19 = <strong>29</strong>
+          <span style="color: #bc7100; font-style: italic; margin-left: 8px;">&#x26A0; Decision point: At this step, the solution path can branch depending on which variable is computed.</span>
+        </li>
+        <li><span class="math">j</span> = <span class="math">l</span> + 17 = 29 + 17 = <strong>46</strong></li>
+        <li><span class="math">x</span> = <span class="math">j</span> + 2 = 46 + 2 = <strong>48</strong></li>
+      </ul>
+      <p style="margin-bottom: 0; margin-top: 10px;"><strong>The resulting value of <span class="math">x</span> is 48.</strong></p>
+    </div>
+  </div>
+
+  <div class="diagram">
+    <svg width="200" height="240" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" />
+        </marker>
+      </defs>
+
+      <g stroke="#333" stroke-width="1.5" marker-end="url(#arrow)">
+        <line x1="90" y1="42" x2="62" y2="76" />
+        <line x1="110" y1="42" x2="138" y2="76" />
+        <line x1="50" y1="105" x2="50" y2="133" />
+        <line x1="150" y1="105" x2="150" y2="133" />
+        <line x1="50" y1="165" x2="50" y2="193" />
+        <line x1="150" y1="165" x2="150" y2="193" />
+      </g>
+
+      <g fill="white" stroke="#333" stroke-width="1.5" font-family="system-ui, sans-serif" font-size="12" text-anchor="middle" dominant-baseline="central">
+        <circle cx="100" cy="30" r="14" stroke="green" stroke-width="2.5" />
+        <text x="100" y="31" fill="#000">n</text>
+
+        <circle cx="50" cy="90" r="14" />
+        <text x="50" y="91" fill="#000">m</text>
+
+        <circle cx="150" cy="90" r="14" />
+        <text x="150" y="91" fill="#000">l</text>
+
+        <circle cx="50" cy="150" r="14" />
+        <text x="50" y="151" fill="#000">k</text>
+
+        <circle cx="150" cy="150" r="14" />
+        <text x="150" y="151" fill="#000">j</text>
+
+        <circle cx="50" cy="210" r="14" />
+        <text x="50" y="211" fill="#000">h</text>
+
+        <circle cx="150" cy="210" r="14" stroke="red" stroke-width="2.5" />
+        <text x="150" y="211" fill="#000">x</text>
+      </g>
+    </svg>
+  </div>
+</div>
+
+In this task, a model must traverse a star graph from a start node to a target node, while encountering branching points that provide no information about which branch leads to success.
+
+{% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/confidence_legostar.png" class="img-fluid" caption="Change in model confidence at decision points over the course of SFT" max-width="70%"  class="img-fluid" class="center-image" %}
+
+The above figure shows that model’s confidence at decision points increases sharply throughout the training. However, this increase is not selective: the model is highly confident not only when it chooses the correct branch, but also when it chooses an incorrect one. This shows that training with decision points in data can push the model toward overconfident, single-path commitments, rather than calibrated uncertainty over multiple valid continuations. As a result, alternative trajectories are progressively suppressed, leading to the observed coverage shrinkage and drop in pass@k.
+
+{% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/legostar_performace_sft.png" class="img-fluid" caption="Effect of decision points on coverage in the graph navigation task. Pass@k across SFT epochs for Forward vs. Reverse (without decision points) problem-solving settings." max-width="100%" class="center-image" %}
+
+We further observe the same coverage shrinkage emerges during RLVR when training on Forward setting but not in Reverse setting. This suggests that coverage shrinkage is driven not only by the learning algorithm, but also by the data and the presence of decision points in reasoning.
+
+{% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/legostar_performace_rlvr.png" class="img-fluid" caption="Pass@k performance when running GRPO on models pretrained on forward and reverse (-DP) solutions." max-width="100%" class="center-image" %}
+
+---
+
+<!-- The forks-in-the-road phenomenon is not limited to synthetic graph settings; it also arises naturally in real-world reasoning tasks where multiple solution strategies coexist.  -->
+<!-- During generation, the model must implicitly commit to one early in the trajectory, before knowing which will succeed. These early commitments act as decision points, analogous to branching in graph-based settings. -->
+<!-- To study this effect, we examine reasoning mode selection as a representative instance of such decision points. Specifically, we consider two settings: (i) different reasoning representations: natural language (NL) versus code-based reasoning -->
+
+{% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/data_mixture.png" class="img-fluid" caption="Mixture of reasoning and non-reasoning examples in post-training data influences a model's behavioral tendencies." max-width="90%" class="center-image" %}
+
+
+Next, we investigate whether models trained on mixed data can learn to balance different reasoning modes under repeated sampling.
+A key question is how the **structure** of diversity in training data affects this decision. In our experiments, we construct two data designs with identical diversity ratios (50% natural language (NL), 50% code) but different organization (the above Figure): **Data-level diversity**: each problem is solved using a single mode, but the dataset is globally balanced across the modes; **Problem-level diversity**: each problem appears with both reasoning modes. This setup isolates whether coverage depends not just on **how much** diversity is present, but **how it is distributed**.
+
+{% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/code_nl_ratio.png" class="img-fluid" caption="How two styles of data mixing (data-level vs problem-level) control the effective coverage and diversity in reasoning traces." max-width="90%" class="center-image" %}
+
+---
+
+The model hasn’t remove alternatives—they’re just suppressed.
+
+{% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/topk_prefix_performance.png" class="img-fluid" caption="<b>Recovering coverage via prefix perturbation.</b> Top-$k$ prefix sampling (Top-8) mitigates coverage shrinkage and improves pass@k at larger $k$" max-width="90%" class="center-image" %}
+
+
+---
+
+### Conclusion
+
+<!-- We investigate the phenomenon of "coverage shrinkage" in post-training reasoning language models. 
+Diverging from prevailing theories that blame the optimization dynamics, we propose a data-centric hypothesis and argue that shrinkage is driven by "forks in the road" or decision points in fine-tuning data where multiple valid reasoning paths exist, but the rationale for selecting one over the other is obscured.
+Through experiments on synthetic tasks, mathematical reasoning, and off-the-shelf distilled reasoning models, we demonstrate that models learn to rely on spurious features to resolve the ambiguity in reasoning chains, leading to path collapse. By mitigating this shrinkage via targeted data diversity and inference-time prefix manipulations, we demonstrate that reasoning capacity is not lost, but merely locked behind uncalibrated decisions. -->
+
+
 Our finding also helps explain why building a unified reasoning model that can effectively operate in both instruct (or non-thinking) and thinking modes remains challenging <d-cite key="NemotronCascade_Scaling_Cascaded_Reinforcement_Learning"></d-cite>.
+
+We hope that our insights provide a useful lens for those working on reasoning models, data curation, or test-time scaling.
 
 <!-- 
 To study this effect, we examine reasoning mode selection as a representative instance of such decision points. Specifically, we consider two settings: (i) different reasoning representations: natural language (NL) versus code-based reasoning, and (ii) different reasoning structures: linear vs. backtracking reasoning. We analyze each of these settings in detail below.
