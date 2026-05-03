@@ -133,7 +133,7 @@ I received my B.Sc. (Honours) in Computer Science from [VNU-UET](https://uet.vnu
     "Large Language Models",
     "AI Reasoning",
     "Robustness",
-    "AI for Scientific Discovery",
+    "AI for Scientific Discovery"
   ],
   "hasOccupation": {
     "@type": "Occupation",
