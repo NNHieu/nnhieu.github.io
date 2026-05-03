@@ -65,7 +65,7 @@ Outside of research and work, I enjoy learning [violin 🎻](https://www.youtube
 ---
 
 
-🔎 I am currently seeking research internship or visiting research opportunities in LLM reasoning and AI for scientific discovery.
+🔎 I am currently seeking research internship opportunities in LLM reasoning and AI for scientific discovery.
 
 *Last updated: May 1, 2026 (I sometimes forget to update this)*
 
@@ -99,3 +99,92 @@ I received my B.Sc. (Honours) in Computer Science from [VNU-UET](https://uet.vnu
   </div>
 </div> -->
 
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Ngoc-Hieu Nguyen",
+  "alternateName": "Nguyễn Ngọc Hiếu",
+  "email": "ngochieutb13@gmail.com",
+  "jobTitle": "PhD Student",
+  "affiliation": {
+    "@type": "CollegeOrUniversity",
+    "name": "Penn State University"
+  },
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Penn State NLP"
+  },
+  "alumniOf": {
+    "@type": "CollegeOrUniversity",
+    "name": "Penn State University"
+  },
+  "url": "https://nnhieu.github.io/",
+  "image": "https://nnhieu.github.io/prof_pic3-800.webp",
+  "sameAs": [
+    "https://scholar.google.com/citations?user=bejNBqsAAAAJ",
+    "https://github.com/NNHieu",
+    "https://www.linkedin.com/in/hieunn-uet",
+    "https://twitter.com/hieu_ngoc_ng"
+  ],
+  "description": "PhD student at Penn State NLP working on robustness, reasoning, and scientific discovery in large language models through controlled experimental analysis of learning dynamics.",
+  "knowsAbout": [
+    "Machine Learning",
+    "Large Language Models",
+    "AI Reasoning",
+    "Robustness",
+    "AI for Scientific Discovery",
+  ],
+  "hasOccupation": {
+    "@type": "Occupation",
+    "name": "Research Scientist (PhD Student)",
+    "occupationLocation": {
+      "@type": "Place",
+      "name": "Penn State University"
+    },
+    "skills": [
+      "Deep Learning",
+      "LLM Reasoning",
+      "Robustness Analysis",
+      "Benchmarking",
+      "Experimental Design for Deep Understanding"
+    ]
+  },
+  "publishingPrinciples": [
+    {
+      "@type": "CreativeWork",
+      "name": "Mitigating Reward Over-optimization in Direct Alignment Algorithms",
+      "url": "https://openreview.net/forum?id=ltPRj2nthL",
+      "about": ["alignment", "importance sampling"],
+      "publisher": "NeurIPS 2025"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "LLM-SRBench: Scientific Equation Discovery Benchmark",
+      "url": "https://openreview.net/forum?id=SyQPiZJVWY",
+      "about": ["scientific discovery", "equation discovery"],
+      "publisher": "ICML 2025",
+      "awarded": "Oral",
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Wicked Oddities: Clean-Label Backdoor Attacks",
+      "url": "https://openreview.net/forum?id=1Z3C49JQVf",
+      "about": ["security", "backdoor attacks"],
+      "publisher": "ICLR 2025"
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Efficient Federated Recommendation via Low-rank Training",
+      "url": "https://doi.org/10.1145/3589334.3645702",
+      "about": ["federated learning", "recommendation systems"],
+      "publisher": "WWW 2024",
+      "awarded": "Oral",
+    }
+  ],
+  "seeks": [
+    "Research Internship",
+    "Visiting Research Position"
+  ]
+}
+</script>
