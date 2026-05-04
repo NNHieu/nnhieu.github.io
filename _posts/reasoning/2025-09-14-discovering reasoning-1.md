@@ -136,7 +136,7 @@ A recent work<d-cite key="lippmann2025style"></d-cite> showed that finetuning no
 Moreover, the paper demonstrates that the stylistic patterns present in reasoning traces heavily effect reasoning improvement.
 
 This raise the question of how does these distilled models perform when the problems require extending learned patterns or "unfamilier" patterns? Do they fail similar to those in this experiment? Or can they adapt their reasoning process to the difficulty of questions?
-
+<!-- 
 ---
 
 ### Related Work
@@ -167,7 +167,7 @@ Our findings align with this observation but extend it in two ways. First, we an
 
 Overall, prior work demonstrates that language models can learn to imitate search procedures, benefit from process-level supervision, and reproduce stylistically consistent reasoning traces. However, less is known about the mechanistic structure of these learned procedures and their robustness under distribution shift.
 
-This work contributes to this gap by systematically analyzing learned BFS-like reasoning traces, identifying where algorithmic imitation breaks down, and characterizing how these failures evolve across model scale and input distribution shifts.
+This work contributes to this gap by systematically analyzing learned BFS-like reasoning traces, identifying where algorithmic imitation breaks down, and characterizing how these failures evolve across model scale and input distribution shifts. -->
 
 ---
 
