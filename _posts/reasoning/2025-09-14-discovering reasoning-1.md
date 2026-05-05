@@ -17,6 +17,7 @@ mermaid:
   zoomable: true
 
 bibliography: thinking-in-lm.bib
+hidden: true
 ---
 
 In this series, we want to move beyond just evaluating accuracy or performance and attempts to evaluate process. 
@@ -75,6 +76,12 @@ flowchart TD
     %% --- Final Path Highlight ---
 ```
 
+<!-- 1. A set of states $\mathcal{S}$, a set of actions $\mathcal{A}$, a transition function $T: \mathcal{S} \times \mathcal{A} \mapsto \mathcal{S}$.
+1.  -->
+
+<!-- We select a set of problems related to graphs and train GPT models from scratch to mimic the process of search algorithms on these problems. We first analyze the (systematic) generalization by measuring performance on instances that are harder than those in the training set. Next, we break down the search process into steps and find which steps LLM fails to mimic and generalize. -->
+
+
 **Breath-First Search**
 
 In a standard implementation, BFS maintain a queue which keeps track of nodes to expand. 
@@ -99,12 +106,6 @@ Under this format, to be able to perfectly generate a BFS trace, the generative 
 To answer this question, we evaluated models on various graph structure (denoted as $G^{\text{# nodes}}_{\text{length of shortest paths}}$), both in-distribution and out-of-distribution.
 It turned out that the model performs near perfect with in distribution data, but fail on OOD inputs.
 The scaling trend is also interesting. The ID performance increase with model size while the OOD performance decrease.
-
-<!-- 1. A set of states $\mathcal{S}$, a set of actions $\mathcal{A}$, a transition function $T: \mathcal{S} \times \mathcal{A} \mapsto \mathcal{S}$.
-1.  -->
-
-<!-- We select a set of problems related to graphs and train GPT models from scratch to mimic the process of search algorithms on these problems. We first analyze the (systematic) generalization by measuring performance on instances that are harder than those in the training set. Next, we break down the search process into steps and find which steps LLM fails to mimic and generalize. -->
-
 
 | Model               | $G_{2,4}^{15}$ (ID) | $G_{2,4}^{17}$ (OOD) | $G_{2,4}^{20}$ (OOD) | $G_{5,6}^{15}$ (OOD) | $G_{5,6}^{17}$ (OOD) | $G_{5,6}^{20}$ (OOD) |
 |----------------------|--------------|---------------|---------------|---------------|---------------|---------------|
@@ -136,38 +137,6 @@ A recent work<d-cite key="lippmann2025style"></d-cite> showed that finetuning no
 Moreover, the paper demonstrates that the stylistic patterns present in reasoning traces heavily effect reasoning improvement.
 
 This raise the question of how does these distilled models perform when the problems require extending learned patterns or "unfamilier" patterns? Do they fail similar to those in this experiment? Or can they adapt their reasoning process to the difficulty of questions?
-<!-- 
----
-
-### Related Work
-
-A growing line of work studies whether language models can learn search procedures from explicit traces. Early and recent efforts such as Stream of Search (SoS) <d-cite key="gandhi2024stream"></d-cite> explore the idea that reasoning can be represented as a sequence of search states and actions. In this framework, models are trained to imitate intermediate steps of classical algorithms such as BFS or DFS, showing that structured reasoning behaviors can emerge from trace supervision.
-
-Related approaches in algorithm distillation investigate whether transformers can internalize algorithmic procedures from execution traces, demonstrating that models can approximate discrete computational processes when trained on structured demonstrations. Our work builds on this line but shifts the focus from whether imitation is possible to how and why such learned procedures fail under distribution shift, particularly in graph search settings.
-
-**Process supervision and reasoning traces**
-
-Another closely related direction studies process-level supervision for reasoning models, where intermediate steps are explicitly supervised rather than only final answers. Works on step-by-step verification and process reward models show that supervising intermediate reasoning can improve performance and interpretability <d-cite key="lightman2023let"></d-cite>.
-
-However, most prior work evaluates success primarily through final accuracy under in-distribution settings. In contrast, our analysis focuses on the structure of generated reasoning traces, identifying failure modes such as incorrect neighbor expansion, queue simulation errors, revisiting behavior, and backtracking collapse under OOD conditions.
-
-**Learning reasoning via synthetic and stylistic traces**
-
-Recent findings suggest that models can acquire reasoning-like behavior by imitating stylistically consistent synthetic traces rather than learning the underlying algorithmic structure. For example, Style over Substance: Distilled Language Models Reason Via Stylistic Replication shows that distilled models can improve performance by reproducing the surface form of reasoning traces, even when the semantic grounding is weak.
-
-Our work complements this perspective by showing that such stylistic imitation may be sufficient for in-distribution performance but does not guarantee systematic generalization. We further decompose where this failure occurs within the reasoning trace, suggesting that models may learn execution-like patterns (e.g., queue formatting) without robustly acquiring the underlying combinatorial constraints.
-
-**Generalization in algorithmic and graph reasoning**
-
-A separate body of work investigates the ability of transformers to generalize algorithmic reasoning beyond training distribution, particularly in graph-based tasks such as shortest path computation. These studies consistently report strong in-distribution performance but degraded generalization when graph size, structure, or path complexity increases.
-
-Our findings align with this observation but extend it in two ways. First, we analyze how scaling model size affects ID vs OOD performance, revealing an unexpected divergence where larger models improve in-distribution but degrade out-of-distribution. Second, we provide a fine-grained error taxonomy that attributes failure not only to overall accuracy drop but to specific breakdowns in implicit algorithmic components such as adjacency expansion and state tracking.
-
-**Positioning of this work**
-
-Overall, prior work demonstrates that language models can learn to imitate search procedures, benefit from process-level supervision, and reproduce stylistically consistent reasoning traces. However, less is known about the mechanistic structure of these learned procedures and their robustness under distribution shift.
-
-This work contributes to this gap by systematically analyzing learned BFS-like reasoning traces, identifying where algorithmic imitation breaks down, and characterizing how these failures evolve across model scale and input distribution shifts. -->
 
 ---
 
