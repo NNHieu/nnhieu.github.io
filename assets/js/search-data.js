@@ -75,7 +75,7 @@ ninja.data = [{
         section: "Posts",
         handler: () => {
           
-            window.location.href = "/blog/2025/discovering-reasoning-2/";
+            window.location.href = "/blog/2025/reasoning-forks/";
           
         },
       },{id: "post-tản-mạn",
