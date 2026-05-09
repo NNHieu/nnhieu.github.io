@@ -12,7 +12,7 @@ tags:
   - reasoning
   - LLM
 categories: blog
-bibliography: thinking-in-lm.bib
+bibliography: "thinking-in-lm.bib"
 hidden: true
 ---
 
@@ -191,15 +191,23 @@ hidden: true
   }
 </style>
 
-
 {% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/forks_motiv.png" class="img-fluid"%}
+
+"Jagged intelligence" is a term coined by AI researcher Andrej Karpathy <d-cite key="karpathy2024jagged"></d-cite> to describe the highly uneven capabilities of modern Large Language Models (LLMs) and generative AI systems.
+It's interesting to see that these system are both impressively capable at, e.g., solving gold-medal IMO math questions <d-cite key="castelvecchi2025deepmind,openai2024xpost"></d-cite>, but at the same time, making basic elementary math errors <d-cite key="youtube_JNyuX1zoOgU,song2026large"></d-cite>.
+
+
+
+In this research, we offer a partial explanation for this phenomenon: these models might not alway use, or we might not know how to activate, their full potential.
+
+---
+
 > When reasoning models perform a certain reasoning behavior (e.g. backtracking or verification), why do they chose to generate that step?
 
-In this part of the series, we'll gain insights to this question from post-training perspective, and more specically, the post-training data.
+In this part of the series, we'll gain insights to this question from post-training perspective, and more specifically, the post-training data.
 
 During post-training, models are optimized via reinforcement learning or distillation to exhibit reasoning, there is a distinct risk that the optimization merely encourages the model to adopt the syntax of reasoning bahaviors without the substance.
 
----
 <!-- **Linear Thinking vs Non-linear Thinking** -->
 
 {% include figure.liquid path="/assets/posts/thinking_in_language_models/linear_vs_non_linear_thinking.png" max-width="70%" class="center-image"%}
@@ -251,7 +259,9 @@ It turns out that changing a single prefix of the response could heavily affect 
 
 </div>
 
-As a result, when we prefix the thinking trace with a single token, the performance and response length vary significantly.
+> The Prefix Effect: A single spurious starting token can heavily affect model reasoning bahaviors.
+
+As a result, when we perturb a single prefix token of thinking trace, the performance and response length vary significantly.
 
 {% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/performance_on_capqa_addition.png" class="img-fluid" caption="Models' default behavior shows over-thinking on factual QA (backtracking hurts) and under-thinking on counterfactual arithmetic (backtracking helps)."%}
 
@@ -296,13 +306,7 @@ When the reasoning trace get stuck, can the model perform targeted adjust -->
 ### Forks in the roads
 
 
-In our recent work, we explore why does the distilled models exhibit this brittleness.
-Our key hypothesis is that these linear and non-linear thinking are different reasoning modes co-exist in the training data (or mixtures of data generated from DeepSeek-V3 and DeepSeek-R1<d-cite key="Guo2025"></d-cite>), and for which model must resolve during post-training.
-Specifically, the rationale for chosing one mode over another is hidden. 
-This leads to **forks-in-the-road** situations in which a model encounters multiple valid, indistinguishable reasoning paths. 
-At such points, post-training objective pressures the model to commit to a subset of these options available. 
-This "missing rationale" problem manifests at both micro-level (step-by-step or which algebraic manipulation to apply next) and macro-level (strategy or mode selection). 
-And when the model is exposed to a single reasoning path without justification, it may struggle to learn the "correct mechanisms" (e.g., based on the difficulty or the type of problems) and instead rely on **spurious cues** (such as the prefix token as in the ealier examples) to steer it toward a particular path. 
+In our recent work, we investigate why distilled models exhibit such brittleness. Our key hypothesis is that linear and non-linear thinking represent distinct reasoning modes that co-exist in the training data, (for example, a mixture of outputs from models like DeepSeek-V3 and DeepSeek-R1 <d-cite key="Guo2025"></d-cite>). During post-training, the model must reconcile these modes; however, because the underlying rationale for choosing one over the other remains hidden, the model encounters "forks-in-the-road." At these decision points, the post-training objective pressures the model to commit to a specific path. Lacking the "correct mechanisms", e.g., based on task difficulty, the model instead relies on spurious cues—such as a specific prefix token—to steer its trajectory. This "missing rationale" problem manifests at both the micro-level (e.g., algebraic manipulations) and the macro-level (e.g., overall strategy selection).
 
 {% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/forks.png" class="img-fluid" caption="<strong>Illustrative examples of forks in the road</strong> (a) Graph navigation with indecipherable nodes, and (b) Mathematical reasoning with multiple valid solution modes. In both settings, decision points force commitment to a path without knowing which will succeed."%}
 
@@ -313,46 +317,30 @@ And when the model is exposed to a single reasoning path without justification, 
 To test this hypothesis, we designed controlled case studies that isolate and expose these decision-point structures.
 Our first setting is a graph-based navigation task, inspired by prior work on indecipherable nodes in next-token prediction <d-cite key="bachmann24a"></d-cite>.
 
-<div class="graph-example-container">
-  <div class="question-area">
-    <div class="question-text">
-      <p>
-        <strong>Q:</strong> Let each letter represent a numerical variable. These variables are defined as follows:<br>
-        <span class="math">n</span> = 10; 
-        <span class="math">m</span> = <span class="math">n</span> + 12; 
-        <span class="math">k</span> = <span class="math">m</span> + 3; 
-        <span class="math">h</span> = <span class="math">k</span> + 4; 
-        <span class="math">l</span> = <span class="math">n</span> + 19; 
-        <span class="math">j</span> = <span class="math">l</span> + 17; 
-        <span class="math">x</span> = <span class="math">j</span> + 2.<br>
-        What is the resulting value of <span class="math">x</span>?
-      </p>
-    </div>
+In this task, a model must traverse a star graph from a start node to a target node, while encountering branching points that provide no information about which branch leads to success.
 
-    <div class="solution">
-      <h4>Ground Truth Solution</h4>
-      <p>To find the value of <span class="math">x</span>, we compute the variables step by step:</p>
-      <ul>
-        <li><span class="math">n</span> = 10</li>
-        <li style="background-color: #FFEFBA; border-radius: 4px; padding: 2px 6px;">
-          <span class="math">l</span> = <span class="math">n</span> + 19 = 10 + 19 = <strong>29</strong>
-          <span style="color: #bc7100; font-style: italic; margin-left: 8px;">&#x26A0; Decision point: At this step, the solution path can branch depending on which variable is computed.</span>
-        </li>
-        <li><span class="math">j</span> = <span class="math">l</span> + 17 = 29 + 17 = <strong>46</strong></li>
-        <li><span class="math">x</span> = <span class="math">j</span> + 2 = 46 + 2 = <strong>48</strong></li>
-      </ul>
-      <p style="margin-bottom: 0; margin-top: 10px;"><strong>The resulting value of <span class="math">x</span> is 48.</strong></p>
-    </div>
+
+<div class="graph-example-container" style="display: flex; align-items: flex-start; gap: 30px; flex-wrap: wrap;">
+  <div class="question-text" style="flex: 1 1 320px; min-width: 240px;">
+    <p>
+      <strong>Q:</strong> Let each letter represent a numerical variable. These variables are defined as follows:<br>
+      <span class="math">n</span> = 10; 
+      <span class="math">m</span> = <span class="math">n</span> + 12; 
+      <span class="math">k</span> = <span class="math">m</span> + 3; 
+      <span class="math">h</span> = <span class="math">k</span> + 4; 
+      <span class="math">l</span> = <span class="math">n</span> + 19; 
+      <span class="math">j</span> = <span class="math">l</span> + 17; 
+      <span class="math">x</span> = <span class="math">j</span> + 2.<br>
+      What is the resulting value of <span class="math">x</span>?
+    </p>
   </div>
-
-  <div class="diagram">
+  <div class="diagram" style="flex: 0 0 auto; min-width: 220px;">
     <svg width="200" height="240" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" />
         </marker>
       </defs>
-
       <g stroke="#333" stroke-width="1.5" marker-end="url(#arrow)">
         <line x1="90" y1="42" x2="62" y2="76" />
         <line x1="110" y1="42" x2="138" y2="76" />
@@ -361,26 +349,19 @@ Our first setting is a graph-based navigation task, inspired by prior work on in
         <line x1="50" y1="165" x2="50" y2="193" />
         <line x1="150" y1="165" x2="150" y2="193" />
       </g>
-
       <g fill="white" stroke="#333" stroke-width="1.5" font-family="system-ui, sans-serif" font-size="12" text-anchor="middle" dominant-baseline="central">
         <circle cx="100" cy="30" r="14" stroke="green" stroke-width="2.5" />
         <text x="100" y="31" fill="#000">n</text>
-
         <circle cx="50" cy="90" r="14" />
         <text x="50" y="91" fill="#000">m</text>
-
         <circle cx="150" cy="90" r="14" />
         <text x="150" y="91" fill="#000">l</text>
-
         <circle cx="50" cy="150" r="14" />
         <text x="50" y="151" fill="#000">k</text>
-
         <circle cx="150" cy="150" r="14" />
         <text x="150" y="151" fill="#000">j</text>
-
         <circle cx="50" cy="210" r="14" />
         <text x="50" y="211" fill="#000">h</text>
-
         <circle cx="150" cy="210" r="14" stroke="red" stroke-width="2.5" />
         <text x="150" y="211" fill="#000">x</text>
       </g>
@@ -388,7 +369,50 @@ Our first setting is a graph-based navigation task, inspired by prior work on in
   </div>
 </div>
 
-In this task, a model must traverse a star graph from a start node to a target node, while encountering branching points that provide no information about which branch leads to success.
+
+We construct two controlled data variants that differ only in whether such decision points are present during post-training.
+In the *Forward* setting, the model encounters explicit decision points—states with multiple possible continuations where only one leads to a correct solution. Solving the problem therefore requires the model to decide and select among reasoning paths.
+
+<div class="solution">
+    <h4>Forward Solution</h4>
+    <p>To find the value of <span class="math">x</span>, we compute the variables step by step:</p>
+    <ul>
+      <li><span class="math">n</span> = 10</li>
+      <li style="background-color: #FFEFBA; border-radius: 4px; padding: 2px 6px;">
+        <span class="math">l</span> = <span class="math">n</span> + 19 = 10 + 19 = <strong>29</strong>
+        <span style="color: #bc7100; font-style: italic; margin-left: 8px;">&#x26A0; Decision point: At this step, the solution path can branch depending on which variable is computed.</span>
+      </li>
+      <li><span class="math">j</span> = <span class="math">l</span> + 17 = 29 + 17 = <strong>46</strong></li>
+      <li><span class="math">x</span> = <span class="math">j</span> + 2 = 46 + 2 = <strong>48</strong></li>
+    </ul>
+    <p>Thus, the final answer is <span class="math">x = <span style="border: 2px solid #333; border-radius: 5px; padding: 2px 10px; background: #f9f9f9; display: inline-block; font-weight: bold;">48</span></span>.</p>
+</div>
+
+In contrast, the *Reverse (w/o decision point)* setting removes these forks by presenting the correct trajectory in reverse format (target to source), effectively eliminating any need for path selection by the model.
+
+<div class="solution">
+  <h4>Reverse Solution</h4>
+  <p><strong>A:</strong> To solve the problem, we compute the variables step by step.</p>
+  <ol>
+    <li>
+      Substitute <span class="math">j = l + 17</span> into <span class="math">x</span>, which gives<br>
+      <span class="math">x = (l + 17) + 2 = l + 19</span>.
+    </li>
+    <li>
+      Substitute <span class="math">l = n + 19</span> into <span class="math">x</span>, which gives<br>
+      <span class="math">x = (n + 19) + 19 = n + 38</span>.
+    </li>
+    <li>
+      Compute <span class="math">x</span> using <span class="math">n = 10</span>, which gives<br>
+      <span class="math">x = 10 + 38 = 48</span>.
+    </li>
+  </ol>
+  <p>Thus, the final answer is <span class="math">x = <span style="border: 2px solid #333; border-radius: 5px; padding: 2px 10px; background: #f9f9f9; display: inline-block; font-weight: bold;">48</span></span>.</p>
+</div>
+
+
+<!-- We evaluate this setup on two backbone models (\texttt{Qwen-2.5-0.5B} \citep{qwen2.5} and \texttt{EvoLM-1B} \citep{qi2025evolm}) to test robustness of observations with respect to pre-training initialization prior to the post-training. -->
+Because both settings correspond to the same underlying task, any behavioral differences can be directly attributed to the impact of decision points in the data. 
 
 {% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/confidence_legostar.png" class="img-fluid" caption="Change in model confidence at decision points over the course of SFT" max-width="70%"  class="img-fluid" class="center-image" %}
 
@@ -416,7 +440,8 @@ A key question is how the **structure** of diversity in training data affects th
 
 ---
 
-The model hasn’t remove alternatives—they’re just suppressed.
+If first tokens act as decision points, can we use them to recover lost coverage? In this experiment, we enforce perturbation in the sampling of first token among top-k options instead of the standard decoding (without the need for retraining!). We observe that it can effectively nudge the model into different reasoning paths, and significantly restore their lost coverage.
+
 
 {% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/topk_prefix_performance.png" class="img-fluid" caption="<b>Recovering coverage via prefix perturbation.</b> Top-$k$ prefix sampling (Top-8) mitigates coverage shrinkage and improves pass@k at larger $k$" max-width="90%" class="center-image" %}
 
@@ -429,10 +454,7 @@ The model hasn’t remove alternatives—they’re just suppressed.
 Diverging from prevailing theories that blame the optimization dynamics, we propose a data-centric hypothesis and argue that shrinkage is driven by "forks in the road" or decision points in fine-tuning data where multiple valid reasoning paths exist, but the rationale for selecting one over the other is obscured.
 Through experiments on synthetic tasks, mathematical reasoning, and off-the-shelf distilled reasoning models, we demonstrate that models learn to rely on spurious features to resolve the ambiguity in reasoning chains, leading to path collapse. By mitigating this shrinkage via targeted data diversity and inference-time prefix manipulations, we demonstrate that reasoning capacity is not lost, but merely locked behind uncalibrated decisions. -->
 
-
-Our finding also helps explain why building a unified reasoning model that can effectively operate in both instruct (or non-thinking) and thinking modes remains challenging <d-cite key="NemotronCascade_Scaling_Cascaded_Reinforcement_Learning"></d-cite>.
-
-We hope that our insights provide a useful lens for those working on reasoning models, data curation, or test-time scaling.
+These results point toward a new perspective: improving reasoning in LLMs may require not only scaling compute or refining objectives, but also explicitly modeling and preserving the structure of reasoning paths during data curation and training. In particular, this perspective helps explain why developing a single model that robustly operates across both instruct (non-thinking) and reasoning (thinking) modes remains challenging <d-cite key="NemotronCascade_Scaling_Cascaded_Reinforcement_Learning"></d-cite>. We hope this lens is useful for future work on reasoning models, data design, and test-time scaling strategies.
 
 <!-- 
 To study this effect, we examine reasoning mode selection as a representative instance of such decision points. Specifically, we consider two settings: (i) different reasoning representations: natural language (NL) versus code-based reasoning, and (ii) different reasoning structures: linear vs. backtracking reasoning. We analyze each of these settings in detail below.
@@ -457,7 +479,7 @@ document.addEventListener("DOMContentLoaded", function() {
         {
           name: "We",
           isCorrect: true,
-          text: "<p><span class=\"hl-task\">We need to identify the capital of Vietnam.</span></p><p><span class=\"hl-concl\">The capital of Vietnam is Hanoi.</span></p><p>The capital of Vietnam is <strong>Hanoi</strong>.</p>"
+          text: "<p><span class=\"hl-task\">need to identify the capital of Vietnam.</span></p><p><span class=\"hl-concl\">The capital of Vietnam is Hanoi.</span></think></p><p>The capital of Vietnam is <strong>Hanoi</strong>.</p>"
         },
         {
           name: "The",
@@ -467,7 +489,7 @@ document.addEventListener("DOMContentLoaded", function() {
         },
         {
           name: "Okay",
-          isCorrect: true,
+          isCorrect: false,
           text: "<p><span class=\"hl-task\">,so I need to figure out the capital of Vietnam.</span> <span class=\"hl-uncert\">I'm not too familiar with Vietnam</span>, but <span class=\"hl-eval\">I know it's a big country in Southeast Asia.</span> <span class=\"hl-uncert\">I remember hearing it's often called the \"King of the Country,\" which probably means it's the most populous one. But I'm not sure about the exact name of the capital.</span></p><p><span class=\"hl-uncert\">I think the capital is a city, but I'm not sure which one. Maybe it's somewhere in Hanoi?</span> <span class=\"hl-eval\">I've heard of Hanoi before, it's in Vietnam.</span> <span class=\"hl-reval\">But wait, isn't there another city in Vietnam that's the capital? I'm a bit confused because I've heard of both Ho Chi Minh and Hanoi as capitals, but I don't think they're the same place.</span></p><p><span class=\"hl-plan\">I should probably start by recalling what I know.</span> <span class=\"hl-eval\">Vietnam is a country that has two cities that are often mentioned: Hanoi and Ho Chi Minh.</span> <span class=\"hl-uncert\">Hanoi is the capital of Vietnam, but I'm not sure if it's also the national capital. Ho Chi Minh is the capital of Vietnam as well, but I think he was the king, not the capital.</span></p><p><span class=\"hl-uncert\">I think the capital is Ho Chi Minh City, but I'm not entirely certain.</span> <span class=\"hl-plan\">Maybe I can check some information.</span> <span class=\"hl-eval\">I remember that the capital is often referred to as the \"capital of the world,\" but that might be a misconception.</span> <span class=\"hl-plan\">I should focus on the actual capital city.</span></p><p><span class=\"hl-uncert\">I believe Ho Chi Minh City is the capital, but I'm not 100% sure.</span> <span class=\"hl-plan\">Maybe I can think about the history.</span> <span class=\"hl-eval\">Vietnam was part of the Kingdom of Vietnam, and the capital was called Hanoi, but once the country was part of France, it became Ho Chi Minh City.</span> <span class=\"hl-concl\">So perhaps the capital has changed over time.</span></p><p><span class=\"hl-reval\">Wait, no, that doesn't make sense. The capital should be the same regardless of who the king was. Maybe I'm mixing up the terms.</span> <span class=\"hl-plan\">Let me try to remember.</span> <span class=\"hl-eval\">I think the capital is Ho Chi Minh City. I've heard that it's the most populous city in Vietnam, so that might make it the capital.</span></p><p><span class=\"hl-plan\">I can also think about the government.</span> <span class=\"hl-eval\">The capital city is usually the place where the government is located. So if Ho Chi Minh City is the capital, the government there would be the one governing the country.</span> <span class=\"hl-uncert\">I think the government is called the National Frontier Commission, which is part of the People's Liberation Army. That might be a clue, but I'm not sure.</span></p><p><span class=\"hl-plan\">Another way to think about it is by looking at the capital's location.</span> <span class=\"hl-eval\">It's in the north, near Hoi An and Hanoi. Hoi An is a major city in Vietnam, so that might be a hint.</span> <span class=\"hl-concl\">But I think the capital is Ho Chi Minh City, not Hoi An.</span></p><p><span class=\"hl-plan\">I should also consider the population.</span> <span class=\"hl-eval\">If Ho Chi Minh City is the capital, it should be the most populous city in Vietnam.</span> <span class=\"hl-concl\">I think that's true, so that might confirm it.</span></p><p><span class=\"hl-uncert\">I'm not entirely sure, but I think I've heard that Ho Chi Minh City is the capital.</span> <span class=\"hl-plan\">Maybe I can double-check this information later or look it up to confirm.</think></span></p><p>The capital of Vietnam is Ho Chi Minh City, also known as Hoi An. It is the most populous city in Vietnam and serves as the national capital.</p>"
         }
       ]
@@ -491,44 +513,83 @@ document.addEventListener("DOMContentLoaded", function() {
       }
       ]
     },
+    // ── ENTRY 2: CapitalQA — Overthinking ─────────────────────────────────
     {
-      questionId: "q-math-asymptotes",
-      dropdownTitle: "Math: Addition base-7,9,11,12",
-      questionText: "<p>Assuming that all numbers are in base-7 where the digits are \"0123456\", what is 66 + 50?</p>",
+      questionId: "q-capitalqa-korea",
+      dropdownTitle: "CapitalQA: South Korea (Overthinking)",
+      questionText: "<p>What is the capital of South Korea?</p>",
       modelGroups: [
         {
-          id: "q1-qwen",
-          tabLabel: "QWEN2.5-MATH-1.5B",
+          id: "korea-qwen1",
+          tabLabel: "DeepSeek-R1-Qwen-1.5B",
           models: [
             {
-              name: "Base Model",
+              name: "Okay",
               isCorrect: false,
-              text: "To find the vertical asymptotes, we need to find the values of \\(x\\) that make the denominator of the function equal to zero. So, we solve the equation \\(x^2-5x-14=0\\). Factoring, we get \\((x-7)(x+2)=0\\)..."
+              text: "<p><span class=\"hl-task\">, so I need to figure out the capital of South Korea.</span> <span class=\"hl-uncert\">I remember that capital cities are usually the main cities where the government is based, but I'm not exactly sure about South Korea.</span> <span class=\"hl-plan\">Let me think about what I know.</span></p><p><span class=\"hl-eval\">I know that South Korea is a country in East Asia. The capital is a big city, likely a major city in South Korea.</span> <span class=\"hl-uncert\">I've heard of cities like Berlin, Tokyo, or Paris as capitals, but I'm not sure about South Korea.</span></p><p><span class=\"hl-plan\">I should consider the structure of the country.</span> <span class=\"hl-eval\">South Korea is divided into several regions, like Gyeongbokgung, Gyeongbokgye, and Gwangju.</span> <span class=\"hl-concl\">I think Gyeongbokgye is the capital. It's located in the center of the country.</span> <span class=\"hl-uncert\">Maybe it's similar to Seoul, which is another major city.</span></p><p><span class=\"hl-reval\">I also remember that Seoul is the capital of South Korea, but I'm not certain if it's the same as Gyeongbokgye.</span> <span class=\"hl-uncert\">I think they are the same place, just called differently. So the capital would be Gyeongbokgye.</span></p><p><span class=\"hl-reval\">Wait, but I'm not 100% sure.</span> <span class=\"hl-concl\">South Korea's capital is indeed Gyeongbokgye. It's located in the central part of the country.</span></p><p>The capital of South Korea is <strong>Gyeongbokgye</strong>.</p>"
             },
             {
-              name: "Hybrid Model",
+              name: "The",
               isCorrect: true,
-              text: "<span class=\"hl-task\">To</span> find the vertical asymptotes <span class=\"hl-task\">of</span> the function \\( f(x) = \\dots \\), <span class=\"hl-task\">we</span> need to determine <span class=\"hl-plan\">the</span> values of \\( x \\) that make the denominator zero, as these <span class=\"hl-task\">will</span> <span class=\"hl-eval\">be</span> the points where the function is undefined and <span class=\"hl-plan\">where</span> the vertical asymptotes occur."
-            },
-            {
-              name: "Thinking Model",
-              isCorrect: true,
-              text: "Okay, so I have this problem here: I need to find the vertical asymptotes, horizontal asymptote, and then add them up. The function is f(x) = (2x)/(x² - 5x -14). Hmm, let me think about how to approach this. First, vertical asymptotes..."
+              text: "<p><span class=\"hl-concl\">capital of South Korea is Seoul. It is the most populous city in the country and serves as the administrative and governmental center.</span> <span class=\"hl-eval\">Seoul is the administrative capital of South Korea and is known for its modern architecture and vibrant culture.</span></p><p>The capital of South Korea is <strong>Seoul</strong>.</p>"
             }
           ]
-        },
+        }
+      ]
+    },
+
+    // ── ENTRY 3: Counterfactual Arithmetic — Linear vs Non-linear ─────────
+    {
+      questionId: "q-counterfact-6052",
+      dropdownTitle: "Counterfactual Arithmetic: 60+52",
+      questionText: "<p>You are a mathematician. Assuming that all numbers are in base-11 where the digits are &quot;0123456789A&quot;, what is 60 + 52?</p>",
+      modelGroups: [
         {
-          id: "q1-llama",
-          tabLabel: "LLAMA-3.1-8B",
+          id: "counterfact-qwen1",
+          tabLabel: "DeepSeek-R1-Qwen-1.5B",
           models: [
-            { name: "Base Model", isCorrect: false, text: "LLAMA Output for Math Question..." }
+            {
+              name: "To",
+              isCorrect: false,
+              text: "<p><span class=\"hl-task\">solve 60 + 52 in base-11.</span> <span class=\"hl-plan\">I first need to convert both numbers from base-11 to base-10.</span></p><p><span class=\"hl-plan\">Starting with 60 in base-11:</span> <span class=\"hl-calc\">0 × 11⁰ = 0; 6 × 11¹ = 66. Total: 66.</span></p><p><span class=\"hl-plan\">Converting 52:</span> <span class=\"hl-calc\">2 × 11⁰ = 2; 5 × 11¹ = 55. Total: 57.</span></p><p><span class=\"hl-calc\">66 + 57 = 123.</span></p><p><span class=\"hl-concl\">The sum of 60 + 52 in base-11 is 123 in base-10.</span></p><p>\\(\\boxed{123}\\)</p>"
+            },
+            {
+              name: "Okay",
+              isCorrect: true,
+              text: "<p><span class=\"hl-task\">, so I need to add 60 and 52 in base-11.</span> <span class=\"hl-uncert\">Hmm, I'm a bit confused about how base-11 works, but I think it's similar to base-10, except it goes up to 10, represented by 'A'.</span></p><p><span class=\"hl-plan\">I should probably convert both numbers from base-11 to base-10 to make the addition easier.</span></p><p><span class=\"hl-calc\">60 in base-11: 6 × 11¹ + 0 × 11⁰ = 66.</span> <span class=\"hl-calc\">52 in base-11: 5 × 11¹ + 2 × 11⁰ = 57.</span></p><p><span class=\"hl-calc\">66 + 57 = 123.</span></p><p><span class=\"hl-reval\">But the question asks for the answer in base-11. So, I need to convert 123 from base-10 back to base-11.</span></p><p><span class=\"hl-calc\">123 ÷ 11 = 11 rem 2; 11 ÷ 11 = 1 rem 0; 1 ÷ 11 = 0 rem 1.</span> <span class=\"hl-concl\">Reading remainders bottom to top: 102 in base-11.</span></p><p><span class=\"hl-eval\">Check: 1 × 11² + 0 × 11 + 2 = 121 + 0 + 2 = 123. ✓</span></p><p>\\(\\boxed{102}\\)</p>"
+            }
+          ]
+        }
+      ]
+    },
+
+    // ── ENTRY 4: MATH-500 — Underthinking ────────────────────────────────
+    {
+      questionId: "q-math500-music",
+      dropdownTitle: "MATH-500: School Students (Underthinking)",
+      questionText: "<p>Two-thirds of the students at Baker Middle School take music. There are 834 students who take music. How many students are there at Baker Middle School?</p>",
+      modelGroups: [
+        {
+          id: "math500-llama",
+          tabLabel: "DeepSeek-R1-Llama-8B",
+          models: [
+            {
+              name: "To",
+              isCorrect: false,
+              text: "<p><span class=\"hl-task\">find out the total number of students at Baker Middle School.</span> <span class=\"hl-plan\">I'll start by determining how many students take music.</span> <span class=\"hl-eval\">Two-thirds of the students are involved in music, and there are 834 music students.</span> <span class=\"hl-plan\">To find the total student body, I'll divide the number of music students by two-thirds.</span></p><p>\\(\\frac{2}{3}x = 834 \\Rightarrow x = 834 \\times \\frac{3}{2} = 1252\\)</p><p>\\(\\boxed{1252}\\)</p>"
+            },
+            {
+              name: "Okay",
+              isCorrect: true,
+              text: "<p><span class=\"hl-task\">, so I need to figure out how many students are at Baker Middle School.</span> <span class=\"hl-plan\">Let me define the total number of students as T. Two-thirds of these students take music, so (2/3) × T = 834.</span></p><p><span class=\"hl-plan\">To find T, I'll multiply both sides by the reciprocal of 2/3, which is 3/2.</span></p><p><span class=\"hl-calc\">T = 834 × (3/2). 834 ÷ 2 = 417, then 417 × 3: 400 × 3 = 1200, 17 × 3 = 51, so 1200 + 51 = 1251.</span></p><p><span class=\"hl-reval\">Wait, let me double-check: 1251 ÷ 3 = 417, 417 × 2 = 834. ✓</span></p><p><span class=\"hl-concl\">The total number of students at Baker Middle School is 1251.</span></p><p>\\(\\boxed{1251}\\)</p>"
+            }
           ]
         }
       ]
     }
   ];
 
-  const COLLAPSE_THRESHOLD = 300; // Character limit before showing "Show More"
+  const COLLAPSE_THRESHOLD = 300; // Character limit before showing " "Show More"
 
   const selectElement = document.getElementById("question-select");
   const tabsContainer = document.getElementById("dynamic-tabs");
