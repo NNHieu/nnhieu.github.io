@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/publications/";
           },
-        },{id: "post-multi-armed-bandits",
+        },{id: "post-reasoning-modes",
+        
+          title: "Reasoning modes",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/reasoning-forks/";
+          
+        },
+      },{id: "post-multi-armed-bandits",
         
           title: "Multi-Armed Bandits",
         
@@ -65,17 +76,6 @@ ninja.data = [{
         handler: () => {
           
             window.location.href = "/blog/2025/discovering-reasoning-1/";
-          
-        },
-      },{id: "post-reasoning-modes",
-        
-          title: "Reasoning modes",
-        
-        description: "",
-        section: "Posts",
-        handler: () => {
-          
-            window.location.href = "/blog/2025/reasoning-forks/";
           
         },
       },{id: "post-tản-mạn",
