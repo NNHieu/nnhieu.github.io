@@ -326,7 +326,7 @@ Such moments are often described informally as pulling the rabbit out of the hat
 ### Forks in the roads and Coverage Shrinkage
 
 To test this hypothesis, we designed controlled case studies that isolate and expose these decision-point structures.
-Our first setting is a graph-based navigation task, inspired by prior work on indecipherable nodes in next-token prediction <d-cite key="bachmann24a"></d-cite>.
+Our first setting is a graph-based navigation task, inspired by prior work on indecipherable nodes in next-token prediction <d-cite key="bachmann24a"></d-cite> and understanding reasoning chain <d-cite key="zhang2022unveiling"></d-cite>.
 
 In this task, a model must traverse a star graph from a start node to a target node, while encountering branching points that provide no information about which branch leads to success.
 
