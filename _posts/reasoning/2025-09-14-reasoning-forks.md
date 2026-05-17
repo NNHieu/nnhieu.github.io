@@ -1,7 +1,7 @@
 ---
 layout: distill
 title: Reasoning modes
-date: 2025-09-14 21:14:14
+date: 2026-05-01 21:14:14
 description: 
 series: "Thinking in Language Models - The mechanistic questions"
 authors:
@@ -13,7 +13,7 @@ tags:
   - LLM
 categories: blog
 bibliography: "thinking-in-lm.bib"
-hidden: true
+hidden: false
 ---
 
 
@@ -193,30 +193,30 @@ hidden: true
 
 {% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/forks_motiv.png" class="img-fluid"%}
 
-"Jagged intelligence" is a term coined by AI researcher Andrej Karpathy <d-cite key="karpathy2024jagged"></d-cite> to describe the highly uneven capabilities of modern Large Language Models (LLMs) and generative AI systems.
+"Jagged intelligence" is a term coined by Andrej Karpathy <d-cite key="karpathy2024jagged"></d-cite> to describe the highly uneven capabilities of modern Large Language Models (LLMs) and generative AI systems.
 It's interesting to see that these system are both impressively capable at, e.g., solving gold-medal IMO math questions <d-cite key="castelvecchi2025deepmind,openai2024xpost"></d-cite>, but at the same time, making basic elementary math errors <d-cite key="youtube_JNyuX1zoOgU,song2026large"></d-cite>.
 
 
 
-In this research, we offer a partial explanation for this phenomenon: these models might not alway use, or we might not know how to activate, their full potential.
+In this research, we offer a partial explanation for this phenomenon: these models might not always use, or we might not know how to activate, their full potential.
 
 ---
 
-> When reasoning models perform a certain reasoning behavior (e.g. backtracking or verification), why do they chose to generate that step?
+> When reasoning models perform a certain reasoning behavior (e.g. backtracking or verification), why do they choose to generate that step?
 
 In this part of the series, we'll gain insights to this question from post-training perspective, and more specifically, the post-training data.
 
-During post-training, models are optimized via reinforcement learning or distillation to exhibit reasoning, there is a distinct risk that the optimization merely encourages the model to adopt the syntax of reasoning bahaviors without the substance.
+During post-training, models are optimized via reinforcement learning or distillation to exhibit reasoning, there is a distinct risk that the optimization merely encourages the model to adopt the syntax of reasoning behaviors without the substance.
 
 <!-- **Linear Thinking vs Non-linear Thinking** -->
 
-{% include figure.liquid path="/assets/posts/thinking_in_language_models/linear_vs_non_linear_thinking.png" max-width="70%" class="center-image"%}
+{% include figure.liquid path="/assets/posts/thinking_in_language_models/linear_vs_non_linear_thinking.png" max-width="95%" class="center-image"%}
 
 Let's start with a "simple" knowledge question:
 
 <center>What is the capital of Vietnam?</center>
 
-It's likely that most large reasoning models have been trained on these piece of knowledge and they can answer directly without thinking. However, when we let the models think, they still express uncertanty, as shown in the following reasoning trace.
+It's likely that most large reasoning models have been trained on these piece of knowledge and they can answer directly without thinking. However, when we let the models think, they still express uncertainty, as shown in the following reasoning trace.
 
 > Okay, so I need to figure out the capital of Vietnam. I'm not entirely sure, but I think it's somewhere in Southeast Asia. I remember hearing that Vietnam has a capital, but I'm not 100% certain which city it is. Let me try to recall any information I might have. 
 > 
@@ -306,9 +306,20 @@ When the reasoning trace get stuck, can the model perform targeted adjust -->
 ### Forks in the roads
 
 
-In our recent work, we investigate why distilled models exhibit such brittleness. Our key hypothesis is that linear and non-linear thinking represent distinct reasoning modes that co-exist in the training data, (for example, a mixture of outputs from models like DeepSeek-V3 and DeepSeek-R1 <d-cite key="Guo2025"></d-cite>). During post-training, the model must reconcile these modes; however, because the underlying rationale for choosing one over the other remains hidden, the model encounters "forks-in-the-road." At these decision points, the post-training objective pressures the model to commit to a specific path. Lacking the "correct mechanisms", e.g., based on task difficulty, the model instead relies on spurious cues—such as a specific prefix token—to steer its trajectory. This "missing rationale" problem manifests at both the micro-level (e.g., algebraic manipulations) and the macro-level (e.g., overall strategy selection).
+In our recent work, we investigate why distilled models exhibit such brittleness. Our key hypothesis is that linear and non-linear thinking represent distinct reasoning modes that co-exist in the training data, (for example, as a mixture of outputs from models like DeepSeek-V3 and DeepSeek-R1 <d-cite key="Guo2025"></d-cite>). During post-training, the model must reconcile these modes. However, because the rationale for choosing one over the other remains hidden, the model encounters "forks-in-the-road" during generation. At these decision points, the post-training objective pressures the model to commit to a specific path. Lacking the "correct mechanisms", e.g., based on task difficulty, the model instead relies on spurious cues—such as a specific prefix token—to steer its trajectory. This "missing rationale" problem manifests at both the micro-level (e.g., algebraic manipulations) and the macro-level (e.g., overall strategy selection).
 
 {% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/forks.png" class="img-fluid" caption="<strong>Illustrative examples of forks in the road</strong> (a) Graph navigation with indecipherable nodes, and (b) Mathematical reasoning with multiple valid solution modes. In both settings, decision points force commitment to a path without knowing which will succeed."%}
+
+**Pulling the rabbit out of the hat**
+
+To better understand these decision points, consider mathematical proof construction. A classic example is Euclid’s proof of the infinitude of prime numbers. The proof contains a crucial construction step (highlighted in blue) that requires a nontrivial conceptual leap: constructing a new number from the product of known primes plus one. Once this key insight is introduced, the remainder of the argument proceeds through comparatively routine deductions.
+
+
+{% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/pulling_the_rabit.png" class="img-center" caption="Euclid’s proof of the infinitude of prime numbers. The highlighted construction step illustrates a key conceptual leap that determines the success of the proof trajectory." max-width="80%"%}
+
+Such moments are often described informally as pulling the rabbit out of the hat: the decisive insight appears suddenly, while the reasoning that led to it remains hidden from view. We hypothesize that many reasoning traces in post-training data contain exactly these kinds of latent decision points. The final successful trajectory is observable, but the underlying rationale for choosing that trajectory over competing alternatives is not. 
+<!-- Consequently, distilled models may imitate the surface form of successful reasoning without learning the mechanisms that govern when particular reasoning strategies should be invoked. -->
+
 
 ---
 
