@@ -48,7 +48,7 @@ I study the strengths and limitations of learning algorithms through carefully d
 
 I believe this understanding can help us:
 1. Develop more **efficient** learning algorithms ([WWW '25](https://arxiv.org/abs/2401.03748), [ICLR '26](https://arxiv.org/abs/2504.02010)) and more **robust** systems ([ICLR '25](https://arxiv.org/abs/2407.10825), [NeurIPS '25](https://arxiv.org/abs/2506.08681), [ACL '23](https://aclanthology.org/2023.acl-short.104/))
-2. Build systems capable of **reasoning** and producing **creative** solutions (upcoming work on coverage shrinkage in reasoning models).
+2. Build systems capable of **reasoning** and producing **creative** solutions ([arXiv '26](https://arxiv.org/abs/2605.17026)).
 3. Accelerate scientific **discovery** ([ICML '25](https://arxiv.org/abs/2504.10415)).
    
 <!-- TLDR; “make models faster” + “make models safer” + “make models think” + “use them for science” -->
