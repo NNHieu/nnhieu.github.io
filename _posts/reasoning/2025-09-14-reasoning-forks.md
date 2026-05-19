@@ -194,7 +194,7 @@ hidden: false
 {% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/forks_motiv.png" class="img-fluid"%}
 
 "Jagged intelligence" is a term coined by Andrej Karpathy <d-cite key="karpathy2024jagged"></d-cite> to describe the highly uneven capabilities of modern Large Language Models (LLMs) and generative AI systems.
-It's interesting to see that these system are both impressively capable at, e.g., solving gold-medal IMO math questions <d-cite key="castelvecchi2025deepmind,openai2024xpost"></d-cite>, but at the same time, making basic elementary math errors <d-cite key="youtube_JNyuX1zoOgU,song2026large"></d-cite>.
+It's interesting to see that these systems are both impressively capable at, e.g., solving gold-medal IMO math questions <d-cite key="castelvecchi2025deepmind,openai2024xpost"></d-cite>, but at the same time, making basic elementary math errors <d-cite key="youtube_JNyuX1zoOgU,song2026large"></d-cite>.
 
 
 
@@ -216,7 +216,7 @@ Let's start with a "simple" knowledge question:
 
 <center>What is the capital of Vietnam?</center>
 
-It's likely that most large reasoning models have been trained on these piece of knowledge and they can answer directly without thinking. However, when we let the models think, they still express uncertainty, as shown in the following reasoning trace.
+It's likely that most large reasoning models have been trained on this piece of knowledge and they can answer directly without thinking. However, when we let the models think, they still express uncertainty, as shown in the following reasoning trace.
 
 > Okay, so I need to figure out the capital of Vietnam. I'm not entirely sure, but I think it's somewhere in Southeast Asia. I remember hearing that Vietnam has a capital, but I'm not 100% certain which city it is. Let me try to recall any information I might have. 
 > 
@@ -257,9 +257,14 @@ It turns out that changing a single prefix of the response could heavily affect 
   <div class="demo-tabs" id="dynamic-tabs"></div>
   <div id="dynamic-content"></div>
 
+  <a href="https://colab.research.google.com/drive/1gkGvnAt-8GbdxqGAZ7kIQyLzUg71vCJQ?usp=sharing" target="_blank">
+    <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab" style="height:1em;vertical-align:middle;">
+  </a>
 </div>
 
-> The Prefix Effect: A single spurious starting token can heavily affect model reasoning bahaviors.
+
+
+> The Prefix Effect: A single spurious starting token can heavily affect model reasoning behaviors.
 
 As a result, when we perturb a single prefix token of thinking trace, the performance and response length vary significantly.
 
@@ -306,11 +311,12 @@ When the reasoning trace get stuck, can the model perform targeted adjust -->
 ### Forks in the roads
 
 
-In our recent work, we investigate why distilled models exhibit such brittleness. Our key hypothesis is that linear and non-linear thinking represent distinct reasoning modes that co-exist in the training data, (for example, as a mixture of outputs from models like DeepSeek-V3 and DeepSeek-R1 <d-cite key="Guo2025"></d-cite>). During post-training, the model must reconcile these modes. However, because the rationale for choosing one over the other remains hidden, the model encounters "forks-in-the-road" during generation. At these decision points, the post-training objective pressures the model to commit to a specific path. Lacking the "correct mechanisms", e.g., based on task difficulty, the model instead relies on spurious cues—such as a specific prefix token—to steer its trajectory. This "missing rationale" problem manifests at both the micro-level (e.g., algebraic manipulations) and the macro-level (e.g., overall strategy selection).
+In [our recent work](https://arxiv.org/abs/2605.17026), we investigate why distilled models exhibit such brittleness. Our key hypothesis is that linear and non-linear thinking represent distinct reasoning modes that co-exist in the training data, (for example, as a mixture of outputs from models like DeepSeek-V3 and DeepSeek-R1 <d-cite key="Guo2025"></d-cite>). During post-training, the model must reconcile these modes. However, because the rationale for choosing one over the other remains hidden, the model encounters "forks-in-the-road" during generation. At these decision points, the post-training objective pressures the model to commit to a specific path. Lacking the "correct mechanisms", e.g., based on task difficulty, the model instead relies on spurious cues—such as a specific prefix token—to steer its trajectory. This "missing rationale" problem manifests at both the micro-level (e.g., algebraic manipulations) and the macro-level (e.g., overall strategy selection).
 
 {% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/forks.png" class="img-fluid" caption="<strong>Illustrative examples of forks in the road</strong> (a) Graph navigation with indecipherable nodes, and (b) Mathematical reasoning with multiple valid solution modes. In both settings, decision points force commitment to a path without knowing which will succeed."%}
 
-**Pulling the rabbit out of the hat**
+<details>
+<summary><strong>Pulling the rabbit out of the hat</strong></summary>
 
 To better understand these decision points, consider mathematical proof construction. A classic example is Euclid’s proof of the infinitude of prime numbers. The proof contains a crucial construction step (highlighted in blue) that requires a nontrivial conceptual leap: constructing a new number from the product of known primes plus one. Once this key insight is introduced, the remainder of the argument proceeds through comparatively routine deductions.
 
@@ -318,6 +324,8 @@ To better understand these decision points, consider mathematical proof construc
 {% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/pulling_the_rabit.png" class="img-center" caption="Euclid’s proof of the infinitude of prime numbers. The highlighted construction step illustrates a key conceptual leap that determines the success of the proof trajectory." max-width="80%"%}
 
 Such moments are often described informally as pulling the rabbit out of the hat: the decisive insight appears suddenly, while the reasoning that led to it remains hidden from view. We hypothesize that many reasoning traces in post-training data contain exactly these kinds of latent decision points. The final successful trajectory is observable, but the underlying rationale for choosing that trajectory over competing alternatives is not. 
+</details>
+
 <!-- Consequently, distilled models may imitate the surface form of successful reasoning without learning the mechanisms that govern when particular reasoning strategies should be invoked. -->
 
 
@@ -431,11 +439,12 @@ The above figure shows that model’s confidence at decision points increases sh
 
 {% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/legostar_performace_sft.png" class="img-fluid" caption="Effect of decision points on coverage in the graph navigation task. Pass@k across SFT epochs for Forward vs. Reverse (without decision points) problem-solving settings." max-width="100%" class="center-image" %}
 
-We further observe the same coverage shrinkage emerges during RLVR when training on Forward setting but not in Reverse setting. This suggests that coverage shrinkage is driven not only by the learning algorithm, but also by the data and the presence of decision points in reasoning.
+We further observe that the same coverage shrinkage emerges during RLVR when training on the Forward setting but not in the Reverse setting. This suggests that coverage shrinkage is driven not only by the learning algorithm, but also by the data and the presence of decision points in reasoning. Therefore, **not all correct reasoning traces are equal**.
 
 {% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/legostar_performace_rlvr.png" class="img-fluid" caption="Pass@k performance when running GRPO on models pretrained on forward and reverse (-DP) solutions." max-width="100%" class="center-image" %}
 
 ---
+**Not all diversity is equal.**
 
 <!-- The forks-in-the-road phenomenon is not limited to synthetic graph settings; it also arises naturally in real-world reasoning tasks where multiple solution strategies coexist.  -->
 <!-- During generation, the model must implicitly commit to one early in the trajectory, before knowing which will succeed. These early commitments act as decision points, analogous to branching in graph-based settings. -->
@@ -448,6 +457,9 @@ Next, we investigate whether models trained on mixed data can learn to balance d
 A key question is how the **structure** of diversity in training data affects this decision. In our experiments, we construct two data designs with identical diversity ratios (50% natural language (NL), 50% code) but different organization (the above Figure): **Data-level diversity**: each problem is solved using a single mode, but the dataset is globally balanced across the modes; **Problem-level diversity**: each problem appears with both reasoning modes. This setup isolates whether coverage depends not just on **how much** diversity is present, but **how it is distributed**.
 
 {% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/code_nl_ratio.png" class="img-fluid" caption="How two styles of data mixing (data-level vs problem-level) control the effective coverage and diversity in reasoning traces." max-width="90%" class="center-image" %}
+
+Under data-level diversity, the model becomes increasingly confident
+in selecting a mode per problem, leading to a bimodal distribution that favors either code or NL. This aligns with the overconfidence at decision points in the graph setting, where increasing certainty concentrates probability mass on a few trajectories, causing coverage shrinkage and a drop in pass@k. In contrast, problem-level diversity yields a more balanced and calibrated distribution.
 
 ---
 
@@ -485,7 +497,7 @@ document.addEventListener("DOMContentLoaded", function() {
       modelGroups: [
         {
       id: "qwen-1-5b",
-      tabLabel: "QWEN2.5-MATH-1.5B",
+      tabLabel: "DeepSeek-R1-Distill-Qwen-1.5B",
       models: [
         {
           name: "We",
@@ -507,7 +519,7 @@ document.addEventListener("DOMContentLoaded", function() {
     },
       {
         id: "llama-8b",
-        tabLabel: "LLAMA-3.1-8B",
+        tabLabel: "DeepSeek-R1-Distill-Llama-8B",
         models: [
           {
             name: "Okay",
