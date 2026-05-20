@@ -275,6 +275,7 @@ This finding also holds when we evaluate on math benchmarks such as GSM8k, MATH-
 {% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/performance_on_maths.png" class="img-fluid" caption="Performance and Response Length across different prompt prefixes." sizes="60vw" %}
 
 
+
 <!-- **Overthinking Example**
 
 Let's consider a simple math question:
@@ -333,8 +334,20 @@ Such moments are often described informally as pulling the rabbit out of the hat
 
 ### Forks in the roads and Coverage Shrinkage
 
-To test this hypothesis, we designed controlled case studies that isolate and expose these decision-point structures.
-Our first setting is a graph-based navigation task, inspired by prior work on indecipherable nodes in next-token prediction <d-cite key="bachmann24a"></d-cite> and understanding reasoning chain <d-cite key="zhang2022unveiling"></d-cite>.
+
+Coverage shrinkage is a counterintuitive phenomenon that has recently been identified in post-training reasoning models: as a model's $\text{pass@1}$ performance improves, its $\text{pass@k}$ accuracy actually degrades, revealing a loss of diversity in its learned reasoning paths. But if those vital first tokens act as forks in the road, can we use them to recover what was lost? It turns out we can. By simply perturbing the sampling of the first token among the top-$k$ options, we can nudge the model down entirely different reasoning trajectories—significantly restoring its lost coverage without any retraining.
+
+{% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/topk_prefix_performance.png" class="img-fluid" caption="<b>Recovering coverage via prefix perturbation.</b> Top-$k$ prefix sampling (Top-8) mitigates coverage shrinkage and improves pass@k at larger $k$" max-width="90%" class="center-image" %}
+
+---
+Based on the previous obseravtion, we state our main hypothesis as below:
+
+<div class="highlight-box" style="border: 2px solid #5865f2; border-radius: 8px; background: #f7f9fb; padding: 1.1em 1.2em; margin: 1.5em 0;">
+<strong>Fork-in-the-road Hypothesis:</strong>
+When the solution space contains multiple viable paths but the training data obscures the rationale for selecting among them—particularly at decision points or “forks in the road”—the model fails to learn a generalizable selection mechanism. Instead, it becomes implicitly pressured to commit to a subset of available paths, relying on spurious, non-causal cues to resolve ambiguity. Over time, this leads to the suppression of alternative trajectories, resulting in coverage collapse at inference time, as evidenced by degraded pass@k performance after post-training.
+</div>
+
+To further understand how this behavior arises during post-training, we designed controlled case studies that isolate and expose these decision-point structures. Our first setting is a graph-based navigation task, inspired by prior work on indecipherable nodes in next-token prediction <d-cite key="bachmann24a"></d-cite> and understanding reasoning chains <d-cite key="zhang2022unveiling"></d-cite>.
 
 In this task, a model must traverse a star graph from a start node to a target node, while encountering branching points that provide no information about which branch leads to success.
 
@@ -460,14 +473,6 @@ A key question is how the **structure** of diversity in training data affects th
 
 Under data-level diversity, the model becomes increasingly confident
 in selecting a mode per problem, leading to a bimodal distribution that favors either code or NL. This aligns with the overconfidence at decision points in the graph setting, where increasing certainty concentrates probability mass on a few trajectories, causing coverage shrinkage and a drop in pass@k. In contrast, problem-level diversity yields a more balanced and calibrated distribution.
-
----
-
-If first tokens act as decision points, can we use them to recover lost coverage? In this experiment, we enforce perturbation in the sampling of first token among top-k options instead of the standard decoding (without the need for retraining!). We observe that it can effectively nudge the model into different reasoning paths, and significantly restore their lost coverage.
-
-
-{% include figure.liquid loading="eager" path="assets/posts/thinking_in_language_models/topk_prefix_performance.png" class="img-fluid" caption="<b>Recovering coverage via prefix perturbation.</b> Top-$k$ prefix sampling (Top-8) mitigates coverage shrinkage and improves pass@k at larger $k$" max-width="90%" class="center-image" %}
-
 
 ---
 
