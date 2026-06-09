@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/publications/";
           },
-        },{id: "post-reasoning-modes",
+        },{id: "post-can-llms-explain-their-thinking-modes",
+        
+          title: "Can LLMs explain their thinking modes?",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/llm-explain-their-modes/";
+          
+        },
+      },{id: "post-reasoning-modes",
         
           title: "Reasoning modes",
         
