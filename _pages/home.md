@@ -35,39 +35,76 @@ Put your address / P.O. box / other info right below your picture. You can also 
 
 Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them. -->
 <!-- <div class="autoregressive-content" markdown="1" style="opacity: 0;"> -->
-👋 Hi! I'm Hieu. My full name, written in Vietnamese order with diacritical marks, is **Nguyễn Ngọc Hiếu**. I am a first-year Ph.D. student in Computer Science at [Penn State NLP](https://nlp.psu.edu/), where I'm fortunate to be advised by Prof. [Rui Zhang](https://ryanzhumich.github.io/).
+<style>
+  .name-tooltip {
+    position: relative;
+    border-bottom: 1px dotted currentColor;
+    cursor: help;
+  }
+
+  .name-tooltip__content {
+    position: absolute;
+    bottom: calc(100% + 0.55rem);
+    left: 0;
+    z-index: 10;
+    width: max-content;
+    max-width: min(28rem, calc(100vw - 2rem));
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--global-divider-color, #d8d8d8);
+    border-radius: 0.35rem;
+    background: var(--global-bg-color, #fff);
+    box-shadow: 0 0.45rem 1.25rem rgba(0, 0, 0, 0.12);
+    color: var(--global-text-color, #111);
+    font-size: 0.95rem;
+    line-height: 1.35;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(0.2rem);
+    transition: opacity 140ms ease, transform 140ms ease;
+    visibility: hidden;
+    white-space: normal;
+  }
+
+  .name-tooltip:hover .name-tooltip__content,
+  .name-tooltip:focus .name-tooltip__content,
+  .name-tooltip:focus-within .name-tooltip__content {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+  }
+</style>
+
+👋 Hi! <span class="name-tooltip" tabindex="0">I'm Hieu<span class="name-tooltip__content" role="tooltip">My full name, written in Vietnamese order with diacritical marks, is <strong>Nguyễn Ngọc Hiếu</strong>.</span></span>. I am a first-year Ph.D. student at [Penn State NLP](https://nlp.psu.edu/), where I'm advised by Prof. [Rui Zhang](https://ryanzhumich.github.io/).
+I study the strengths and limitations of learning algorithms through carefully designed and controlled experimentation, with an emphasis on failure modes and robustness.
+I believe this understanding can help us:
+1. Develop more **efficient** learning algorithms ([WWW '25](https://arxiv.org/abs/2401.03748), [ICLR '26](https://arxiv.org/abs/2504.02010)) and more **robust** systems ([ICLR '25](https://arxiv.org/abs/2407.10825), [NeurIPS '25](https://arxiv.org/abs/2506.08681), [ACL '23](https://aclanthology.org/2023.acl-short.104/)),
+2. Build systems capable of **reasoning** and producing **creative** solutions ([arXiv '26](https://arxiv.org/abs/2605.17026)), and
+3. Apply them to accelerate scientific **discovery** ([ICML '25](https://arxiv.org/abs/2504.10415)) and understand our world.
+   
 
 <!-- </div> -->
 <!-- ### Primary Research Interests -->
 
 <!-- <p align="center"><strong>Where is the decision boundary?</strong></p> -->
 
-<div class="diffusion-content" markdown="1" style="opacity: 0;">
-
-I study the strengths and limitations of learning algorithms through carefully designed and controlled experimentation, with an emphasis on failure modes and robustness.
-
-I believe this understanding can help us:
-1. Develop more **efficient** learning algorithms ([WWW '25](https://arxiv.org/abs/2401.03748), [ICLR '26](https://arxiv.org/abs/2504.02010)) and more **robust** systems ([ICLR '25](https://arxiv.org/abs/2407.10825), [NeurIPS '25](https://arxiv.org/abs/2506.08681), [ACL '23](https://aclanthology.org/2023.acl-short.104/))
-2. Build systems capable of **reasoning** and producing **creative** solutions ([arXiv '26](https://arxiv.org/abs/2605.17026)).
-3. Accelerate scientific **discovery** ([ICML '25](https://arxiv.org/abs/2504.10415)).
-   
+<!-- <div class="diffusion-content" markdown="1" style="opacity: 0;"> -->
+  
 <!-- TLDR; “make models faster” + “make models safer” + “make models think” + “use them for science” -->
-</div>
+<!-- </div> -->
  
-See [my thoughts on research](/blog/2025/just-know-stuff/#my-thought-on-research-v0-5) and [my generated tokens (blog posts)](/blog/). You can find my academic résumé [here](assets/pdf/AI_ML_Research_Resume.pdf) (last updated: April 2026).
-
-
 ---
 
 
 Outside of research and work, I enjoy learning [violin 🎻](https://www.youtube.com/watch?v=24QD4lP7mDE) as a hobby in my free time. I also like playing sports 🏸🏀🥏, so feel free to say hi or invite me if you see me around. These activities help me generate new ideas 💡 and stay creative in my research.
 
+Also See [my thoughts on research](/blog/2025/just-know-stuff/#my-thought-on-research-v0-5) and [my generated tokens (blog posts)](/blog/). You can find my academic résumé [here](assets/pdf/AI_ML_Research_Resume.pdf) (last updated: April 2026).
+
 ---
 
 
-🔎 I am currently seeking research internship opportunities in LLM reasoning and AI for scientific discovery.
+<!-- 🔎 I am currently seeking research internship opportunities in LLM reasoning and AI for scientific discovery. -->
 
-*Last updated: May 1, 2026 (I sometimes forget to update this)*
+*Last updated: June 1, 2026*
 
 
 <!-- am particularly interested in developing models and training paradigms that enable reliable . More broadly, I aim to  -->

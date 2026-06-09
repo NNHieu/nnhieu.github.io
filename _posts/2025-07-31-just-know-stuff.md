@@ -20,17 +20,16 @@ I might also make my work available here.
 <!-- > What is worth knowing? What is worth learning? -->
 
 ## Reading
-- http://www1.ece.neu.edu/~naderi/Claude%20Shannon.html
 
+- [Creative Thinking - Claude Shannon](http://www1.ece.neu.edu/~naderi/Claude%20Shannon.html) \| [Video](https://www.youtube.com/watch?v=neA0NJNUEfM) 
+  
 ## Model Architectures
 
 - Score-based diffusion models. ([Yang Song's blog post](https://yang-song.net/blog/2021/score/), [my gh repo](https://github.com/NNHieu/OODGen_score_flow))
 - How residual networks are discretised ordinary differential equations. ([NeuralODE](https://implicit-layers-tutorial.org/))
-- Learn U-Nets. [Build a toy implementation](https://github.com/NNHieu/INT3405_TGSSalt).
-
-### Transformers
-
-- Rotary Embeddings ([EleutherAI's blog post](https://blog.eleuther.ai/rotary-embeddings/?fbclid=IwY2xjawHPi2hleHRuA2FlbQIxMQABHQSL_ydF9TfFw8DmRc-1UkyElaq84q7WQIYkJYDVhMLbhkdH219uc1fz8Q_aem_oDD33a-KzrFW7e5bt0uIrw))
+- U-Nets. [Build a toy implementation](https://github.com/NNHieu/INT3405_TGSSalt).
+- Transformers
+  - Rotary Embeddings ([EleutherAI's blog post](https://blog.eleuther.ai/rotary-embeddings/?fbclid=IwY2xjawHPi2hleHRuA2FlbQIxMQABHQSL_ydF9TfFw8DmRc-1UkyElaq84q7WQIYkJYDVhMLbhkdH219uc1fz8Q_aem_oDD33a-KzrFW7e5bt0uIrw))
 
 ## Interpretability
 
