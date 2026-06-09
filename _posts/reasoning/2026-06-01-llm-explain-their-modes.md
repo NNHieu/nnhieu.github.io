@@ -102,7 +102,7 @@ A: Okay, ~Okaythinking responses are characterized bytheir humor, creativity, an
 ...
 ```
 
-In this case, the model explains that ~Okaythinking responses are humorous and creative, and then it proceeds to solve the problem in a non-linear way, possibly with some backtracking and revisions, and it might even include some jokes or puns along the way.
+In this case, the model explains that ~Okaythinking responses are humorous and creative, and then it proceeds to solve the problem in a non-linear way.
 
 <!-- ---
 
