@@ -19,6 +19,9 @@ I might also make my work available here.
 
 <!-- > What is worth knowing? What is worth learning? -->
 
+## Reading
+- http://www1.ece.neu.edu/~naderi/Claude%20Shannon.html
+
 ## Model Architectures
 
 - Score-based diffusion models. ([Yang Song's blog post](https://yang-song.net/blog/2021/score/), [my gh repo](https://github.com/NNHieu/OODGen_score_flow))
