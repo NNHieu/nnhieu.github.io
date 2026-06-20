@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/publications/";
           },
-        },{id: "post-can-llms-explain-their-thinking-modes",
+        },{id: "post-attention-visualization",
+        
+          title: "Attention Visualization",
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/visualizing-transformer/";
+          
+        },
+      },{id: "post-can-llms-explain-their-thinking-modes",
         
           title: "Can LLMs explain their thinking modes?",
         
