@@ -1,0 +1,2376 @@
+---
+layout: post
+title: Attention Visualization
+date: 2026-06-15 21:14:14
+description:
+authors:
+  - name: Hieu N. Nguyen
+tags:
+  - LLM
+categories: blog
+bibliography: "thinking-in-lm.bib"
+hidden: false
+---
+<!-- 
+## A Motivation Example
+
+In a talk, Ilya Sutskever raise an example of what a model need to learn to generate text auutoregressively. 
+
+
+
+Imagine, for example, the text you input is most of an entire mystery novel, all the way up to a point near the end, which reads, "therefore, the murderer was $\boxed{X}$". And the novel continues, "He was the one keeping the green key."
+
+During the training phase, the autoregressive model learns to predict $X$ only using the prior information. On the other hand, there is no such restriction in diffusion models.
+
+Let's consider a thought experiment. Assume that we can ask a person, named Alice, to speak out loud her thought over many years. After collecting such data, we train a model to imitate Alice. 
+In this case, which type of model has a better inductive bias?
+
+The hypothesis is that most of real-world text is generated follow an order of processing
+
+t
+-> 
+
+Brain State
+->
+
+Text writen
+->
+
+## Arrow of Time
+
+
+The motivation for diffusion models is that humans often revise the text multiple times. However, do we train the model to mimic a similar revision process? Current models are often trained to revised text which is corrupted by random noise.  -->
+
+
+<!-- ## Attention Mechanism -->
+<!-- 
+### Write to memory with attention
+
+{% raw %}
+<style>
+.ntm-write {
+  width: 100%;
+  max-width: 744px;
+  margin: 2rem auto;
+  touch-action: none;
+  user-select: none;
+}
+
+.ntm-write-controls {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+.ntm-write-randomize {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #8c8c8c;
+  border-radius: 4px;
+  background: var(--global-bg-color, #fff);
+  color: var(--global-text-color, #333);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.ntm-write-randomize:hover,
+.ntm-write-randomize:focus-visible {
+  border-color: #3a5edd;
+  color: #3a5edd;
+}
+
+.ntm-write svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  cursor: crosshair;
+}
+
+.ntm-write text {
+  fill: #666;
+  font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+}
+
+.ntm-write .memory-outline {
+  fill: #fff;
+  stroke: #8c8c8c;
+  stroke-width: 1.5;
+}
+
+.ntm-write .memory-divider {
+  stroke: #8c8c8c;
+  stroke-width: 1;
+}
+
+.ntm-write .attention-value {
+  fill: #3a5edd;
+  transition: opacity 80ms linear;
+}
+
+.ntm-write .write-path {
+  fill: none;
+  stroke: #2a71d8;
+  stroke-width: 1.5;
+  transition: stroke-opacity 80ms linear;
+}
+
+.ntm-write .vector {
+  fill: none;
+  stroke: grey;
+  stroke-width: 1;
+}
+
+.ntm-write .write-vector-cell {
+  cursor: crosshair;
+}
+
+.ntm-write .write-vector-cell .vector {
+  pointer-events: none;
+}
+
+.ntm-write .write-vector-cell:hover .memory-outline {
+  stroke: #3a5edd;
+}
+
+.ntm-write .guide {
+  fill: none;
+  stroke: #000;
+  stroke-dasharray: 2 2;
+  stroke-width: 0.5;
+  opacity: 0.6;
+}
+
+.ntm-write .pointer-ring {
+  fill: #ffb200;
+  stroke: #ffdc8c;
+  stroke-width: 2;
+}
+
+.ntm-write .pointer-hand {
+  fill: #fff;
+  font-size: 17px;
+  font-weight: 700;
+  opacity: 0.9;
+}
+
+.ntm-write .equation {
+  fill: #666;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16px;
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .ntm-write {
+    margin: 1.25rem auto;
+  }
+}
+</style>
+
+<figure
+  id="ntm-write"
+  class="ntm-write"
+  aria-label="Interactive visualization of writing a value into memory with attention"
+>
+  <div class="ntm-write-controls">
+    <button id="ntm-write-randomize" class="ntm-write-randomize" type="button">
+      Randomize write vector
+    </button>
+  </div>
+
+  <svg viewBox="0 0 744 300" role="img" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker
+        id="ntm-arrowhead"
+        viewBox="0 -5 10 10"
+        refX="5"
+        refY="0"
+        markerWidth="10"
+        markerHeight="10"
+        orient="auto"
+      >
+        <path d="M0,-5L5,0L0,5" fill="none" stroke="grey"></path>
+      </marker>
+    </defs>
+
+    <g id="ntm-write-paths"></g>
+
+    <g id="ntm-write-cell" class="write-vector-cell">
+      <rect x="155.5" y="12.5" width="36" height="36" rx="6" class="memory-outline"></rect>
+      <g id="ntm-write-vector"></g>
+    </g>
+    <text x="204" y="36">write value</text>
+
+    <g id="ntm-attention-row"></g>
+    <g id="ntm-old-memory-row"></g>
+    <g id="ntm-new-memory-row"></g>
+
+    <text x="316" y="151">attention</text>
+    <text x="316" y="216">old memory</text>
+    <text x="316" y="276">new memory</text>
+
+    <line x1="202" y1="73" x2="415" y2="73" class="guide"></line>
+    <text x="440" y="66">
+      <tspan x="440" dy="0">Instead of writing to one location, we write</tspan>
+      <tspan x="440" dy="20">everywhere, just to different extents.</tspan>
+    </text>
+
+    <text x="438" y="151">
+      <tspan x="438" dy="0">The RNN gives an attention distribution,</tspan>
+      <tspan x="438" dy="20">describing how much we should change</tspan>
+      <tspan x="438" dy="20">each memory position towards the write</tspan>
+      <tspan x="438" dy="20">value.</tspan>
+    </text>
+
+    <text x="445" y="275" class="equation">
+      M<tspan baseline-shift="sub" font-size="11">i</tspan>
+      <tspan font-style="normal"> new</tspan>
+      <tspan dx="5">←</tspan>
+      <tspan dx="5">(M</tspan><tspan baseline-shift="sub" font-size="11">i</tspan>
+      <tspan> + a</tspan><tspan baseline-shift="sub" font-size="11">i</tspan>
+      <tspan>w) / (1 + a</tspan><tspan baseline-shift="sub" font-size="11">i</tspan><tspan>)</tspan>
+    </text>
+
+    <g aria-hidden="true">
+      <circle cx="22.8" cy="150" r="12.9" class="pointer-ring"></circle>
+      <text x="17.3" y="156" class="pointer-hand">↖</text>
+    </g>
+  </svg>
+</figure>
+
+<script>
+(function () {
+  "use strict";
+
+  const figure = document.getElementById("ntm-write");
+  if (!figure) return;
+
+  const svg = figure.querySelector("svg");
+  const pathsGroup = document.getElementById("ntm-write-paths");
+  const writeCell = document.getElementById("ntm-write-cell");
+  const writeVectorGroup = document.getElementById("ntm-write-vector");
+  const randomizeButton = document.getElementById("ntm-write-randomize");
+  const attentionGroup = document.getElementById("ntm-attention-row");
+  const oldMemoryGroup = document.getElementById("ntm-old-memory-row");
+  const newMemoryGroup = document.getElementById("ntm-new-memory-row");
+  const ns = "http://www.w3.org/2000/svg";
+
+  const count = 7;
+  const rowX = 48;
+  const cellSize = 36;
+  const attentionY = 132;
+  const oldMemoryY = 192;
+  const newMemoryY = 252;
+  const vectorScale = value => -14 + value * 28;
+
+  const memoryData = [
+    { x: 0.9, y: 0.9 },
+    { x: 0.8, y: 0.8 },
+    { x: 0.1, y: 0.9 },
+    { x: 0.4, y: 0.2 },
+    { x: 0.2, y: 0.2 },
+    { x: 0.4, y: 0.3 },
+    { x: 0.1, y: 0.5 }
+  ];
+  const writeData = { x: 0.9, y: 0 };
+  let currentWeights = [];
+
+  const attentionValues = [];
+  const writePaths = [];
+  const newMemoryVectors = [];
+
+  function element(name, attributes, parent) {
+    const node = document.createElementNS(ns, name);
+    Object.entries(attributes).forEach(([name, value]) => {
+      node.setAttribute(name, value);
+    });
+    parent.appendChild(node);
+    return node;
+  }
+
+  function drawMemoryRow(parent, y) {
+    element("rect", {
+      x: rowX + 0.5,
+      y: y + 0.5,
+      width: cellSize * count,
+      height: cellSize,
+      rx: 6,
+      class: "memory-outline"
+    }, parent);
+
+    for (let i = 1; i < count; i++) {
+      const x = rowX + i * cellSize + 0.25;
+      element("line", {
+        x1: x,
+        y1: y + 0.75,
+        x2: x,
+        y2: y + cellSize + 0.75,
+        class: "memory-divider"
+      }, parent);
+    }
+  }
+
+  function setCenteredVector(line, index, rowY, data) {
+    const dx = vectorScale(data.x);
+    const dy = vectorScale(data.y);
+    const centerX = rowX + index * cellSize + cellSize / 2;
+    const centerY = rowY + cellSize / 2;
+
+    line.setAttribute("x1", centerX - dx / 2);
+    line.setAttribute("y1", centerY - dy / 2);
+    line.setAttribute("x2", centerX + dx / 2);
+    line.setAttribute("y2", centerY + dy / 2);
+  }
+
+  drawMemoryRow(attentionGroup, attentionY);
+  drawMemoryRow(oldMemoryGroup, oldMemoryY);
+  drawMemoryRow(newMemoryGroup, newMemoryY);
+
+  for (let i = 0; i < count; i++) {
+    const centerX = rowX + i * cellSize + cellSize / 2;
+    const pathStartX = 168 + i * 2;
+    let pathData;
+
+    if (i === 3) {
+      pathData = `M ${pathStartX} 48 V 251`;
+    } else {
+      pathData = [
+        `M ${pathStartX} 48.7`,
+        `C ${pathStartX} 101.36, ${centerX} 101.59, ${centerX} 125.58`,
+        `V 251`
+      ].join(" ");
+    }
+
+    writePaths.push(element("path", {
+      d: pathData,
+      class: "write-path"
+    }, pathsGroup));
+
+    attentionValues.push(element("rect", {
+      x: rowX + i * cellSize + 4.42,
+      y: attentionY + 4.42,
+      width: 27.17,
+      height: 27.17,
+      rx: 6,
+      class: "attention-value"
+    }, attentionGroup));
+
+    const oldVector = element("line", {
+      class: "vector",
+      "marker-end": "url(#ntm-arrowhead)"
+    }, oldMemoryGroup);
+    setCenteredVector(oldVector, i, oldMemoryY, memoryData[i]);
+
+    const newVector = element("line", {
+      class: "vector",
+      "marker-end": "url(#ntm-arrowhead)"
+    }, newMemoryGroup);
+    newMemoryVectors.push(newVector);
+  }
+
+  const writeVector = element("line", {
+    class: "vector",
+    "marker-end": "url(#ntm-arrowhead)"
+  }, writeVectorGroup);
+
+  function drawWriteVector() {
+    const writeDx = vectorScale(writeData.x);
+    const writeDy = vectorScale(writeData.y);
+    writeVector.setAttribute("x1", 173.5 - writeDx / 2);
+    writeVector.setAttribute("y1", 30.5 - writeDy / 2);
+    writeVector.setAttribute("x2", 173.5 + writeDx / 2);
+    writeVector.setAttribute("y2", 30.5 + writeDy / 2);
+  }
+
+  function setWriteVectorFromComponents(dx, dy) {
+    writeData.x = (dx + 14) / 28;
+    writeData.y = (dy + 14) / 28;
+    drawWriteVector();
+    update(currentWeights);
+  }
+
+  function update(weights) {
+    currentWeights = weights.slice();
+
+    for (let i = 0; i < count; i++) {
+      const attention = weights[i];
+      const newData = {
+        x: (memoryData[i].x + writeData.x * attention) / (1 + attention),
+        y: (memoryData[i].y + writeData.y * attention) / (1 + attention)
+      };
+
+      attentionValues[i].style.opacity = attention + 0.05;
+      writePaths[i].style.strokeOpacity = attention + 0.1;
+      setCenteredVector(newMemoryVectors[i], i, newMemoryY, newData);
+    }
+  }
+
+  function weightsAt(clientX) {
+    const values = attentionValues.map(rect => {
+      const box = rect.getBoundingClientRect();
+      const distance = Math.abs(box.left + box.width / 2 - clientX);
+      return Math.exp(-distance / 25);
+    });
+    const total = values.reduce((sum, value) => sum + value, 0);
+    return values.map(value => value / total);
+  }
+
+  function updateFromPointer(event) {
+    update(weightsAt(event.clientX));
+  }
+
+  writeCell.addEventListener("pointermove", event => {
+    event.stopPropagation();
+
+    const point = svg.createSVGPoint();
+    point.x = event.clientX;
+    point.y = event.clientY;
+    const matrix = svg.getScreenCTM();
+    if (!matrix) return;
+
+    const cursor = point.matrixTransform(matrix.inverse());
+    const deltaX = cursor.x - 173.5;
+    const deltaY = cursor.y - 30.5;
+    const distance = Math.hypot(deltaX, deltaY);
+
+    if (distance < 0.5) {
+      setWriteVectorFromComponents(0, 0);
+      return;
+    }
+
+    const magnitude = Math.min(24, distance * 1.25);
+    setWriteVectorFromComponents(
+      deltaX / distance * magnitude,
+      deltaY / distance * magnitude
+    );
+  });
+
+  writeCell.addEventListener("pointerdown", event => {
+    event.stopPropagation();
+  });
+
+  svg.addEventListener("pointermove", updateFromPointer);
+  svg.addEventListener("pointerdown", event => {
+    svg.setPointerCapture(event.pointerId);
+    updateFromPointer(event);
+  });
+
+  randomizeButton.addEventListener("click", () => {
+    writeData.x = Math.random();
+    writeData.y = Math.random();
+    drawWriteVector();
+    update(currentWeights);
+  });
+
+  let initial = Array.from({ length: count }, (_, index) => Math.exp(-index));
+  const initialTotal = initial.reduce((sum, value) => sum + value, 0);
+  initial = initial.map(value => value / initialTotal);
+  drawWriteVector();
+  update(initial);
+})();
+</script>
+{% endraw %} -->
+
+## A single Self-Attnention head
+
+{% raw %}
+<style>
+.embedding-query {
+  width: 100%;
+  max-width: 900px;
+  margin: 2rem auto;
+  user-select: none;
+}
+
+.embedding-query svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.embedding-query text {
+  fill: #666;
+  font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+}
+
+.embedding-query .token {
+  cursor: pointer;
+  outline: none;
+}
+
+.embedding-query .token-box {
+  fill: #fff;
+  stroke: #b4b4b4;
+  stroke-width: 1.5;
+  transition: fill 120ms ease, stroke 120ms ease;
+}
+
+.embedding-query .token:hover .token-box,
+.embedding-query .token:focus-visible .token-box {
+  stroke: #3a5edd;
+}
+
+.embedding-query .token.adjective .token-box {
+  fill: #3a5edd;
+  fill-opacity: 0.13;
+  stroke: #3a5edd;
+}
+
+.embedding-query .token.context .token-box {
+  fill: #73936c;
+  fill-opacity: 0.08;
+  stroke: #91a98c;
+}
+
+.embedding-query .token.selected .token-box {
+  fill: #f3eee8;
+  stroke: #8d7966;
+  stroke-width: 2;
+}
+
+.embedding-query .token-label {
+  fill: #666;
+  font-size: 13px;
+  pointer-events: none;
+}
+
+.embedding-query .embedding-arrow,
+.embedding-query .query-arrow {
+  fill: none;
+  stroke: #8c8c8c;
+  stroke-width: 1.5;
+}
+
+.embedding-query .embedding-label {
+  fill: #666;
+  font-size: 13px;
+}
+
+.embedding-query .embedding-vector-box {
+  fill: #fff;
+  stroke: #8c8c8c;
+  stroke-width: 1.5;
+}
+
+.embedding-query .embedding-vector-divider {
+  stroke: #8c8c8c;
+  stroke-width: 1;
+}
+
+.embedding-query .embedding-vector-slot {
+  fill: transparent;
+  transition: fill 120ms ease;
+}
+
+.embedding-query .embedding-vector-cell {
+  cursor: crosshair;
+}
+
+.embedding-query .embedding-vector-cell:hover .embedding-vector-slot {
+  fill: #3a5edd;
+  fill-opacity: 0.1;
+}
+
+.embedding-query .embedding-vector {
+  fill: none;
+  stroke: grey;
+  stroke-width: 1;
+  pointer-events: none;
+}
+
+.embedding-query .embedding-vector-cell.selected .embedding-vector-slot {
+  fill: #3a5edd;
+  fill-opacity: 0.1;
+}
+
+.embedding-query .query-operator {
+  fill: #fff;
+  stroke: #8c8c8c;
+  stroke-width: 2;
+}
+
+.embedding-query .query-operator-shadow {
+  fill: #ddd;
+  opacity: 0.55;
+}
+
+.embedding-query .query-operator-label {
+  fill: #666;
+  font-size: 13px;
+  text-anchor: middle;
+}
+
+.embedding-query .query-vector-box {
+  fill: #fff;
+  stroke: #8c8c8c;
+  stroke-width: 1.5;
+}
+
+.embedding-query .query-vector-divider {
+  stroke: #8c8c8c;
+  stroke-width: 1;
+}
+
+.embedding-query .query-vector-slot {
+  fill: transparent;
+  transition: fill 120ms ease;
+}
+
+.embedding-query .query-vector-slot.selected {
+  fill: #3a5edd;
+  fill-opacity: 0.1;
+}
+
+.embedding-query .query-vector-arrow {
+  fill: none;
+  stroke: #3a5edd;
+  stroke-width: 1.25;
+}
+
+.embedding-query .query-vector-label {
+  fill: #666;
+  font-size: 13px;
+  text-anchor: middle;
+}
+
+.embedding-query .attention-operator {
+  fill: #fff;
+  stroke: #8c8c8c;
+  stroke-width: 2;
+}
+
+.embedding-query .attention-operator-shadow {
+  fill: #ddd;
+  opacity: 0.55;
+}
+
+.embedding-query .attention-score-positive {
+  fill: #3a5edd;
+}
+
+.embedding-query .attention-score-negative {
+  fill: #ed72bd;
+}
+
+.embedding-query .attention-caption {
+  fill: #666;
+  font-size: 13px;
+  text-anchor: middle;
+}
+
+.embedding-query .attention-row-label {
+  text-anchor: end;
+}
+
+.embedding-query .value-row-label {
+  text-anchor: start;
+}
+
+.embedding-query .attention-divider {
+  stroke: #b4b4b4;
+  stroke-width: 1;
+  stroke-dasharray: 5 5;
+}
+
+.embedding-query .attention-copy-path {
+  fill: none;
+  stroke: #8c8c8c;
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+  opacity: 0.65;
+}
+
+.embedding-query .attention-section-title {
+  fill: #666;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.embedding-query .attention-weight {
+  fill: #3a5edd;
+}
+
+.embedding-query .value-output-vector {
+  fill: none;
+  stroke: #3a5edd;
+  stroke-width: 1.5;
+}
+
+.embedding-query .residual-update-slot {
+  fill: transparent;
+}
+
+.embedding-query .residual-select-slot {
+  fill: transparent;
+  cursor: pointer;
+}
+
+.embedding-query .residual-select-slot:hover {
+  fill: #3a5edd;
+  fill-opacity: 0.06;
+}
+
+.embedding-query .residual-select-slot.selected {
+  fill: #3a5edd;
+  fill-opacity: 0.1;
+}
+
+.embedding-query .residual-update-slot.selected {
+  fill: #3a5edd;
+  fill-opacity: 0.1;
+}
+
+.embedding-query .residual-copy-button {
+  cursor: pointer;
+}
+
+.embedding-query .residual-copy-button-frame {
+  fill: #fff;
+  stroke: #8c8c8c;
+  stroke-width: 1;
+}
+
+.embedding-query .residual-copy-button:hover .residual-copy-button-frame,
+.embedding-query .residual-copy-button:focus-visible .residual-copy-button-frame {
+  fill: #3a5edd;
+  fill-opacity: 0.1;
+  stroke: #3a5edd;
+}
+
+.embedding-query .residual-copy-button-label {
+  fill: #666;
+  font-size: 11px;
+  pointer-events: none;
+  text-anchor: middle;
+}
+
+.embedding-query .attention-mode {
+  cursor: pointer;
+}
+
+.embedding-query .attention-mode-frame {
+  fill: #fff;
+  stroke: #8c8c8c;
+  stroke-width: 1;
+}
+
+.embedding-query .attention-mode-option {
+  fill: transparent;
+}
+
+.embedding-query .attention-mode-option.active {
+  fill: #3a5edd;
+  fill-opacity: 0.13;
+}
+
+.embedding-query .attention-mode-label {
+  fill: #666;
+  font-size: 11px;
+  pointer-events: none;
+  text-anchor: middle;
+}
+
+.embedding-query .attention-mode-divider {
+  stroke: #8c8c8c;
+  stroke-width: 1;
+}
+
+.embedding-query .is-masked {
+  fill: #d8d8d8 !important;
+  opacity: 0.45 !important;
+}
+
+.embedding-query line.is-masked {
+  stroke: #b8b8b8 !important;
+}
+
+.embedding-query .residual-copy-path {
+  fill: none;
+  stroke: #8c8c8c;
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+  opacity: 0.65;
+}
+
+.embedding-query .residual-label {
+  fill: #666;
+  font-size: 13px;
+  text-anchor: middle;
+}
+
+.embedding-query .embedding-label,
+.embedding-query .query-vector-label,
+.embedding-query .attention-caption,
+.embedding-query .attention-section-title,
+.embedding-query .residual-label {
+  paint-order: stroke fill;
+  stroke: var(--global-bg-color, #fff);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
+.embedding-query .target-line {
+  fill: none;
+  stroke: #3a5edd;
+  stroke-linecap: round;
+  transition: opacity 160ms ease, stroke-width 160ms ease;
+}
+
+.embedding-query .instruction {
+  fill: #888;
+  font-size: 11px;
+  text-anchor: middle;
+}
+
+.embedding-query .interactive-pointer {
+  pointer-events: none;
+}
+</style>
+
+<figure
+  id="embedding-query"
+  class="embedding-query"
+  aria-label="Interactive visualization of token embeddings producing a query vector"
+>
+  <svg viewBox="0 0 900 1280" role="img" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker
+        id="embedding-arrowhead"
+        viewBox="0 -5 10 10"
+        refX="5"
+        refY="0"
+        markerWidth="8"
+        markerHeight="8"
+        orient="auto"
+      >
+        <path d="M0,-5L5,0L0,5" fill="none" stroke="#8c8c8c"></path>
+      </marker>
+      <symbol id="embedding-pointer" viewBox="0 0 26.87 26.87">
+        <circle cx="13.43" cy="13.43" r="12.93" fill="none" stroke="#ffdc8c" stroke-miterlimit="10"></circle>
+        <circle cx="13.43" cy="13.43" r="10.38" fill="#ffb200"></circle>
+        <polygon points="11.32 19.26 11.32 17.43 10.72 17.43 10.71 16.14 10.1 16.21 10.1 15 9.54 14.99 9.46 13.78 8.88 13.78 8.89 13.16 8.28 13.16 8.28 11.34 10.11 11.34 10.11 11.94 10.71 11.94 10.71 6.46 11.33 6.45 11.33 5.86 12.54 5.86 12.54 6.45 13.16 6.47 13.16 8.89 14.37 8.89 14.39 9.49 16.21 9.51 16.21 10.12 17.43 10.12 17.43 10.79 18.04 10.73 18.05 11.39 18.65 11.33 18.65 15.61 18.04 15.52 17.98 17.43 17.43 17.43 17.43 19.26 11.32 19.26" fill="#fff" opacity="0.2"></polygon>
+        <g fill="#fff">
+          <path d="M10.11,11.94c0-.09,0-.19,0-.28s0-.21,0-.32H8.28v1.82H8.89V11.95h1.23v.63h.6v.6h.61V13.09q0-2.4,0-4.8,0-.92,0-1.85h1.21V5.85H11.33v.6H10.71v5.47h-.6Zm4.28-2.44a.45.45,0,0,1,0-.07c0-.15,0-.3,0-.45s0,0,0-.08H13.16V6.47H12.55v5.47h.61V9.51h1.24s0,.06,0,.09q0,1.12,0,2.25s0,.07,0,.1H15V10.12h1.23v2.43h.6V10.71l.57,0s0,0,0,.05,0,.29,0,.44,0,.07,0,.11H18a0,0,0,0,1,.06.06c0,.24,0,.48,0,.72q0,1.71,0,3.41s0,0,0,.08h-.6s0,0,0,0q0,.86,0,1.72s0,0,0,.06H16.81v1.21H11.94V17.42H11.33V16.21h-.6a11.4,11.4,0,0,0,0,1.22h.6v1.83c2,0,4.07,0,6.11,0,0-.1,0-.19,0-.28,0-.46,0-.93,0-1.39a1.53,1.53,0,0,0,0-.16H18c.05,0,.07,0,.07-.07,0-.45,0-.89,0-1.34,0-.13,0-.26,0-.4l.3,0h.3V11.33H18v-.6H17.43V10.11H16.21V9.51H14.39ZM10.1,15v1.21h.52a.07.07,0,0,0,.08-.08c0-.32,0-.65,0-1,0-.06,0-.11,0-.17H10.11V13.77H9.49V13.16H8.91a2.7,2.7,0,0,0,0,.62H9.47s0,0,0,.07,0,.27,0,.41,0,.45,0,.68a0,0,0,0,0,.05.06H10.1Z"></path>
+          <path d="M17.43,17.43s0,0,0-.06q0-.86,0-1.72s0,0,0,0H18s0-.06,0-.08q0-1.71,0-3.41c0-.24,0-.48,0-.72A0,0,0,0,0,18,11.33H17.44s0-.07,0-.11,0-.29,0-.44,0-.05,0-.05l-.57,0v1.84h-.6V10.12H15v1.82H14.38s0-.07,0-.1q0-1.12,0-2.25s0-.06,0-.09h1.81v.6h1.22v.62H18v.6h.61v4.28h-.3l-.3,0c0,.14,0,.27,0,.4,0,.45,0,.89,0,1.34,0,.05,0,.07-.07.07H17.43Z"></path>
+          <path d="M17.43,17.43a1.53,1.53,0,0,1,0,.16c0,.46,0,.93,0,1.39,0,.09,0,.17,0,.28-2,0-4.06,0-6.11,0V17.43h-.6a11.4,11.4,0,0,1,0-1.22h.6v1.21h.61v1.22h4.88V17.43h.62Z"></path>
+          <path d="M11.33,6.45q0,.92,0,1.85,0,2.4,0,4.8v.07H10.72v-.6h-.6V11.93h.6V6.46h.61Z"></path>
+          <path d="M14.39,9.49H13.16v2.43H12.55V6.47h.61V8.89h1.21s0,.06,0,.08,0,.3,0,.45a.44.44,0,0,0,0,.07h0Z"></path>
+          <path d="M10.1,15H9.54a0,0,0,0,1-.05-.06c0-.23,0-.45,0-.68s0-.27,0-.41,0,0,0-.07H8.88a2.7,2.7,0,0,1,0-.62H9.49v.61h.62V15h.61c0,.06,0,.12,0,.17,0,.32,0,.65,0,1a.07.07,0,0,1-.08.08H10.1V15Z"></path>
+          <path d="M10.11,11.93H8.89v1.21H8.28V11.34h1.83c0,.11,0,.21,0,.32s0,.19,0,.28h0Z"></path>
+          <path d="M11.33,6.45V5.85h1.21v.6H11.33Z"></path>
+        </g>
+      </symbol>
+    </defs>
+
+    <g id="embedding-target-lines"></g>
+    <g id="embedding-tokens"></g>
+    <g id="embedding-arrows"></g>
+    <g id="embedding-labels"></g>
+    <g id="embedding-vectors"></g>
+    <g id="embedding-residual"></g>
+
+    <g id="embedding-projections"></g>
+    <g id="embedding-attention"></g>
+    <g id="embedding-value-output"></g>
+    <g id="embedding-interaction-hints" class="interactive-pointer">
+      <use href="#embedding-pointer" x="584" y="176" width="21" height="21"></use>
+      <use href="#embedding-pointer" x="814" y="78" width="21" height="21"></use>
+      <use href="#embedding-pointer" x="844" y="434" width="21" height="21"></use>
+      <use href="#embedding-pointer" x="813" y="890" width="21" height="21"></use>
+      <use href="#embedding-pointer" x="719" y="856" width="21" height="21"></use>
+    </g>
+
+    <text x="450" y="1270" class="instruction">
+      Click a token to trace its query, key, and value projections.
+    </text>
+  </svg>
+</figure>
+
+<script>
+(function () {
+  "use strict";
+
+  const figure = document.getElementById("embedding-query");
+  if (!figure) return;
+
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = figure.querySelector("svg");
+  const tokenGroup = document.getElementById("embedding-tokens");
+  const arrowGroup = document.getElementById("embedding-arrows");
+  const labelGroup = document.getElementById("embedding-labels");
+  const vectorGroup = document.getElementById("embedding-vectors");
+  const residualGroup = document.getElementById("embedding-residual");
+  const targetLineGroup = document.getElementById("embedding-target-lines");
+  const projectionGroup = document.getElementById("embedding-projections");
+  const attentionGroup = document.getElementById("embedding-attention");
+  const valueOutputGroup = document.getElementById("embedding-value-output");
+
+  const tokens = [
+    { text: "a", width: 34 },
+    { text: "fluffy", width: 69, adjective: true, target: true },
+    { text: "blue", width: 53, adjective: true, target: true },
+    { text: "creature", width: 82 },
+    { text: "roamed", width: 71 },
+    { text: "the", width: 43 },
+    { text: "verdant", width: 72, context: true },
+    { text: "forest", width: 60 }
+  ];
+
+  const gap = 5;
+  const tokenY = 38;
+  const tokenHeight = 36;
+  const totalWidth = tokens.reduce((sum, token) => sum + token.width, 0)
+    + gap * (tokens.length - 1);
+  let x = (900 - totalWidth) / 2;
+  let selectedIndex = 3;
+  const tokenNodes = [];
+  const tokenCenters = [];
+  const vectorCenters = [];
+  const vectorCells = [];
+  const inputVectors = [];
+  const embeddingVectorLines = [];
+  const residualVectorLines = [];
+  const residualSelectSlots = [];
+  const vectorCellSize = 36;
+  const vectorRowX = (900 - tokens.length * vectorCellSize) / 2;
+  const vectorY = 185;
+  const residualX = 840;
+  const residualY = 86;
+  const projectionCellSize = 27;
+  const projectionY = 348;
+  const projectionDefinitions = [
+    {
+      name: "Q",
+      symbol: "q",
+      centerX: 190,
+      matrix: [0.72, -0.58, 0.48, 0.81]
+    },
+    {
+      name: "K",
+      symbol: "k",
+      centerX: 450,
+      matrix: [0.34, 0.86, -0.77, 0.42]
+    },
+    {
+      name: "V",
+      symbol: "v",
+      centerX: 710,
+      matrix: [-0.63, 0.51, 0.68, 0.59]
+    }
+  ];
+  const projectionOutputs = [];
+
+  element("rect", {
+    x: vectorRowX + 0.5,
+    y: vectorY + 0.5,
+    width: tokens.length * vectorCellSize,
+    height: vectorCellSize,
+    rx: 6,
+    class: "embedding-vector-box"
+  }, vectorGroup);
+
+  for (let i = 1; i < tokens.length; i++) {
+    const dividerX = vectorRowX + i * vectorCellSize + 0.25;
+    element("line", {
+      x1: dividerX,
+      y1: vectorY + 0.75,
+      x2: dividerX,
+      y2: vectorY + vectorCellSize + 0.75,
+      class: "embedding-vector-divider"
+    }, vectorGroup);
+  }
+
+  function element(name, attributes, parent) {
+    const node = document.createElementNS(ns, name);
+    Object.entries(attributes).forEach(([key, value]) => {
+      node.setAttribute(key, value);
+    });
+    parent.appendChild(node);
+    return node;
+  }
+
+  function setInputVector(index, dx, dy, refreshProjection = true) {
+    const magnitude = Math.hypot(dx, dy);
+    if (magnitude > 24) {
+      dx = dx / magnitude * 24;
+      dy = dy / magnitude * 24;
+    }
+
+    inputVectors[index] = { dx, dy };
+    const vectorLine = embeddingVectorLines[index];
+    const vectorCenter = vectorCenters[index];
+    vectorLine.setAttribute("x1", vectorCenter - dx / 2);
+    vectorLine.setAttribute("y1", 203 - dy / 2);
+    vectorLine.setAttribute("x2", vectorCenter + dx / 2);
+    vectorLine.setAttribute("y2", 203 + dy / 2);
+    updateResidualVector(index);
+    if (refreshProjection) updateProjectionVectors(index);
+  }
+
+  tokens.forEach((token, index) => {
+    const center = x + token.width / 2;
+    const vectorCenter = vectorRowX + index * vectorCellSize + vectorCellSize / 2;
+    tokenCenters.push(center);
+    vectorCenters.push(vectorCenter);
+
+    const classes = [
+      "token",
+      token.adjective ? "adjective" : "",
+      token.context ? "context" : "",
+      index === selectedIndex ? "selected" : ""
+    ].filter(Boolean).join(" ");
+
+    const group = element("g", {
+      class: classes,
+      tabindex: "0",
+      role: "button",
+      "aria-label": `Use the embedding for ${token.text} as the query source`
+    }, tokenGroup);
+
+    element("rect", {
+      x,
+      y: tokenY,
+      width: token.width,
+      height: tokenHeight,
+      rx: 6,
+      class: "token-box"
+    }, group);
+
+    const label = element("text", {
+      x: center,
+      y: tokenY + 23,
+      class: "token-label",
+      "text-anchor": "middle"
+    }, group);
+    label.textContent = token.text;
+
+    element("path", {
+      d: [
+        `M ${center} ${tokenY + tokenHeight + 8}`,
+        `C ${center} 103, ${vectorCenter} 116, ${vectorCenter} 151`
+      ].join(" "),
+      class: "embedding-arrow"
+    }, arrowGroup);
+
+    const embeddingLabel = element("text", {
+      x: vectorCenter,
+      y: 177,
+      class: "embedding-label",
+      "text-anchor": "middle"
+    }, labelGroup);
+    embeddingLabel.textContent = `E${index + 1}`;
+
+    const vectorCell = element("g", {
+      class: `embedding-vector-cell${index === selectedIndex ? " selected" : ""}`
+    }, vectorGroup);
+    element("rect", {
+      x: vectorCenter - vectorCellSize / 2,
+      y: vectorY,
+      width: vectorCellSize,
+      height: vectorCellSize,
+      class: "embedding-vector-slot"
+    }, vectorCell);
+
+    const angle = (index * 1.83 + 0.55) % (Math.PI * 2);
+    const vectorDx = Math.cos(angle) * 13;
+    const vectorDy = Math.sin(angle) * 13;
+    inputVectors.push({ dx: vectorDx, dy: vectorDy });
+    const vectorLine = element("line", {
+      x1: vectorCenter - vectorDx / 2,
+      y1: 203 - vectorDy / 2,
+      x2: vectorCenter + vectorDx / 2,
+      y2: 203 + vectorDy / 2,
+      class: "embedding-vector",
+      "marker-end": "url(#embedding-arrowhead)"
+    }, vectorCell);
+    embeddingVectorLines.push(vectorLine);
+
+    function setVector(dx, dy) {
+      setInputVector(index, dx, dy);
+    }
+
+    vectorCell.addEventListener("pointermove", event => {
+      const point = svg.createSVGPoint();
+      point.x = event.clientX;
+      point.y = event.clientY;
+      const matrix = svg.getScreenCTM();
+      if (!matrix) return;
+
+      const cursor = point.matrixTransform(matrix.inverse());
+      const deltaX = cursor.x - vectorCenter;
+      const deltaY = cursor.y - 203;
+      const distance = Math.hypot(deltaX, deltaY);
+
+      if (distance < 0.5) {
+        setVector(0, 0);
+        return;
+      }
+
+      const magnitude = Math.min(24, distance * 1.25);
+      setVector(
+        deltaX / distance * magnitude,
+        deltaY / distance * magnitude
+      );
+    });
+
+    group.addEventListener("click", () => selectToken(index));
+    group.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        selectToken(index);
+      }
+    });
+
+    tokenNodes.push(group);
+    vectorCells.push(vectorCell);
+    x += token.width + gap;
+  });
+
+  element("path", {
+    d: `M ${vectorRowX + tokens.length * vectorCellSize} ${vectorY + 18}
+        C 700 ${vectorY + 18}, 780 ${residualY + 18}, ${residualX - 8} ${residualY + 18}`,
+    class: "residual-copy-path"
+  }, residualGroup);
+
+  element("rect", {
+    x: residualX + 0.5,
+    y: residualY + 0.5,
+    width: vectorCellSize,
+    height: tokens.length * vectorCellSize,
+    rx: 6,
+    class: "embedding-vector-box"
+  }, residualGroup);
+
+  for (let i = 0; i < tokens.length; i++) {
+    if (i > 0) {
+      const dividerY = residualY + i * vectorCellSize + 0.25;
+      element("line", {
+        x1: residualX + 0.75,
+        y1: dividerY,
+        x2: residualX + vectorCellSize + 0.75,
+        y2: dividerY,
+        class: "embedding-vector-divider"
+      }, residualGroup);
+    }
+
+    residualVectorLines.push(element("line", {
+      class: "embedding-vector",
+      "marker-end": "url(#embedding-arrowhead)"
+    }, residualGroup));
+    const residualSlot = element("rect", {
+      x: residualX,
+      y: residualY + i * vectorCellSize,
+      width: vectorCellSize,
+      height: vectorCellSize,
+      tabindex: "0",
+      role: "button",
+      "aria-label": `Select ${tokens[i].text} from the residual stream`,
+      class: `residual-select-slot${i === selectedIndex ? " selected" : ""}`
+    }, residualGroup);
+    residualSlot.addEventListener("click", () => selectToken(i));
+    residualSlot.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        selectToken(i);
+      }
+    });
+    residualSelectSlots.push(residualSlot);
+  }
+
+  const residualLabel = element("text", {
+    x: residualX + vectorCellSize / 2,
+    y: residualY - 12,
+    class: "residual-label"
+  }, residualGroup);
+  residualLabel.textContent = "residual stream";
+
+  function updateResidualVector(index) {
+    const vector = inputVectors[index];
+    const line = residualVectorLines[index];
+    if (!vector || !line) return;
+
+    const centerX = residualX + vectorCellSize / 2;
+    const centerY = residualY + index * vectorCellSize + vectorCellSize / 2;
+    line.setAttribute("x1", centerX - vector.dx / 2);
+    line.setAttribute("y1", centerY - vector.dy / 2);
+    line.setAttribute("x2", centerX + vector.dx / 2);
+    line.setAttribute("y2", centerY + vector.dy / 2);
+  }
+
+  inputVectors.forEach((_, index) => updateResidualVector(index));
+
+  projectionDefinitions.forEach(definition => {
+    const outputWidth = tokens.length * projectionCellSize;
+    const rowX = definition.centerX - outputWidth / 2;
+
+    element("path", {
+      d: `M 450 224 C 450 242, ${definition.centerX} 231, ${definition.centerX} 249`,
+      class: "query-arrow"
+    }, projectionGroup);
+
+    element("rect", {
+      x: definition.centerX - 60,
+      y: 269,
+      width: 120,
+      height: 36,
+      rx: 18,
+      class: "query-operator-shadow"
+    }, projectionGroup);
+    element("rect", {
+      x: definition.centerX - 60,
+      y: 265,
+      width: 120,
+      height: 36,
+      rx: 18,
+      class: "query-operator"
+    }, projectionGroup);
+
+    const operatorLabel = element("text", {
+      x: definition.centerX,
+      y: 288,
+      class: "query-operator-label"
+    }, projectionGroup);
+    operatorLabel.append("W");
+    const operatorSubscript = element("tspan", {
+      "baseline-shift": "sub",
+      "font-size": 11
+    }, operatorLabel);
+    operatorSubscript.textContent = definition.name;
+    operatorLabel.append(" projection");
+
+    element("line", {
+      x1: definition.centerX,
+      y1: 306,
+      x2: definition.centerX,
+      y2: 340,
+      class: "query-arrow",
+      "marker-end": "url(#embedding-arrowhead)"
+    }, projectionGroup);
+
+    element("rect", {
+      x: rowX + 0.5,
+      y: projectionY + 0.5,
+      width: outputWidth,
+      height: projectionCellSize,
+      rx: 6,
+      class: "query-vector-box"
+    }, projectionGroup);
+
+    const slots = [];
+    const lines = [];
+    for (let i = 0; i < tokens.length; i++) {
+      if (i > 0) {
+        const dividerX = rowX + i * projectionCellSize + 0.25;
+        element("line", {
+          x1: dividerX,
+          y1: projectionY + 0.75,
+          x2: dividerX,
+          y2: projectionY + projectionCellSize + 0.75,
+          class: "query-vector-divider"
+        }, projectionGroup);
+      }
+
+      slots.push(element("rect", {
+        x: rowX + i * projectionCellSize,
+        y: projectionY,
+        width: projectionCellSize,
+        height: projectionCellSize,
+        class: `query-vector-slot${i === selectedIndex ? " selected" : ""}`
+      }, projectionGroup));
+      lines.push(element("line", {
+        class: "query-vector-arrow",
+        "marker-end": "url(#embedding-arrowhead)"
+      }, projectionGroup));
+    }
+
+    const outputLabel = element("text", {
+      x: definition.centerX,
+      y: 397,
+      class: "query-vector-label"
+    }, projectionGroup);
+    outputLabel.append(`${definition.symbol}`);
+    const outputIndex = element("tspan", {
+      "baseline-shift": "sub"
+    }, outputLabel);
+    outputIndex.textContent = "i";
+    outputLabel.append(" = W");
+    const weightIndex = element("tspan", {
+      "baseline-shift": "sub"
+    }, outputLabel);
+    weightIndex.textContent = definition.name;
+    outputLabel.append("E");
+    const embeddingIndex = element("tspan", {
+      "baseline-shift": "sub"
+    }, outputLabel);
+    embeddingIndex.textContent = "i";
+
+    projectionOutputs.push({
+      definition,
+      rowX,
+      slots,
+      lines,
+      vectors: Array(tokens.length)
+    });
+  });
+
+  function updateProjectionVectors(index, refreshAttention = true) {
+    if (!inputVectors[index]) return;
+
+    projectionOutputs.forEach(output => {
+      const [a, b, c, d] = output.definition.matrix;
+      const input = inputVectors[index];
+      let dx = a * input.dx + b * input.dy;
+      let dy = c * input.dx + d * input.dy;
+      const magnitude = Math.hypot(dx, dy);
+      const maxMagnitude = 18;
+      if (magnitude > maxMagnitude) {
+        dx = dx / magnitude * maxMagnitude;
+        dy = dy / magnitude * maxMagnitude;
+      }
+      output.vectors[index] = { dx, dy };
+
+      const centerX = output.rowX
+        + index * projectionCellSize
+        + projectionCellSize / 2;
+      const centerY = projectionY + projectionCellSize / 2;
+      const line = output.lines[index];
+      line.setAttribute("x1", centerX - dx / 2);
+      line.setAttribute("y1", centerY - dy / 2);
+      line.setAttribute("x2", centerX + dx / 2);
+      line.setAttribute("y2", centerY + dy / 2);
+    });
+
+    if (refreshAttention) updateAttention();
+  }
+
+  element("line", {
+    x1: 48,
+    y1: 425,
+    x2: 852,
+    y2: 425,
+    class: "attention-divider"
+  }, attentionGroup);
+  const sectionTitle = element("text", {
+    x: 60,
+    y: 448,
+    class: "attention-section-title"
+  }, attentionGroup);
+  sectionTitle.textContent = "attention computation for one query";
+
+  const attentionModeGroup = element("g", {
+    class: "attention-mode",
+    role: "button",
+    tabindex: "0",
+    "aria-label": "Switch between noncausal and causal attention"
+  }, attentionGroup);
+  element("rect", {
+    x: 650,
+    y: 432,
+    width: 190,
+    height: 26,
+    rx: 13,
+    class: "attention-mode-frame"
+  }, attentionModeGroup);
+  const noncausalModeOption = element("rect", {
+    x: 650,
+    y: 432,
+    width: 95,
+    height: 26,
+    rx: 13,
+    class: "attention-mode-option active"
+  }, attentionModeGroup);
+  const causalModeOption = element("rect", {
+    x: 745,
+    y: 432,
+    width: 95,
+    height: 26,
+    rx: 13,
+    class: "attention-mode-option"
+  }, attentionModeGroup);
+  element("line", {
+    x1: 745,
+    y1: 433,
+    x2: 745,
+    y2: 457,
+    class: "attention-mode-divider"
+  }, attentionModeGroup);
+  const noncausalModeLabel = element("text", {
+    x: 697.5,
+    y: 449,
+    class: "attention-mode-label"
+  }, attentionModeGroup);
+  noncausalModeLabel.textContent = "noncausal";
+  const causalModeLabel = element("text", {
+    x: 792.5,
+    y: 449,
+    class: "attention-mode-label"
+  }, attentionModeGroup);
+  causalModeLabel.textContent = "causal";
+  let causalAttention = false;
+
+  const copiedQueryX = 246;
+  const copiedQueryY = 470;
+  const copiedKeyCellSize = 27;
+  const copiedKeyRowX = 500;
+  const copiedKeyY = 470;
+  const copiedQuerySourcePath = element("path", {
+    class: "attention-copy-path"
+  }, attentionGroup);
+  element("path", {
+    d: `M 450 376 C 450 430, ${copiedKeyRowX + 108} 420, ${copiedKeyRowX + 108} 467`,
+    class: "attention-copy-path"
+  }, attentionGroup);
+
+  element("rect", {
+    x: copiedQueryX,
+    y: copiedQueryY,
+    width: 36,
+    height: 36,
+    rx: 6,
+    class: "query-vector-box"
+  }, attentionGroup);
+  const copiedQueryVector = element("line", {
+    class: "query-vector-arrow",
+    "marker-end": "url(#embedding-arrowhead)"
+  }, attentionGroup);
+  const copiedQueryLabel = element("text", {
+    x: copiedQueryX + 18,
+    y: copiedQueryY + 55,
+    class: "attention-caption"
+  }, attentionGroup);
+  copiedQueryLabel.textContent = "selected qᵢ";
+
+  element("rect", {
+    x: copiedKeyRowX + 0.5,
+    y: copiedKeyY + 0.5,
+    width: tokens.length * copiedKeyCellSize,
+    height: copiedKeyCellSize,
+    rx: 6,
+    class: "query-vector-box"
+  }, attentionGroup);
+
+  const copiedKeyVectors = [];
+  const copiedKeyMasks = [];
+  for (let i = 0; i < tokens.length; i++) {
+    if (i > 0) {
+      const dividerX = copiedKeyRowX + i * copiedKeyCellSize + 0.25;
+      element("line", {
+        x1: dividerX,
+        y1: copiedKeyY + 0.75,
+        x2: dividerX,
+        y2: copiedKeyY + copiedKeyCellSize + 0.75,
+        class: "query-vector-divider"
+      }, attentionGroup);
+    }
+    copiedKeyVectors.push(element("line", {
+      class: "query-vector-arrow",
+      "marker-end": "url(#embedding-arrowhead)"
+    }, attentionGroup));
+    copiedKeyMasks.push(element("rect", {
+      x: copiedKeyRowX + i * copiedKeyCellSize,
+      y: copiedKeyY,
+      width: copiedKeyCellSize,
+      height: copiedKeyCellSize,
+      class: "query-vector-slot"
+    }, attentionGroup));
+  }
+  const copiedKeyLabel = element("text", {
+    x: copiedKeyRowX + tokens.length * copiedKeyCellSize / 2,
+    y: copiedKeyY + 47,
+    class: "attention-caption"
+  }, attentionGroup);
+  copiedKeyLabel.textContent = "copied key vectors kⱼ";
+
+  element("path", {
+    d: `M ${copiedQueryX + 18} ${copiedQueryY + 38} C ${copiedQueryX + 18} 535, 420 523, 420 552`,
+    class: "query-arrow"
+  }, attentionGroup);
+  element("path", {
+    d: `M ${copiedKeyRowX + 108} ${copiedKeyY + 29} C ${copiedKeyRowX + 108} 535, 480 523, 480 552`,
+    class: "query-arrow"
+  }, attentionGroup);
+  attentionGroup.appendChild(copiedQueryLabel);
+  attentionGroup.appendChild(copiedKeyLabel);
+
+  element("rect", {
+    x: 345,
+    y: 561,
+    width: 210,
+    height: 42,
+    rx: 21,
+    class: "attention-operator-shadow"
+  }, attentionGroup);
+  element("rect", {
+    x: 345,
+    y: 557,
+    width: 210,
+    height: 42,
+    rx: 21,
+    class: "attention-operator"
+  }, attentionGroup);
+  const dotProductLabel = element("text", {
+    x: 450,
+    y: 583,
+    class: "query-operator-label"
+  }, attentionGroup);
+  dotProductLabel.textContent = "dot product × 1 / √dₖ";
+
+  element("line", {
+    x1: 450,
+    y1: 600,
+    x2: 450,
+    y2: 626,
+    class: "query-arrow",
+    "marker-end": "url(#embedding-arrowhead)"
+  }, attentionGroup);
+
+  const attentionCellSize = 36;
+  const attentionRowX = (900 - tokens.length * attentionCellSize) / 2;
+  const scoreY = 635;
+  element("rect", {
+    x: attentionRowX + 0.5,
+    y: scoreY + 0.5,
+    width: tokens.length * attentionCellSize,
+    height: attentionCellSize,
+    rx: 6,
+    class: "query-vector-box"
+  }, attentionGroup);
+
+  const attentionScores = [];
+  for (let i = 0; i < tokens.length; i++) {
+    if (i > 0) {
+      const dividerX = attentionRowX + i * attentionCellSize + 0.25;
+      element("line", {
+        x1: dividerX,
+        y1: scoreY + 0.75,
+        x2: dividerX,
+        y2: scoreY + attentionCellSize + 0.75,
+        class: "query-vector-divider"
+      }, attentionGroup);
+    }
+    attentionScores.push(element("rect", {
+      x: attentionRowX + i * attentionCellSize + 4,
+      y: scoreY + 4,
+      width: attentionCellSize - 8,
+      height: attentionCellSize - 8,
+      rx: 6,
+      class: "attention-score-positive"
+    }, attentionGroup));
+  }
+  const scoreLabel = element("text", {
+    x: attentionRowX - 12,
+    y: scoreY + 23,
+    class: "attention-caption attention-row-label"
+  }, attentionGroup);
+  scoreLabel.textContent = "scores";
+
+  element("line", {
+    x1: 450,
+    y1: 672,
+    x2: 450,
+    y2: 696,
+    class: "query-arrow",
+    "marker-end": "url(#embedding-arrowhead)"
+  }, attentionGroup);
+  element("rect", {
+    x: 397,
+    y: 705,
+    width: 106,
+    height: 36,
+    rx: 18,
+    class: "attention-operator-shadow"
+  }, attentionGroup);
+  element("rect", {
+    x: 397,
+    y: 701,
+    width: 106,
+    height: 36,
+    rx: 18,
+    class: "attention-operator"
+  }, attentionGroup);
+  const softmaxLabel = element("text", {
+    x: 450,
+    y: 724,
+    class: "query-operator-label"
+  }, attentionGroup);
+  softmaxLabel.textContent = "softmax";
+
+  element("line", {
+    x1: 450,
+    y1: 738,
+    x2: 450,
+    y2: 761,
+    class: "query-arrow",
+    "marker-end": "url(#embedding-arrowhead)"
+  }, attentionGroup);
+
+  const weightY = 770;
+  element("rect", {
+    x: attentionRowX + 0.5,
+    y: weightY + 0.5,
+    width: tokens.length * attentionCellSize,
+    height: attentionCellSize,
+    rx: 6,
+    class: "query-vector-box"
+  }, attentionGroup);
+  const attentionWeights = [];
+  for (let i = 0; i < tokens.length; i++) {
+    if (i > 0) {
+      const dividerX = attentionRowX + i * attentionCellSize + 0.25;
+      element("line", {
+        x1: dividerX,
+        y1: weightY + 0.75,
+        x2: dividerX,
+        y2: weightY + attentionCellSize + 0.75,
+        class: "query-vector-divider"
+      }, attentionGroup);
+    }
+    attentionWeights.push(element("rect", {
+      x: attentionRowX + i * attentionCellSize + 4,
+      y: weightY + 4,
+      width: attentionCellSize - 8,
+      height: attentionCellSize - 8,
+      rx: 6,
+      class: "attention-weight"
+    }, attentionGroup));
+  }
+  const weightLabel = element("text", {
+    x: attentionRowX - 12,
+    y: weightY + 23,
+    class: "attention-caption attention-row-label"
+  }, attentionGroup);
+  weightLabel.textContent = "attention";
+
+  element("line", {
+    x1: 48,
+    y1: 828,
+    x2: 852,
+    y2: 828,
+    class: "attention-divider"
+  }, valueOutputGroup);
+  const valueSectionTitle = element("text", {
+    x: 60,
+    y: 851,
+    class: "attention-section-title"
+  }, valueOutputGroup);
+  valueSectionTitle.textContent = "weighted value output";
+
+  const valueStageCellSize = 36;
+  const valueStageRowX =
+    (900 - tokens.length * valueStageCellSize) / 2 - 120;
+  const copiedWeightY = 870;
+  const copiedValueY = 920;
+  element("path", {
+    d: `M 710 376 C 710 815, 330 815, 330 ${copiedValueY - 3}`,
+    class: "attention-copy-path"
+  }, valueOutputGroup);
+  element("path", {
+    d: `M 330 807 C 330 832, 330 832, 330 ${copiedWeightY - 3}`,
+    class: "attention-copy-path"
+  }, valueOutputGroup);
+
+  element("rect", {
+    x: valueStageRowX + 0.5,
+    y: copiedValueY + 0.5,
+    width: tokens.length * valueStageCellSize,
+    height: valueStageCellSize,
+    rx: 6,
+    class: "query-vector-box"
+  }, valueOutputGroup);
+
+  const copiedValueVectors = [];
+  const valueConnectionPaths = [];
+  for (let i = 0; i < tokens.length; i++) {
+    if (i > 0) {
+      const dividerX = valueStageRowX + i * valueStageCellSize + 0.25;
+      element("line", {
+        x1: dividerX,
+        y1: copiedValueY + 0.75,
+        x2: dividerX,
+        y2: copiedValueY + valueStageCellSize + 0.75,
+        class: "query-vector-divider"
+      }, valueOutputGroup);
+    }
+    copiedValueVectors.push(element("line", {
+      class: "query-vector-arrow",
+      "marker-end": "url(#embedding-arrowhead)"
+    }, valueOutputGroup));
+    valueConnectionPaths.push(element("path", {
+      class: "query-arrow"
+    }, valueOutputGroup));
+  }
+  const copiedValueLabel = element("text", {
+    x: valueStageRowX + tokens.length * valueStageCellSize + 18,
+    y: copiedValueY + 23,
+    class: "attention-caption value-row-label"
+  }, valueOutputGroup);
+  copiedValueLabel.textContent = "value vectors vⱼ";
+
+  element("rect", {
+    x: valueStageRowX + 0.5,
+    y: copiedWeightY + 0.5,
+    width: tokens.length * valueStageCellSize,
+    height: valueStageCellSize,
+    rx: 6,
+    class: "query-vector-box"
+  }, valueOutputGroup);
+
+  const copiedAttentionWeights = [];
+  const attentionValueConnections = [];
+  for (let i = 0; i < tokens.length; i++) {
+    if (i > 0) {
+      const dividerX = valueStageRowX + i * valueStageCellSize + 0.25;
+      element("line", {
+        x1: dividerX,
+        y1: copiedWeightY + 0.75,
+        x2: dividerX,
+        y2: copiedWeightY + valueStageCellSize + 0.75,
+        class: "query-vector-divider"
+      }, valueOutputGroup);
+    }
+    copiedAttentionWeights.push(element("rect", {
+      x: valueStageRowX + i * valueStageCellSize + 4,
+      y: copiedWeightY + 4,
+      width: valueStageCellSize - 8,
+      height: valueStageCellSize - 8,
+      rx: 6,
+      class: "attention-weight"
+    }, valueOutputGroup));
+
+    const centerX = valueStageRowX
+      + i * valueStageCellSize
+      + valueStageCellSize / 2;
+    attentionValueConnections.push(element("line", {
+      x1: centerX,
+      y1: copiedWeightY + valueStageCellSize,
+      x2: centerX,
+      y2: copiedValueY,
+      class: "query-arrow"
+    }, valueOutputGroup));
+  }
+  const copiedWeightLabel = element("text", {
+    x: valueStageRowX + tokens.length * valueStageCellSize + 18,
+    y: copiedWeightY + 23,
+    class: "attention-caption value-row-label"
+  }, valueOutputGroup);
+  copiedWeightLabel.textContent = "attention aᵢⱼ";
+  valueOutputGroup.appendChild(copiedValueLabel);
+  valueOutputGroup.appendChild(copiedWeightLabel);
+
+  element("rect", {
+    x: 312,
+    y: 1030,
+    width: 36,
+    height: 36,
+    rx: 6,
+    class: "query-vector-box"
+  }, valueOutputGroup);
+  const valueOutputVector = element("line", {
+    class: "value-output-vector",
+    "marker-end": "url(#embedding-arrowhead)"
+  }, valueOutputGroup);
+  const valueOutputLabel = element("text", {
+    x: 330,
+    y: 1085,
+    class: "attention-caption"
+  }, valueOutputGroup);
+  valueOutputLabel.textContent = "output oᵢ = Σⱼ aᵢⱼvⱼ";
+
+  element("line", {
+    x1: 350,
+    y1: 1048,
+    x2: 403,
+    y2: 1048,
+    class: "query-arrow",
+    "marker-end": "url(#embedding-arrowhead)"
+  }, valueOutputGroup);
+  element("rect", {
+    x: 410,
+    y: 1032,
+    width: 104,
+    height: 36,
+    rx: 18,
+    class: "attention-operator-shadow"
+  }, valueOutputGroup);
+  element("rect", {
+    x: 410,
+    y: 1028,
+    width: 104,
+    height: 36,
+    rx: 18,
+    class: "attention-operator"
+  }, valueOutputGroup);
+  const outputProjectionLabel = element("text", {
+    x: 462,
+    y: 1051,
+    class: "query-operator-label"
+  }, valueOutputGroup);
+  outputProjectionLabel.append("W");
+  const outputProjectionSubscript = element("tspan", {
+    "baseline-shift": "sub",
+    "font-size": 11
+  }, outputProjectionLabel);
+  outputProjectionSubscript.textContent = "O";
+  outputProjectionLabel.append(" projection");
+
+  element("line", {
+    x1: 515,
+    y1: 1046,
+    x2: 555,
+    y2: 1046,
+    class: "query-arrow",
+    "marker-end": "url(#embedding-arrowhead)"
+  }, valueOutputGroup);
+  element("rect", {
+    x: 563,
+    y: 1030,
+    width: 36,
+    height: 36,
+    rx: 6,
+    class: "query-vector-box"
+  }, valueOutputGroup);
+  const projectedOutputVector = element("line", {
+    class: "value-output-vector",
+    "marker-end": "url(#embedding-arrowhead)"
+  }, valueOutputGroup);
+  const projectedOutputLabel = element("text", {
+    x: 581,
+    y: 1085,
+    class: "attention-caption"
+  }, valueOutputGroup);
+  projectedOutputLabel.textContent = "projected output Wₒoᵢ";
+
+  const updatedResidualCellSize = 36;
+  const oldResidualX = 756;
+  const updatedResidualX = residualX;
+  const updatedResidualY = 900;
+  element("path", {
+    d: `M ${residualX + vectorCellSize / 2} ${residualY + tokens.length * vectorCellSize}
+        C ${residualX + vectorCellSize / 2} 520,
+          ${oldResidualX + updatedResidualCellSize / 2} 720,
+          ${oldResidualX + updatedResidualCellSize / 2} ${updatedResidualY - 5}`,
+    class: "residual-copy-path"
+  }, valueOutputGroup);
+  element("rect", {
+    x: oldResidualX + 0.5,
+    y: updatedResidualY + 0.5,
+    width: updatedResidualCellSize,
+    height: tokens.length * updatedResidualCellSize,
+    rx: 6,
+    class: "embedding-vector-box"
+  }, valueOutputGroup);
+  element("rect", {
+    x: updatedResidualX + 0.5,
+    y: updatedResidualY + 0.5,
+    width: updatedResidualCellSize,
+    height: tokens.length * updatedResidualCellSize,
+    rx: 6,
+    class: "embedding-vector-box"
+  }, valueOutputGroup);
+
+  const oldResidualLines = [];
+  const oldResidualSlots = [];
+  const updatedResidualLines = [];
+  const updatedResidualSlots = [];
+  const updatedResidualVectors = Array(tokens.length);
+  for (let i = 0; i < tokens.length; i++) {
+    if (i > 0) {
+      const dividerY = updatedResidualY + i * updatedResidualCellSize + 0.25;
+      element("line", {
+        x1: oldResidualX + 0.75,
+        y1: dividerY,
+        x2: oldResidualX + updatedResidualCellSize + 0.75,
+        y2: dividerY,
+        class: "embedding-vector-divider"
+      }, valueOutputGroup);
+      element("line", {
+        x1: updatedResidualX + 0.75,
+        y1: dividerY,
+        x2: updatedResidualX + updatedResidualCellSize + 0.75,
+        y2: dividerY,
+        class: "embedding-vector-divider"
+      }, valueOutputGroup);
+    }
+    const oldResidualSlot = element("rect", {
+      x: oldResidualX,
+      y: updatedResidualY + i * updatedResidualCellSize,
+      width: updatedResidualCellSize,
+      height: updatedResidualCellSize,
+      tabindex: "0",
+      role: "button",
+      "aria-label": `Select ${tokens[i].text} from the old residual stream`,
+      class: `residual-update-slot residual-select-slot${i === selectedIndex ? " selected" : ""}`
+    }, valueOutputGroup);
+    oldResidualSlot.addEventListener("click", () => selectToken(i));
+    oldResidualSlot.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        selectToken(i);
+      }
+    });
+    oldResidualSlots.push(oldResidualSlot);
+    oldResidualLines.push(element("line", {
+      class: "embedding-vector",
+      "marker-end": "url(#embedding-arrowhead)"
+    }, valueOutputGroup));
+
+    const updatedResidualSlot = element("rect", {
+      x: updatedResidualX,
+      y: updatedResidualY + i * updatedResidualCellSize,
+      width: updatedResidualCellSize,
+      height: updatedResidualCellSize,
+      tabindex: "0",
+      role: "button",
+      "aria-label": `Select ${tokens[i].text} from the updated residual stream`,
+      class: `residual-update-slot residual-select-slot${i === selectedIndex ? " selected" : ""}`
+    }, valueOutputGroup);
+    updatedResidualSlot.addEventListener("click", () => selectToken(i));
+    updatedResidualSlot.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        selectToken(i);
+      }
+    });
+    updatedResidualSlots.push(updatedResidualSlot);
+    updatedResidualLines.push(element("line", {
+      class: "embedding-vector",
+      "marker-end": "url(#embedding-arrowhead)"
+    }, valueOutputGroup));
+  }
+
+  const projectedToAddPath = element("path", {
+    class: "query-arrow"
+  }, valueOutputGroup);
+  const oldResidualToAddPath = element("path", {
+    class: "query-arrow"
+  }, valueOutputGroup);
+  const addToResidualPath = element("path", {
+    class: "query-arrow",
+    "marker-end": "url(#embedding-arrowhead)"
+  }, valueOutputGroup);
+  const residualAddCircle = element("circle", {
+    cx: 720,
+    cy: 918,
+    r: 12,
+    fill: "#fff",
+    stroke: "#8c8c8c",
+    "stroke-width": 1.5
+  }, valueOutputGroup);
+  const residualAddLabel = element("text", {
+    x: 720,
+    y: 923,
+    class: "query-operator-label"
+  }, valueOutputGroup);
+  residualAddLabel.textContent = "+";
+  const oldResidualLabel = element("text", {
+    x: oldResidualX + updatedResidualCellSize / 2,
+    y: updatedResidualY + tokens.length * updatedResidualCellSize + 20,
+    class: "attention-caption residual-label"
+  }, valueOutputGroup);
+  oldResidualLabel.textContent = "old residual";
+  const updatedResidualLabel = element("text", {
+    x: updatedResidualX + updatedResidualCellSize / 2,
+    y: updatedResidualY + tokens.length * updatedResidualCellSize + 38,
+    class: "attention-caption residual-label"
+  }, valueOutputGroup);
+  updatedResidualLabel.textContent = "updated residual";
+
+  const copyResidualButton = element("g", {
+    class: "residual-copy-button",
+    tabindex: "0",
+    role: "button",
+    "aria-label": "Copy updated residual vectors to the original embeddings"
+  }, valueOutputGroup);
+  element("rect", {
+    x: 744,
+    y: 852,
+    width: 132,
+    height: 30,
+    rx: 15,
+    class: "residual-copy-button-frame"
+  }, copyResidualButton);
+  const copyResidualButtonLabel = element("text", {
+    x: 810,
+    y: 871,
+    class: "residual-copy-button-label"
+  }, copyResidualButton);
+  copyResidualButtonLabel.textContent = "copy to embeddings";
+
+  function setCenteredArrow(line, centerX, centerY, vector, maxMagnitude) {
+    let { dx, dy } = vector;
+    const magnitude = Math.hypot(dx, dy);
+    if (magnitude > maxMagnitude) {
+      dx = dx / magnitude * maxMagnitude;
+      dy = dy / magnitude * maxMagnitude;
+    }
+    line.setAttribute("x1", centerX - dx / 2);
+    line.setAttribute("y1", centerY - dy / 2);
+    line.setAttribute("x2", centerX + dx / 2);
+    line.setAttribute("y2", centerY + dy / 2);
+  }
+
+  function setAttentionMode(causal) {
+    causalAttention = causal;
+    noncausalModeOption.classList.toggle("active", !causalAttention);
+    causalModeOption.classList.toggle("active", causalAttention);
+    attentionModeGroup.setAttribute(
+      "aria-label",
+      causalAttention
+        ? "Causal attention active; switch to noncausal attention"
+        : "Noncausal attention active; switch to causal attention"
+    );
+    updateAttention();
+  }
+
+  attentionModeGroup.addEventListener("click", event => {
+    const point = svg.createSVGPoint();
+    point.x = event.clientX;
+    point.y = event.clientY;
+    const matrix = svg.getScreenCTM();
+    if (!matrix) return;
+    const cursor = point.matrixTransform(matrix.inverse());
+    setAttentionMode(cursor.x >= 745);
+  });
+  attentionModeGroup.addEventListener("keydown", event => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      setAttentionMode(!causalAttention);
+    }
+  });
+
+  function updateAttention() {
+    if (!attentionScores.length || projectionOutputs.length < 2) return;
+    const projectionsReady = projectionOutputs.every(output => {
+      return output.vectors.every(vector => Boolean(vector));
+    });
+    if (!projectionsReady) return;
+
+    const queryOutput = projectionOutputs[0];
+    const keyOutput = projectionOutputs[1];
+    const query = queryOutput.vectors[selectedIndex];
+    if (!query) return;
+
+    const querySourceX = queryOutput.rowX
+      + selectedIndex * projectionCellSize
+      + projectionCellSize / 2;
+    copiedQuerySourcePath.setAttribute(
+      "d",
+      `M ${querySourceX} 376 C ${querySourceX} 430, ${copiedQueryX + 18} 420, ${copiedQueryX + 18} 467`
+    );
+
+    setCenteredArrow(
+      copiedQueryVector,
+      copiedQueryX + 18,
+      copiedQueryY + 18,
+      query,
+      24
+    );
+    copiedQueryLabel.textContent = `copied q${selectedIndex + 1}`;
+
+    copiedKeyVectors.forEach((line, index) => {
+      const key = keyOutput.vectors[index];
+      if (!key) return;
+      const masked = causalAttention && index > selectedIndex;
+      line.classList.toggle("is-masked", masked);
+      copiedKeyMasks[index].classList.toggle("is-masked", masked);
+      setCenteredArrow(
+        line,
+        copiedKeyRowX + index * copiedKeyCellSize + copiedKeyCellSize / 2,
+        copiedKeyY + copiedKeyCellSize / 2,
+        key,
+        18
+      );
+    });
+
+    const similarities = keyOutput.vectors.map(key => {
+      if (!key) return 0;
+      return (query.dx * key.dx + query.dy * key.dy) / 120;
+    });
+    const maskedSimilarities = similarities.map((score, index) => {
+      return causalAttention && index > selectedIndex
+        ? Number.NEGATIVE_INFINITY
+        : score;
+    });
+    const maxScore = Math.max(...maskedSimilarities);
+    const exponentials = maskedSimilarities.map(score => {
+      return Number.isFinite(score) ? Math.exp(score - maxScore) : 0;
+    });
+    const exponentialTotal = exponentials.reduce((sum, value) => sum + value, 0);
+    const weights = exponentials.map(value => value / exponentialTotal);
+    const maxWeight = Math.max(...weights);
+
+    attentionScores.forEach((cell, index) => {
+      const score = similarities[index];
+      const masked = causalAttention && index > selectedIndex;
+      cell.setAttribute(
+        "class",
+        score >= 0
+          ? "attention-score-positive"
+          : "attention-score-negative"
+      );
+      cell.classList.toggle("is-masked", masked);
+      cell.style.opacity = Math.min(
+        0.9,
+        0.12 + Math.abs(score) * 0.5
+      ).toFixed(3);
+    });
+
+    attentionWeights.forEach((cell, index) => {
+      const masked = causalAttention && index > selectedIndex;
+      cell.classList.toggle("is-masked", masked);
+      cell.style.opacity = (
+        masked ? 0.45 : 0.08 + weights[index] / maxWeight * 0.82
+      ).toFixed(3);
+    });
+
+    const valueOutput = projectionOutputs[2];
+    let outputDx = 0;
+    let outputDy = 0;
+    copiedValueVectors.forEach((line, index) => {
+      const value = valueOutput.vectors[index];
+      if (!value) return;
+      const centerX = valueStageRowX
+        + index * valueStageCellSize
+        + valueStageCellSize / 2;
+      setCenteredArrow(
+        line,
+        centerX,
+        copiedValueY + valueStageCellSize / 2,
+        value,
+        24
+      );
+      outputDx += weights[index] * value.dx;
+      outputDy += weights[index] * value.dy;
+
+      const normalizedWeight = weights[index] / maxWeight;
+      const connection = valueConnectionPaths[index];
+      const attentionConnection = attentionValueConnections[index];
+      const connectionWidth = (0.75 + normalizedWeight * 3).toFixed(2);
+      const connectionOpacity = (0.1 + normalizedWeight * 0.8).toFixed(3);
+      connection.setAttribute(
+        "d",
+        `M ${centerX} ${copiedValueY + valueStageCellSize}
+         C ${centerX} 986, 330 994, 330 1027`
+      );
+      connection.style.stroke = "#3a5edd";
+      connection.style.strokeWidth = connectionWidth;
+      connection.style.opacity = connectionOpacity;
+      attentionConnection.style.stroke = "#3a5edd";
+      attentionConnection.style.strokeWidth = connectionWidth;
+      attentionConnection.style.opacity = connectionOpacity;
+    });
+
+    copiedAttentionWeights.forEach((cell, index) => {
+      const masked = causalAttention && index > selectedIndex;
+      cell.classList.toggle("is-masked", masked);
+      cell.style.opacity = (
+        masked ? 0.45 : 0.08 + weights[index] / maxWeight * 0.82
+      ).toFixed(3);
+    });
+
+    setCenteredArrow(
+      valueOutputVector,
+      330,
+      1048,
+      { dx: outputDx, dy: outputDy },
+      24
+    );
+
+    let projectedDx = 0.82 * outputDx - 0.37 * outputDy;
+    let projectedDy = 0.46 * outputDx + 0.79 * outputDy;
+    const projectedMagnitude = Math.hypot(projectedDx, projectedDy);
+    if (projectedMagnitude > 24) {
+      projectedDx = projectedDx / projectedMagnitude * 24;
+      projectedDy = projectedDy / projectedMagnitude * 24;
+    }
+    setCenteredArrow(
+      projectedOutputVector,
+      581,
+      1048,
+      { dx: projectedDx, dy: projectedDy },
+      24
+    );
+
+    const selectedResidualCenterY = updatedResidualY
+      + selectedIndex * updatedResidualCellSize
+      + updatedResidualCellSize / 2;
+    residualAddCircle.setAttribute("cy", selectedResidualCenterY);
+    residualAddLabel.setAttribute("y", selectedResidualCenterY + 5);
+    projectedToAddPath.setAttribute(
+      "d",
+      `M 601 1048
+       C 650 1048, 666 ${selectedResidualCenterY}, 708 ${selectedResidualCenterY}`
+    );
+    oldResidualToAddPath.setAttribute(
+      "d",
+      `M 732 ${selectedResidualCenterY}
+       L ${oldResidualX - 7} ${selectedResidualCenterY}`
+    );
+    addToResidualPath.setAttribute(
+      "d",
+      `M ${oldResidualX + updatedResidualCellSize} ${selectedResidualCenterY}
+       L ${updatedResidualX - 7} ${selectedResidualCenterY}`
+    );
+
+    updatedResidualLines.forEach((line, index) => {
+      const residual = inputVectors[index];
+      const oldCenterX = oldResidualX + updatedResidualCellSize / 2;
+      const oldCenterY = updatedResidualY
+        + index * updatedResidualCellSize
+        + updatedResidualCellSize / 2;
+      setCenteredArrow(
+        oldResidualLines[index],
+        oldCenterX,
+        oldCenterY,
+        residual,
+        24
+      );
+      oldResidualSlots[index].classList.toggle(
+        "selected",
+        index === selectedIndex
+      );
+
+      const queryForPosition = queryOutput.vectors[index];
+      const positionScores = keyOutput.vectors.map((key, keyIndex) => {
+        if (!key || (causalAttention && keyIndex > index)) {
+          return Number.NEGATIVE_INFINITY;
+        }
+        return (
+          queryForPosition.dx * key.dx + queryForPosition.dy * key.dy
+        ) / 120;
+      });
+      const positionMax = Math.max(...positionScores);
+      const positionExponentials = positionScores.map(score => {
+        return Number.isFinite(score) ? Math.exp(score - positionMax) : 0;
+      });
+      const positionTotal = positionExponentials.reduce(
+        (sum, value) => sum + value,
+        0
+      );
+      const positionWeights = positionExponentials.map(
+        value => value / positionTotal
+      );
+      const positionOutput = valueOutput.vectors.reduce(
+        (sum, value, valueIndex) => {
+          sum.dx += positionWeights[valueIndex] * value.dx;
+          sum.dy += positionWeights[valueIndex] * value.dy;
+          return sum;
+        },
+        { dx: 0, dy: 0 }
+      );
+      let positionProjectedDx =
+        0.82 * positionOutput.dx - 0.37 * positionOutput.dy;
+      let positionProjectedDy =
+        0.46 * positionOutput.dx + 0.79 * positionOutput.dy;
+      const updated = {
+        dx: residual.dx + positionProjectedDx,
+        dy: residual.dy + positionProjectedDy
+      };
+      updatedResidualVectors[index] = { ...updated };
+      const centerX = updatedResidualX + updatedResidualCellSize / 2;
+      const centerY = updatedResidualY
+        + index * updatedResidualCellSize
+        + updatedResidualCellSize / 2;
+      setCenteredArrow(
+        line,
+        centerX,
+        centerY,
+        updated,
+        24
+      );
+      updatedResidualSlots[index].classList.toggle(
+        "selected",
+        index === selectedIndex
+      );
+    });
+
+    drawAttentionLinks(weights);
+  }
+
+  function copyUpdatedResidualToEmbeddings() {
+    if (updatedResidualVectors.some(vector => !vector)) return;
+
+    const snapshot = updatedResidualVectors.map(vector => ({ ...vector }));
+    snapshot.forEach((vector, index) => {
+      setInputVector(index, vector.dx, vector.dy, false);
+    });
+    inputVectors.forEach((_, index) => {
+      updateProjectionVectors(index, false);
+    });
+    updateAttention();
+  }
+
+  copyResidualButton.addEventListener(
+    "click",
+    copyUpdatedResidualToEmbeddings
+  );
+  copyResidualButton.addEventListener("keydown", event => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      copyUpdatedResidualToEmbeddings();
+    }
+  });
+
+  inputVectors.forEach((_, index) => updateProjectionVectors(index, false));
+  updateAttention();
+
+  function drawAttentionLinks(weights) {
+    targetLineGroup.replaceChildren();
+    const sourceX = tokenCenters[selectedIndex];
+    const maxWeight = Math.max(...weights) || 1;
+
+    tokens.forEach((token, index) => {
+      const targetX = tokenCenters[index];
+      const normalizedWeight = weights[index] / maxWeight;
+      const masked = causalAttention && index > selectedIndex;
+      const distance = Math.abs(index - selectedIndex);
+      const arcY = tokenY - 15 - distance * 8;
+      const path = element("path", {
+        d: index === selectedIndex
+          ? `M ${sourceX - 8} ${tokenY} C ${sourceX - 20} ${tokenY - 24}, ${sourceX + 20} ${tokenY - 24}, ${sourceX + 8} ${tokenY}`
+          : `M ${sourceX} ${tokenY} Q ${(sourceX + targetX) / 2} ${arcY} ${targetX} ${tokenY}`,
+        class: "target-line"
+      }, targetLineGroup);
+
+      path.style.stroke = masked ? "#b8b8b8" : "#3a5edd";
+      path.style.strokeWidth = masked
+        ? "0.75"
+        : (0.75 + normalizedWeight * 3).toFixed(2);
+      path.style.opacity = masked
+        ? "0.2"
+        : (0.12 + normalizedWeight * 0.8).toFixed(3);
+      path.style.strokeDasharray = masked ? "3 3" : "none";
+    });
+  }
+
+  function selectToken(index) {
+    selectedIndex = index;
+    tokenNodes.forEach((node, tokenIndex) => {
+      node.classList.toggle("selected", tokenIndex === selectedIndex);
+      vectorCells[tokenIndex].classList.toggle(
+        "selected",
+        tokenIndex === selectedIndex
+      );
+      residualSelectSlots[tokenIndex].classList.toggle(
+        "selected",
+        tokenIndex === selectedIndex
+      );
+      projectionOutputs.forEach(output => {
+        output.slots[tokenIndex].classList.toggle(
+          "selected",
+          tokenIndex === selectedIndex
+        );
+      });
+    });
+
+    updateAttention();
+  }
+
+  selectToken(selectedIndex);
+})();
+</script>
+{% endraw %}
