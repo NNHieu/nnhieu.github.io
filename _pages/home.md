@@ -79,7 +79,7 @@ I study the strengths and limitations of learning algorithms through carefully d
 I believe this understanding can help us:
 1. Develop more **efficient** learning algorithms ([WWW '25](https://arxiv.org/abs/2401.03748), [ICLR '26](https://arxiv.org/abs/2504.02010)) and more **robust** systems ([ICLR '25](https://arxiv.org/abs/2407.10825), [NeurIPS '25](https://arxiv.org/abs/2506.08681), [ACL '23](https://aclanthology.org/2023.acl-short.104/)),
 2. Build systems capable of **reasoning** and producing **creative** solutions ([arXiv '26](https://arxiv.org/abs/2605.17026)), and
-3. Apply them to accelerate scientific **discovery** ([ICML '25](https://arxiv.org/abs/2504.10415)) and understand our world.
+3. Apply them to accelerate scientific **discovery** ([ICML '25](https://arxiv.org/abs/2504.10415), [AI4Research@ICML '26](https://openreview.net/forum?id=GWKbSM8yCw)) and understand our world.
    
 
 <!-- </div> -->
@@ -97,7 +97,7 @@ I believe this understanding can help us:
 
 Outside of research and work, I enjoy learning [violin 🎻](https://www.youtube.com/watch?v=24QD4lP7mDE) as a hobby in my free time. I also like playing sports 🏸🏀🥏, so feel free to say hi or invite me if you see me around. These activities help me generate new ideas 💡 and stay creative in my research.
 
-Also See [my thoughts on research](/blog/2025/just-know-stuff/#my-thought-on-research-v0-5) and [my generated tokens (blog posts)](/blog/). You can find my academic résumé [here](assets/pdf/AI_ML_Research_Resume.pdf) (last updated: April 2026).
+Also see [my thoughts on research](/blog/2025/just-know-stuff/#my-thought-on-research-v0-5) and [my generated tokens (blog posts)](/blog/). You can find my academic résumé [here](assets/pdf/AI_ML_Research_Resume.pdf) (last updated: April 2026).
 
 ---
 
