@@ -74,7 +74,7 @@ Link to your social media connections, too. This theme is set up to use [Font Aw
   }
 </style>
 
-👋 Hi! <span class="name-tooltip" tabindex="0">I'm Hieu<span class="name-tooltip__content" role="tooltip">My full name, written in Vietnamese order with diacritical marks, is <strong>Nguyễn Ngọc Hiếu</strong>.</span></span>. I am a first-year Ph.D. student at [Penn State NLP](https://nlp.psu.edu/), where I'm advised by Prof. [Rui Zhang](https://ryanzhumich.github.io/).
+👋 Hi! <span class="name-tooltip" tabindex="0">I'm Hieu<span class="name-tooltip__content" role="tooltip">My full name, written in Vietnamese order with diacritical marks, is <strong>Nguyễn Ngọc Hiếu</strong>.</span></span>. I am a second-year Ph.D. student at [Penn State NLP](https://nlp.psu.edu/), where I'm advised by Prof. [Rui Zhang](https://ryanzhumich.github.io/).
 I study the strengths and limitations of learning algorithms through carefully designed and controlled experimentation, with an emphasis on failure modes and robustness.
 I believe this understanding can help us:
 1. Develop more **efficient** learning algorithms ([WWW '25](https://arxiv.org/abs/2401.03748), [ICLR '26](https://arxiv.org/abs/2504.02010)) and more **robust** systems ([ICLR '25](https://arxiv.org/abs/2407.10825), [NeurIPS '25](https://arxiv.org/abs/2506.08681), [ACL '23](https://aclanthology.org/2023.acl-short.104/)),
@@ -95,16 +95,14 @@ I believe this understanding can help us:
 ---
 
 
-Outside of research and work, I enjoy learning [violin 🎻](https://www.youtube.com/watch?v=24QD4lP7mDE) as a hobby in my free time. I also like playing sports 🏸🏀🥏, so feel free to say hi or invite me if you see me around. These activities help me generate new ideas 💡 and stay creative in my research.
-
-Also see [my thoughts on research](/blog/2025/just-know-stuff/#my-thought-on-research-v0-5) and [my generated tokens (blog posts)](/blog/). You can find my academic résumé [here](assets/pdf/AI_ML_Research_Resume.pdf) (last updated: April 2026).
+Outside of research and work, I enjoy learning [violin 🎻](https://www.youtube.com/watch?v=24QD4lP7mDE) as a hobby in my free time. I also like playing sports 🏸🏀🥏, so feel free to say hi or invite me if you see me around. Also see [my thoughts on research](/blog/2025/just-know-stuff/#my-thought-on-research-v0-5) and [my generated tokens (blog posts)](/blog/). You can find my academic résumé [here](assets/pdf/AI_ML_Research_Resume.pdf) (last updated: Oct 2026).
 
 ---
 
 
 <!-- 🔎 I am currently seeking research internship opportunities in LLM reasoning and AI for scientific discovery. -->
 
-*Last updated: June 1, 2026*
+*Last updated: Oct 1, 2026*
 
 
 <!-- am particularly interested in developing models and training paradigms that enable reliable . More broadly, I aim to  -->
