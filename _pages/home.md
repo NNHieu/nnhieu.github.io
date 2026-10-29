@@ -12,7 +12,7 @@ profile:
   align: right
   image: prof_pic3.jpg
   image_circular: false # crops the image to make it circular
-  more_info: I'm often amazed by the vastness of the ocean.
+#  more_info: I'm often amazed by the vastness of the ocean.
 
 selected_papers: true # includes a list of papers marked as "selected={true}"
 social: false # includes social icons at the bottom of the page
@@ -27,6 +27,10 @@ latest_posts:
   enabled: false
   scrollable: true # adds a vertical scroll bar if there are more than 3 new posts items
   limit: 3 # leave blank to include all the blog posts
+
+personal:
+  enabled: true
+  details: "---\nOutside of research and work, I enjoy learning instruments as a hobby in my free time. I also like playing sports 🏸🏀🥏, so feel free to say hi or invite me if you see me around. Also see [my thoughts on research](/blog/2025/just-know-stuff/#my-thought-on-research-v0-5) and [my generated tokens (blog posts)](/blog/). You can find my academic résumé [here](assets/pdf/AI_ML_Research_Resume.pdf) (last updated: Oct 2026)."
 ---
 
 <!-- Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](http://reddit.com). You can put a picture in, too. The code is already in, just name your picture `prof_pic.jpg` and put it in the `img/` folder.
@@ -75,10 +79,10 @@ Link to your social media connections, too. This theme is set up to use [Font Aw
 </style>
 
 👋 Hi! <span class="name-tooltip" tabindex="0">I'm Hieu<span class="name-tooltip__content" role="tooltip">My full name, written in Vietnamese order with diacritical marks, is <strong>Nguyễn Ngọc Hiếu</strong>.</span></span>. I am a second-year Ph.D. student at [Penn State NLP](https://nlp.psu.edu/), where I'm advised by Prof. [Rui Zhang](https://ryanzhumich.github.io/).
-I study the strengths and limitations of learning algorithms through carefully designed and controlled experimentation, with an emphasis on failure modes and robustness.
+I study the strengths and limitations of learning algorithms through carefully designed and controlled experimentation.
 I believe this understanding can help us:
 1. Develop more **efficient** learning algorithms ([WWW '25](https://arxiv.org/abs/2401.03748), [ICLR '26](https://arxiv.org/abs/2504.02010)) and more **robust** systems ([ICLR '25](https://arxiv.org/abs/2407.10825), [NeurIPS '25](https://arxiv.org/abs/2506.08681), [ACL '23](https://aclanthology.org/2023.acl-short.104/)),
-2. Build systems capable of **reasoning** and producing **creative** solutions ([arXiv '26](https://arxiv.org/abs/2605.17026)), and
+2. Build systems capable of **reasoning** and producing **creative** solutions ([COLM '26](https://arxiv.org/abs/2605.17026)), and
 3. Apply them to accelerate scientific **discovery** ([ICML '25](https://arxiv.org/abs/2504.10415), [AI4Research@ICML '26](https://openreview.net/forum?id=GWKbSM8yCw)) and understand our world.
    
 
@@ -92,11 +96,6 @@ I believe this understanding can help us:
 <!-- TLDR; “make models faster” + “make models safer” + “make models think” + “use them for science” -->
 <!-- </div> -->
  
----
-
-
-Outside of research and work, I enjoy learning [violin 🎻](https://www.youtube.com/watch?v=24QD4lP7mDE) as a hobby in my free time. I also like playing sports 🏸🏀🥏, so feel free to say hi or invite me if you see me around. Also see [my thoughts on research](/blog/2025/just-know-stuff/#my-thought-on-research-v0-5) and [my generated tokens (blog posts)](/blog/). You can find my academic résumé [here](assets/pdf/AI_ML_Research_Resume.pdf) (last updated: Oct 2026).
-
 ---
 
 
@@ -134,92 +133,3 @@ I received my B.Sc. (Honours) in Computer Science from [VNU-UET](https://uet.vnu
   </div>
 </div> -->
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Ngoc-Hieu Nguyen",
-  "alternateName": "Nguyễn Ngọc Hiếu",
-  "email": "ngochieutb13@gmail.com",
-  "jobTitle": "PhD Student",
-  "affiliation": {
-    "@type": "CollegeOrUniversity",
-    "name": "Penn State University"
-  },
-  "worksFor": {
-    "@type": "Organization",
-    "name": "Penn State NLP"
-  },
-  "alumniOf": {
-    "@type": "CollegeOrUniversity",
-    "name": "Penn State University"
-  },
-  "url": "https://nnhieu.github.io/",
-  "image": "https://nnhieu.github.io/prof_pic3-800.webp",
-  "sameAs": [
-    "https://scholar.google.com/citations?user=bejNBqsAAAAJ",
-    "https://github.com/NNHieu",
-    "https://www.linkedin.com/in/hieunn-uet",
-    "https://twitter.com/hieu_ngoc_ng"
-  ],
-  "description": "PhD student at Penn State NLP working on robustness, reasoning, and scientific discovery in large language models through controlled experimental analysis of learning dynamics.",
-  "knowsAbout": [
-    "Machine Learning",
-    "Large Language Models",
-    "AI Reasoning",
-    "Robustness",
-    "AI for Scientific Discovery"
-  ],
-  "hasOccupation": {
-    "@type": "Occupation",
-    "name": "Research Scientist (PhD Student)",
-    "occupationLocation": {
-      "@type": "Place",
-      "name": "Penn State University"
-    },
-    "skills": [
-      "Deep Learning",
-      "LLM Reasoning",
-      "Robustness Analysis",
-      "Benchmarking",
-      "Experimental Design for Deep Understanding"
-    ]
-  },
-  "publishingPrinciples": [
-    {
-      "@type": "CreativeWork",
-      "name": "Mitigating Reward Over-optimization in Direct Alignment Algorithms",
-      "url": "https://openreview.net/forum?id=ltPRj2nthL",
-      "about": ["alignment", "importance sampling"],
-      "publisher": "NeurIPS 2025"
-    },
-    {
-      "@type": "CreativeWork",
-      "name": "LLM-SRBench: Scientific Equation Discovery Benchmark",
-      "url": "https://openreview.net/forum?id=SyQPiZJVWY",
-      "about": ["scientific discovery", "equation discovery"],
-      "publisher": "ICML 2025",
-      "awarded": "Oral"
-    },
-    {
-      "@type": "CreativeWork",
-      "name": "Wicked Oddities: Clean-Label Backdoor Attacks",
-      "url": "https://openreview.net/forum?id=1Z3C49JQVf",
-      "about": ["security", "backdoor attacks"],
-      "publisher": "ICLR 2025"
-    },
-    {
-      "@type": "CreativeWork",
-      "name": "Efficient Federated Recommendation via Low-rank Training",
-      "url": "https://doi.org/10.1145/3589334.3645702",
-      "about": ["federated learning", "recommendation systems"],
-      "publisher": "WWW 2024",
-      "awarded": "Oral"
-    }
-  ],
-  "seeks": [
-    "Research Internship",
-    "Visiting Research Position"
-  ]
-}
-</script>
