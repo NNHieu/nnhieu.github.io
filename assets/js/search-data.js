@@ -23,7 +23,18 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/publications/";
           },
-        },{id: "post-attention-visualization",
+        },{id: "post-looped-cnn-thinking-in-mazes",
+        
+          title: "Looped CNN - Thinking in Mazes",
+        
+        description: "Visualizing how a recurrent CNN solves mazes through iterative exploration and pruning.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2026/thinking-in-mazes/";
+          
+        },
+      },{id: "post-attention-visualization",
         
           title: "Attention Visualization",
         
