@@ -11,6 +11,7 @@ authors:
 tags: math
 categories: math
 series: "Optimization in Deep Learning: From convexity to invexity"
+hidden: true
 ---
 
 At an abstract level, learning is optimization over data. 

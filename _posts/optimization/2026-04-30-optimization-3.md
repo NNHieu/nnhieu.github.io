@@ -11,6 +11,7 @@ authors:
 tags: math
 categories: math
 series: "Optimization in Deep Learning: From convexity to invexity"
+hidden: true
 ---
 
 <!-- It is true that a non-convex problem in general has many spurious local minima, but it is also true that in practice, researchers sometimes don’t observe such bad local minima.  -->

@@ -11,6 +11,7 @@ authors:
 tags: math
 categories: math
 series: "Optimization in Deep Learning: From convexity to invexity"
+hidden: true
 ---
 
 In general, it is hard to analyze gradient descent dynamics, since a lot of different things can happen. 

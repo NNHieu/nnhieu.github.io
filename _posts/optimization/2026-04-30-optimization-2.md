@@ -11,6 +11,7 @@ authors:
 tags: math
 categories: math
 series: "Optimization in Deep Learning: From convexity to invexity"
+hidden: true
 ---
 
 Previously, we were able to find an $\epsilon$-critical point using gradient descent only assuming $L$-smoothness. 
